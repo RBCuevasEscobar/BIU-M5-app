@@ -1,3 +1,15 @@
+import {
+  User,
+  PageResponse,
+  CreateUserPayload,
+  UpdateUserPayload,
+  ChangePasswordPayload,
+  AdminPasswordResetPayload,
+  UserRoleUpdatePayload,
+  UserReport,
+  AuditLog
+} from '../types';
+
 const API_BASE = '/api/v1';
 
 export class ApiError extends Error {
@@ -58,4 +70,56 @@ export const api = {
   put: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
   patch: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
+
+  // User Management Service API
+  users: {
+    getPaged: (params: { page?: number; size?: number; sort?: string; search?: string; role?: string; status?: string }) => {
+      const q = new URLSearchParams();
+      if (params.page !== undefined) q.append('page', params.page.toString());
+      if (params.size !== undefined) q.append('size', params.size.toString());
+      if (params.sort) q.append('sort', params.sort);
+      if (params.search) q.append('search', params.search);
+      if (params.role) q.append('role', params.role);
+      if (params.status) q.append('status', params.status);
+      return request<PageResponse<User>>(`/users?${q.toString()}`, { method: 'GET' });
+    },
+    getAll: () => request<User[]>('/users/all', { method: 'GET' }),
+    getById: (id: number) => request<User>(`/users/${id}`, { method: 'GET' }),
+    create: (data: CreateUserPayload) => request<User>('/users', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: number, data: UpdateUserPayload) => request<User>(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    updateStatus: (id: number, status: string) => request<User>(`/users/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+    updateRoles: (id: number, data: UserRoleUpdatePayload) => request<User>(`/users/${id}/role`, { method: 'PATCH', body: JSON.stringify(data) }),
+    delete: (id: number) => request<void>(`/users/${id}`, { method: 'DELETE' }),
+    changeOwnPassword: (data: ChangePasswordPayload) => request<void>('/users/change-password', { method: 'POST', body: JSON.stringify(data) }),
+    adminResetPassword: (id: number, data: AdminPasswordResetPayload) => request<void>(`/users/${id}/password-reset`, { method: 'POST', body: JSON.stringify(data) }),
+    getReport: () => request<UserReport>('/users/report', { method: 'GET' }),
+    getAuditLogs: (id: number) => request<AuditLog[]>(`/users/${id}/audit`, { method: 'GET' }),
+    downloadCsv: async (search?: string, role?: string, status?: string) => {
+      const q = new URLSearchParams();
+      if (search) q.append('search', search);
+      if (role) q.append('role', role);
+      if (status) q.append('status', status);
+
+      const token = localStorage.getItem('iq_token');
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/users/export/csv?${q.toString()}`, {
+        method: 'GET',
+        headers,
+      });
+
+      if (!res.ok) throw new Error('Error al descargar el archivo CSV');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'iq_users_export.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    }
+  }
 };

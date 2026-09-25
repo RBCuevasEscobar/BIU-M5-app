@@ -8,10 +8,71 @@ export interface User {
   lastName: string;
   fullName: string;
   phone?: string;
-  status: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED' | string;
   avatarUrl?: string;
   roles: string[];
   permissions: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PageResponse<T> {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+}
+
+export interface CreateUserPayload {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  role?: string;
+  roles?: string[];
+  status?: string;
+  campusId?: number;
+  studentNumber?: string;
+  employeeNumber?: string;
+  specialty?: string;
+}
+
+export interface UpdateUserPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  status?: string;
+  avatarUrl?: string;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface AdminPasswordResetPayload {
+  newPassword: string;
+}
+
+export interface UserRoleUpdatePayload {
+  role?: string;
+  roles?: string[];
+}
+
+export interface UserReport {
+  totalUsers: number;
+  activeUsers: number;
+  inactiveUsers: number;
+  suspendedUsers: number;
+  roleDistribution: Record<string, number>;
+  statusDistribution: Record<string, number>;
+  recentRegistrations30Days: number;
 }
 
 export interface StudentProfile {

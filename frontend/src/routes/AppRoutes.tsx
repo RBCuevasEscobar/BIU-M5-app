@@ -11,9 +11,10 @@ import { AttendanceRegisterPage } from '../features/attendance/AttendanceRegiste
 import { AcademicCatalogPage } from '../features/academic/AcademicCatalogPage';
 import { TalkIOPracticePage } from '../features/talkio/TalkIOPracticePage';
 import { AuditLogsPage } from '../features/administration/AuditLogsPage';
+import { UserManagementPage } from '../features/users/UserManagementPage';
 
 export const AppRoutes: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, hasRole } = useAuth();
 
   if (isLoading) return null;
 
@@ -30,6 +31,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="academic" element={<AcademicCatalogPage />} />
         <Route path="talkio" element={<TalkIOPracticePage />} />
         <Route path="admin/audit" element={<AuditLogsPage />} />
+        <Route path="users" element={hasRole('ADMIN') || hasRole('SUPERVISOR') ? <UserManagementPage /> : <Navigate to="/dashboard" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

@@ -15,6 +15,7 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\controller\UserController.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\AcademicLevelDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\AcademicProgramDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\AdminPasswordResetRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ApiResponse.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\AppointmentDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\AttendanceDTO.java
@@ -25,14 +26,17 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\BookDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\CampusDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\CancelAppointmentDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ChangePasswordRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\CreateSessionDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\CreateTutoringGroupDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\CreateUserRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\DashboardSummaryDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\DuplicateGroupDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ErrorResponse.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\GroupSessionDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ModuleDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\NotificationDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\PageResponse.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\RecordAttendanceDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\RescheduleAppointmentDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\StudentDTO.java
@@ -40,7 +44,11 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TeacherDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TopicDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TutoringGroupDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UpdateUserRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserReportDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserRoleUpdateRequest.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserStatusUpdateRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicLevel.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicProgram.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicProgress.java

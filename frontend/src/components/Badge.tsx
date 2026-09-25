@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, AlertCircle, Clock, Users, XCircle, Video, MapPin } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Clock, Users, XCircle, Video, MapPin, Shield, Briefcase, GraduationCap } from 'lucide-react';
 
 interface BadgeProps {
   status: string;
@@ -11,7 +11,7 @@ export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
 
   let bg = '#f1f5f9';
   let color = '#475569';
-  let icon = <Clock size={14} />;
+  let icon = <Clock size={13} />;
   let label = s;
 
   switch (s) {
@@ -24,6 +24,50 @@ export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
       icon = <CheckCircle2 size={13} />;
       label = s === 'CONFIRMED' ? 'Confirmada' : s === 'PRESENT' ? 'Presente' : 'Activo';
       break;
+    case 'INACTIVE':
+    case 'CANCELLED':
+    case 'ABSENT':
+      bg = '#fef2f2';
+      color = '#991b1b';
+      icon = <XCircle size={13} />;
+      label = s === 'INACTIVE' ? 'Inactivo' : s === 'CANCELLED' ? 'Cancelada' : 'Ausente';
+      break;
+    case 'SUSPENDED':
+    case 'RESCHEDULED':
+    case 'EXCUSED':
+      bg = '#fffbeb';
+      color = '#92400e';
+      icon = <AlertCircle size={13} />;
+      label = s === 'SUSPENDED' ? 'Suspendido' : s === 'RESCHEDULED' ? 'Reprogramada' : 'Justificado';
+      break;
+    case 'ROLE_ADMIN':
+    case 'ADMIN':
+      bg = '#fee2e2';
+      color = '#991b1b';
+      icon = <Shield size={13} />;
+      label = 'Administrador';
+      break;
+    case 'ROLE_SUPERVISOR':
+    case 'SUPERVISOR':
+      bg = '#fef3c7';
+      color = '#92400e';
+      icon = <Shield size={13} />;
+      label = 'Supervisor';
+      break;
+    case 'ROLE_TEACHER':
+    case 'TEACHER':
+      bg = '#e0f2fe';
+      color = '#0369a1';
+      icon = <Briefcase size={13} />;
+      label = 'Docente';
+      break;
+    case 'ROLE_STUDENT':
+    case 'STUDENT':
+      bg = '#f0fdf4';
+      color = '#15803d';
+      icon = <GraduationCap size={13} />;
+      label = 'Estudiante';
+      break;
     case 'FULL':
       bg = '#fef2f2';
       color = '#991b1b';
@@ -35,20 +79,6 @@ export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
       color = '#1e40af';
       icon = <CheckCircle2 size={13} />;
       label = 'Disponible';
-      break;
-    case 'CANCELLED':
-    case 'ABSENT':
-      bg = '#fef2f2';
-      color = '#991b1b';
-      icon = <XCircle size={13} />;
-      label = s === 'CANCELLED' ? 'Cancelada' : 'Ausente';
-      break;
-    case 'RESCHEDULED':
-    case 'EXCUSED':
-      bg = '#fffbeb';
-      color = '#92400e';
-      icon = <Clock size={13} />;
-      label = s === 'RESCHEDULED' ? 'Reprogramada' : 'Justificado';
       break;
     case 'COMPLETED':
       bg = '#f0fdf4';

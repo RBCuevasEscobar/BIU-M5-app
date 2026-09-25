@@ -15,6 +15,7 @@ public class UserDTO {
     private Set<String> roles;
     private Set<String> permissions;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public UserDTO() {}
 
@@ -41,4 +42,6 @@ public class UserDTO {
     public void setPermissions(Set<String> permissions) { this.permissions = permissions; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

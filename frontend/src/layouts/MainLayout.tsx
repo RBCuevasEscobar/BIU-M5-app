@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Logo } from '../components/Logo';
+import { ChangePasswordModal } from '../features/profile/ChangePasswordModal';
 import {
   LayoutDashboard,
   Search,
@@ -11,31 +12,29 @@ import {
   CheckSquare,
   Bot,
   ShieldCheck,
+  UserCog,
   LogOut,
-  Bell,
-  Menu,
-  X,
+  KeyRound,
   ChevronRight,
-  User as UserIcon,
   Sparkles
 } from 'lucide-react';
 
 export const MainLayout: React.FC = () => {
   const { user, studentProfile, teacherProfile, logout, switchDemoRole, hasRole } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Buscar Tutorías', path: '/tutoring/search', icon: <Search size={19} />, roles: ['STUDENT', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Mis Tutorías', path: '/tutoring/my-appointments', icon: <CalendarCheck size={19} />, roles: ['STUDENT'] },
-    { label: 'Gestión de Grupos', path: '/groups', icon: <Users size={19} />, roles: ['SUPERVISOR', 'ADMIN'] },
+    { label: 'Buscar Tutorias', path: '/tutoring/search', icon: <Search size={19} />, roles: ['STUDENT', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Mis Tutorias', path: '/tutoring/my-appointments', icon: <CalendarCheck size={19} />, roles: ['STUDENT'] },
+    { label: 'Gestion de Grupos', path: '/groups', icon: <Users size={19} />, roles: ['SUPERVISOR', 'ADMIN'] },
+    { label: 'Gestion de Usuarios', path: '/users', icon: <UserCog size={19} />, roles: ['ADMIN', 'SUPERVISOR'] },
     { label: 'Registro Asistencia', path: '/attendance', icon: <CheckSquare size={19} />, roles: ['TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Programa Académico', path: '/academic', icon: <BookOpen size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Práctica IA TalkIO', path: '/talkio', icon: <Bot size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Auditoría & Sistema', path: '/admin/audit', icon: <ShieldCheck size={19} />, roles: ['ADMIN'] },
+    { label: 'Programa Academico', path: '/academic', icon: <BookOpen size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Practica IA TalkIO', path: '/talkio', icon: <Bot size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Auditoria & Sistema', path: '/admin/audit', icon: <ShieldCheck size={19} />, roles: ['ADMIN'] },
   ];
 
   const filteredNav = navItems.filter(item => item.roles.some(r => hasRole(r)));
@@ -165,13 +164,22 @@ export const MainLayout: React.FC = () => {
                 </div>
               </div>
             </div>
-            <button
-              onClick={logout}
-              style={{ background: 'none', border: 'none', color: 'var(--iq-gray)', cursor: 'pointer', padding: '6px' }}
-              title="Cerrar sesión"
-            >
-              <LogOut size={17} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button
+                onClick={() => setIsChangePasswordOpen(true)}
+                style={{ background: 'none', border: 'none', color: 'var(--iq-gray)', cursor: 'pointer', padding: '6px' }}
+                title="Cambiar Contrasena"
+              >
+                <KeyRound size={16} />
+              </button>
+              <button
+                onClick={logout}
+                style={{ background: 'none', border: 'none', color: 'var(--iq-gray)', cursor: 'pointer', padding: '6px' }}
+                title="Cerrar sesion"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -195,7 +203,7 @@ export const MainLayout: React.FC = () => {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--iq-primary)' }}>
-              IQ English – Tutoring Management System
+              IQ English - Tutoring Management System
             </span>
           </div>
 
@@ -205,6 +213,15 @@ export const MainLayout: React.FC = () => {
               <span>Plantel:</span>
               <span style={{ color: 'var(--iq-secondary-hover)' }}>{studentProfile?.campusName || teacherProfile?.campusName || 'Plantel Tlaxcala'}</span>
             </div>
+
+            {/* Change Password button */}
+            <button
+              onClick={() => setIsChangePasswordOpen(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', cursor: 'pointer' }}
+            >
+              <KeyRound size={14} />
+              <span>Contrasena</span>
+            </button>
 
             {/* Logout button */}
             <button
@@ -222,6 +239,12 @@ export const MainLayout: React.FC = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Global Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+      />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 mx\iqenglish\tutoring\service\CampusService.class
+mx\iqenglish\tutoring\dto\PageResponse.class
 mx\iqenglish\tutoring\repository\StudentRepository.class
 mx\iqenglish\tutoring\repository\AppointmentRepository.class
 mx\iqenglish\tutoring\service\AuthService.class
@@ -14,6 +15,7 @@ mx\iqenglish\tutoring\controller\AttendanceController.class
 mx\iqenglish\tutoring\repository\NotificationRepository.class
 mx\iqenglish\tutoring\repository\ModuleRepository.class
 mx\iqenglish\tutoring\service\impl\AuditServiceImpl.class
+mx\iqenglish\tutoring\dto\UserRoleUpdateRequest.class
 mx\iqenglish\tutoring\dto\BookAppointmentDTO.class
 mx\iqenglish\tutoring\dto\DuplicateGroupDTO.class
 mx\iqenglish\tutoring\controller\UserController.class
@@ -25,6 +27,7 @@ mx\iqenglish\tutoring\controller\NotificationController.class
 mx\iqenglish\tutoring\exception\ScheduleConflictException.class
 mx\iqenglish\tutoring\controller\ReportController.class
 mx\iqenglish\tutoring\dto\TeacherDTO.class
+mx\iqenglish\tutoring\dto\UserReportDTO.class
 mx\iqenglish\tutoring\entity\Topic.class
 mx\iqenglish\tutoring\service\NotificationService.class
 mx\iqenglish\tutoring\dto\RecordAttendanceDTO.class
@@ -38,6 +41,7 @@ mx\iqenglish\tutoring\exception\DoubleBookingException.class
 mx\iqenglish\tutoring\exception\CapacityExceededException.class
 mx\iqenglish\tutoring\controller\AcademicCatalogController.class
 mx\iqenglish\tutoring\entity\AppointmentStatus.class
+mx\iqenglish\tutoring\dto\ChangePasswordRequest.class
 mx\iqenglish\tutoring\service\impl\CampusServiceImpl.class
 mx\iqenglish\tutoring\dto\AcademicProgramDTO.class
 mx\iqenglish\tutoring\service\impl\AttendanceServiceImpl.class
@@ -59,6 +63,7 @@ mx\iqenglish\tutoring\service\impl\NotificationServiceImpl.class
 mx\iqenglish\tutoring\mapper\EntityMapper.class
 mx\iqenglish\tutoring\dto\BookDTO.class
 mx\iqenglish\tutoring\security\CustomUserDetailsServiceImpl.class
+mx\iqenglish\tutoring\dto\UpdateUserRequest.class
 mx\iqenglish\tutoring\entity\Role.class
 mx\iqenglish\tutoring\controller\TalkIOController.class
 mx\iqenglish\tutoring\service\GroupSessionService.class
@@ -112,11 +117,14 @@ mx\iqenglish\tutoring\dto\AuthRequest.class
 mx\iqenglish\tutoring\security\SecurityUtils.class
 mx\iqenglish\tutoring\dto\GroupSessionDTO.class
 mx\iqenglish\tutoring\service\ReportService.class
+mx\iqenglish\tutoring\dto\CreateUserRequest.class
 mx\iqenglish\tutoring\service\impl\AuthServiceImpl.class
 mx\iqenglish\tutoring\entity\Book.class
 mx\iqenglish\tutoring\repository\TopicRepository.class
+mx\iqenglish\tutoring\dto\UserStatusUpdateRequest.class
 mx\iqenglish\tutoring\exception\ResourceNotFoundException.class
 mx\iqenglish\tutoring\integration\calendar\CalendarEventDTO.class
+mx\iqenglish\tutoring\dto\AdminPasswordResetRequest.class
 mx\iqenglish\tutoring\repository\AttendanceRepository.class
 mx\iqenglish\tutoring\dto\TopicDTO.class
 mx\iqenglish\tutoring\security\JwtTokenProvider.class

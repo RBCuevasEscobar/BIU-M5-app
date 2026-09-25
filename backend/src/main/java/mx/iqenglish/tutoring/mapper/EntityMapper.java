@@ -25,6 +25,7 @@ public class EntityMapper {
         dto.setStatus(user.getStatus() != null ? user.getStatus().name() : null);
         dto.setAvatarUrl(user.getAvatarUrl());
         dto.setCreatedAt(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
         if (user.getRoles() != null) {
             dto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
             Set<String> perms = user.getRoles().stream()
