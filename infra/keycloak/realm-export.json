@@ -1,0 +1,16 @@
+{
+  "realm": "iq-english-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "ADMIN", "description": "Administrator" },
+      { "name": "SUPERVISOR", "description": "Supervisor" },
+      { "name": "TEACHER", "description": "Teacher" },
+      { "name": "STUDENT", "description": "Student" }
+    ]
+  },
+  "clients": [
+    { "clientId": "iq-english-frontend", "enabled": true, "publicClient": true, "redirectUris": ["*"], "webOrigins": ["*"] },
+    { "clientId": "iq-english-backend", "enabled": true, "bearerOnly": true }
+  ]
+}

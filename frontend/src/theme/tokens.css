@@ -1,0 +1,71 @@
+:root {
+  /* IQ English Brand Colors (Manual de Identidad) */
+  --iq-primary: #002e6d;        /* Pantone 294 C */
+  --iq-primary-hover: #00204d;
+  --iq-primary-light: #e6edf7;
+  --iq-secondary: #5eb3e4;      /* Pantone 2915 C */
+  --iq-secondary-hover: #489ecd;
+  --iq-secondary-light: #eaf5fc;
+  --iq-gray: #758592;           /* Pantone 7544 C */
+  --iq-gray-light: #f1f4f7;
+  --iq-gold: #c5a059;           /* Corporate Gold Accent */
+  --iq-gold-light: #fdfaf3;
+  --iq-dark: #121e28;
+
+  /* Semantic UI Colors */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --border-color: #e2e8f0;
+  --border-color-focus: #5eb3e4;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  /* Status Colors (Accessible with icons & text) */
+  --status-success: #10b981;
+  --status-success-bg: #ecfdf5;
+  --status-warning: #f59e0b;
+  --status-warning-bg: #fffbeb;
+  --status-danger: #ef4444;
+  --status-danger-bg: #fef2f2;
+  --status-info: #3b82f6;
+  --status-info-bg: #eff6ff;
+
+  /* Typography */
+  --font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* Texture pattern utility */
+.iq-texture-bg {
+  background-color: var(--iq-primary);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(94, 179, 228, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(197, 160, 89, 0.2) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(0, 46, 109, 0.95) 0%, rgba(18, 30, 40, 0.98) 100%);
+}

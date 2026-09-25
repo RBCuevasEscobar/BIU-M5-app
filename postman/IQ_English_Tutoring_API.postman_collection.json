@@ -1,0 +1,778 @@
+{
+  "info": {
+    "name": "IQ English - Tutoring Management System API",
+    "_postman_id": "iq-english-tutoring-api-v1",
+    "description": "Coleccion de endpoints REST para el Sistema de Gestion de Tutorias IQ English.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. Autenticacion (Auth)",
+      "item": [
+        {
+          "name": "1.1 Login - Estudiante",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"carlos.estudiante@iqenglish.mx\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.2 Login - Docente",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"laura.teacher@iqenglish.mx\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.3 Login - Supervisor",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"supervisor@iqenglish.mx\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.4 Login - Administrador",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@iqenglish.mx\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "1.5 Obtener Perfil Actual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/me",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Catalogo Academico",
+      "item": [
+        {
+          "name": "2.1 Listar Programas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/programs",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "programs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.2 Listar Niveles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/levels",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "levels"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.3 Listar Libros (Book 1, 2, 3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/books",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "books"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.4 Lecciones de Book 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/books/1/modules",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "books",
+                "1",
+                "modules"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.5 Temas de Lesson 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/modules/1/topics",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "modules",
+                "1",
+                "topics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2.6 Progreso Academico del Alumno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/academic/progress/1",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "academic",
+                "progress",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Planteles",
+      "item": [
+        {
+          "name": "3.1 Listar Planteles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/campuses",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "campuses"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.2 Crear Nuevo Plantel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Plantel Coyoacan\",\n  \"code\": \"COY\",\n  \"address\": \"Av. Miguel Angel 450\",\n  \"city\": \"CDMX\",\n  \"phone\": \"+52 55 5555 0000\",\n  \"email\": \"coyoacan@iqenglish.mx\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/campuses",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "campuses"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Grupos y Horarios",
+      "item": [
+        {
+          "name": "4.1 Listar Grupos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/groups",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.2 Crear Grupo Recurrente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Grupo B1 Matutino\",\n  \"campusId\": 1,\n  \"teacherId\": 1,\n  \"bookId\": 1,\n  \"dayOfWeek\": \"SATURDAY\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"capacity\": 5,\n  \"startDate\": \"2026-10-01\",\n  \"weeksCount\": 12\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/groups",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4.3 Actualizar Capacidad",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 6\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/groups/1/capacity",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "1",
+                "capacity"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reservas de Tutorias (Appointments)",
+      "item": [
+        {
+          "name": "5.1 Busqueda por Tema (Metodo A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/search?bookId=1&lessonId=1&topicId=1&campusId=1",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "search?bookId=1&lessonId=1&topicId=1&campusId=1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.2 Busqueda por Horario (Metodo B",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/search?campusId=1&date=2026-10-10&startTime=10:00:00",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "search?campusId=1&date=2026-10-10&startTime=10:00:00"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.3 Reservar Cita (Reglas R1-R18)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"sessionId\": 1,\n  \"topicId\": 1,\n  \"notes\": \"Practica del Tema 1\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/book",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "book"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.4 Reagendar con Rollback (R10)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentAppointmentId\": 1,\n  \"newSessionId\": 2,\n  \"reason\": \"Conflicto de horario\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/reschedule",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "reschedule"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.5 Cancelar Cita y Liberar Cupo (R8)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Enfermedad\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/1/cancel",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "1",
+                "cancel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.6 Listar Mis Citas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/my-bookings",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "my-bookings"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Asistencia y Evaluacion",
+      "item": [
+        {
+          "name": "6.1 Registrar Pase de Lista",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": 1,\n  \"records\": [\n    {\n      \"studentId\": 1,\n      \"appointmentId\": 1,\n      \"status\": \"PRESENT\",\n      \"score\": 95,\n      \"teacherFeedback\": \"Excelente fluidez\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/attendance/register",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "attendance",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.2 Asistencias de una Sesion",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/attendance/session/1",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "attendance",
+                "session",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.3 Historial de Asistencia del Alumno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/attendance/student/1",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "attendance",
+                "student",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Practica Oral TalkIO",
+      "item": [
+        {
+          "name": "7.1 Iniciar Sesion TalkIO",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"topicId\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/talkik/sessions",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "talkik",
+                "sessions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "7.2 Enviar Respuesta y Calificar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userAudioTranscript\": \"My goal in life is to achieve personal fulfillment.\",\n  \"expectedGrammarPattern\": \"Infinitive of purpose\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/talkik/sessions/talkio_sess_101/submit",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "talkik",
+                "sessions",
+                "talkio_sess_101",
+                "submit"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Auditoria y Reportes",
+      "item": [
+        {
+          "name": "8.1 Consultar Logs de Auditoria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/audit/logs?page=0&size=50",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "audit",
+                "logs?page=0&size=50"
+              ]
+            }
+          }
+        },
+        {
+          "name": "8.2 Reporte de Tasa de Asistencia",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports/attendance-rate?campusId=1",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "attendance-rate?campusId=1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "8.3 Reporte de Ocupacion de Planteles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports/campus-occupancy",
+              "host": [
+                "d{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "campus-occupancy"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

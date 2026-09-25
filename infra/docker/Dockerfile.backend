@@ -1,0 +1,20 @@
+# Stage 1: Build
+FROM maven:3.9.8-eclipse-temurin-21-alpine AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn clean package -DskipTests -B
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+RUN addgroup -S iqgroup && adduser -S iquser -G iqgroup
+USER iquser
+COPY --from=build /app/target/iq-english-tutoring-backend-1.0.0.jar app.jar
+
+ENV SPRING_PROFILES_ACTIVE=prod \
+    SERVER_PORT=8080
+
+EXPOSE 8080
+ENDRY_POINT ["Java", "-jar", "app.jar"]
