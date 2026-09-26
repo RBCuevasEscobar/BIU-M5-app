@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import mx.iqenglish.tutoring.dto.*;
 import mx.iqenglish.tutoring.entity.GroupStatus;
 import mx.iqenglish.tutoring.service.TutoringGroupService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,24 @@ public class TutoringGroupController {
         return new ResponseEntity<>(ApiResponse.ok("Group created successfully", created), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('GROUP_UPDATE') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Update an existing tutoring group configuration, capacity and teacher (Supervisor / Admin)")
+    public ResponseEntity<ApiResponse<TutoringGroupDTO>> updateGroup(
+            @PathVariable Long id, 
+            @Valid @RequestBody UpdateTutoringGroupDTO dto) {
+        TutoringGroupDTO updated = groupService.updateGroup(id, dto);
+        return ResponseEntity.ok(ApiResponse.ok("Group updated successfully", updated));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('GROUP_DEACTIVATE') or hasAuthority('GROUP_DELETE') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Delete or cancel a tutoring group (Supervisor / Admin)")
+    public ResponseEntity<ApiResponse<Void>> deleteGroup(@PathVariable Long id) {
+        groupService.deleteGroup(id);
+        return ResponseEntity.ok(ApiResponse.ok("Group deleted or cancelled successfully", null));
+    }
+
     @PostMapping("/{id}/duplicate")
     @PreAuthorize("hasAuthority('GROUP_CREATE') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
     @Operation(summary = "Duplicate group configuration for recurring slots")
@@ -62,5 +82,33 @@ public class TutoringGroupController {
     @Operation(summary = "Update tutoring group status (PUBLISHED, INACTIVE, CANCELLED)")
     public ResponseEntity<ApiResponse<TutoringGroupDTO>> updateStatus(@PathVariable Long id, @RequestParam GroupStatus status) {
         return ResponseEntity.ok(ApiResponse.ok(groupService.updateGroupStatus(id, status)));
+    }
+
+    @GetMapping("/report")
+    @PreAuthorize("hasAuthority('GROUP_READ') or hasRole('TEACHER') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Generate tutoring groups operational report (Admin/Supervisor: ALL, Teacher: OWN)")
+    public ResponseEntity<ApiResponse<GroupReportDTO>> getGroupReport(
+            @RequestParam(required = false) Long campusId,
+            @RequestParam(required = false) Long moduleId,
+            @RequestParam(required = false) Long teacherId,
+            @RequestParam(required = false) Long bookId,
+            @RequestParam(required = false) GroupStatus status) {
+        return ResponseEntity.ok(ApiResponse.ok(groupService.generateGroupReport(campusId, moduleId, teacherId, bookId, status)));
+    }
+
+    @GetMapping("/export/csv")
+    @PreAuthorize("hasAuthority('GROUP_READ') or hasRole('TEACHER') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Export tutoring groups operational report to RFC 4180 CSV")
+    public ResponseEntity<byte[]> exportGroupReportCsv(
+            @RequestParam(required = false) Long campusId,
+            @RequestParam(required = false) Long moduleId,
+            @RequestParam(required = false) Long teacherId,
+            @RequestParam(required = false) Long bookId,
+            @RequestParam(required = false) GroupStatus status) {
+        byte[] csvData = groupService.exportGroupReportCsv(campusId, moduleId, teacherId, bookId, status);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=tutoring_groups_report.csv")
+            .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+            .body(csvData);
     }
 }

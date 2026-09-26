@@ -1,4 +1,5 @@
 import {
+  TutoringGroup,
   User,
   PageResponse,
   CreateUserPayload,
@@ -72,6 +73,64 @@ export const api = {
   delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
 
   // User Management Service API
+
+  // Tutoring Group Management Service API
+  groups: {
+    getAll: (filters?: { campusId?: number; moduleId?: number; teacherId?: number; bookId?: number; status?: string }) => {
+      const q = new URLSearchParams();
+      if (filters?.campusId) q.append('campusId', filters.campusId.toString());
+      if (filters?.moduleId) q.append('moduleId', filters.moduleId.toString());
+      if (filters?.teacherId) q.append('teacherId', filters.teacherId.toString());
+      if (filters?.bookId) q.append('bookId', filters.bookId.toString());
+      if (filters?.status) q.append('status', filters.status);
+      return request<TutoringGroup[]>(`/tutoring/groups?${q.toString()}`, { method: 'GET' });
+    },
+    getById: (id: number) => request<TutoringGroup>(`/tutoring/groups/${id}`, { method: 'GET' }),
+    create: (data: any) => request<TutoringGroup>('/tutoring/groups', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: number, data: any) => request<TutoringGroup>(`/tutoring/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id: number) => request<void>(`/tutoring/groups/${id}`, { method: 'DELETE' }),
+    duplicate: (id: number, data: any) => request<TutoringGroup>(`/tutoring/groups/${id}/duplicate`, { method: 'POST', body: JSON.stringify(data) }),
+    updateStatus: (id: number, status: string) => request<TutoringGroup>(`/tutoring/groups/${id}/status?status=${status}`, { method: 'PATCH' }),
+    getReport: (filters?: { campusId?: number; moduleId?: number; teacherId?: number; bookId?: number; status?: string }) => {
+      const q = new URLSearchParams();
+      if (filters?.campusId) q.append('campusId', filters.campusId.toString());
+      if (filters?.moduleId) q.append('moduleId', filters.moduleId.toString());
+      if (filters?.teacherId) q.append('teacherId', filters.teacherId.toString());
+      if (filters?.bookId) q.append('bookId', filters.bookId.toString());
+      if (filters?.status) q.append('status', filters.status);
+      return request<any>(`/tutoring/groups/report?${q.toString()}`, { method: 'GET' });
+    },
+    downloadCsv: async (filters?: { campusId?: number; moduleId?: number; teacherId?: number; bookId?: number; status?: string }) => {
+      const q = new URLSearchParams();
+      if (filters?.campusId) q.append('campusId', filters.campusId.toString());
+      if (filters?.moduleId) q.append('moduleId', filters.moduleId.toString());
+      if (filters?.teacherId) q.append('teacherId', filters.teacherId.toString());
+      if (filters?.bookId) q.append('bookId', filters.bookId.toString());
+      if (filters?.status) q.append('status', filters.status);
+
+      const token = localStorage.getItem('iq_token');
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/tutoring/groups/export/csv?${q.toString()}`, {
+        method: 'GET',
+        headers,
+      });
+
+      if (!res.ok) throw new Error('Error al descargar el reporte CSV de grupos');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tutoring_groups_report.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    }
+  }
+,
   users: {
     getPaged: (params: { page?: number; size?: number; sort?: string; search?: string; role?: string; status?: string }) => {
       const q = new URLSearchParams();

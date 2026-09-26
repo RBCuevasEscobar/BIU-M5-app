@@ -295,3 +295,75 @@ export interface TalkIOSession {
   grammarScore: number;
   vocabularyScore: number;
 }
+
+export interface CreateTutoringGroupPayload {
+  name: string;
+  campusId: number;
+  teacherId: number;
+  moduleId: number;
+  topicId?: number;
+  capacity: number;
+  modality?: string;
+  initialSessionDate?: string;
+  initialStartTime?: string;
+  initialEndTime?: string;
+  durationMinutes?: number;
+  roomOrLink?: string;
+}
+
+export interface UpdateTutoringGroupPayload {
+  name: string;
+  campusId: number;
+  teacherId: number;
+  moduleId: number;
+  topicId?: number;
+  capacity: number;
+  modality?: string;
+  status?: string;
+}
+
+export interface DuplicateGroupPayload {
+  newName?: string;
+  newTeacherId?: number;
+  newCode?: string;
+  newSessionDate?: string;
+  newStartTime?: string;
+  newEndTime?: string;
+}
+
+export interface GroupReportItem {
+  groupId: number;
+  code: string;
+  name: string;
+  campusName: string;
+  teacherName: string;
+  teacherEmail: string;
+  bookTitle: string;
+  bookNumber: number;
+  moduleCode: string;
+  moduleTitle: string;
+  topicTitle: string;
+  capacity: number;
+  currentEnrollment: number;
+  availableSeats: number;
+  occupancyPercentage: number;
+  status: string;
+  modality: string;
+  sessionsCount: number;
+  createdAt: string;
+}
+
+export interface GroupReport {
+  generatedAt: string;
+  generatedBy: string;
+  scope: string;
+  totalGroups: number;
+  totalCapacity: number;
+  totalEnrolled: number;
+  totalAvailableSeats: number;
+  averageOccupancyPercentage: number;
+  publishedCount: number;
+  inactiveCount: number;
+  cancelledCount: number;
+  items: GroupReportItem[];
+}

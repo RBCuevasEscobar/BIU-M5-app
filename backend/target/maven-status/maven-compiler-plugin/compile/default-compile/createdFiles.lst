@@ -19,6 +19,7 @@ mx\iqenglish\tutoring\dto\UserRoleUpdateRequest.class
 mx\iqenglish\tutoring\dto\BookAppointmentDTO.class
 mx\iqenglish\tutoring\dto\DuplicateGroupDTO.class
 mx\iqenglish\tutoring\controller\UserController.class
+mx\iqenglish\tutoring\dto\GroupReportDTO.class
 mx\iqenglish\tutoring\exception\BusinessException.class
 mx\iqenglish\tutoring\dto\AppointmentDTO.class
 mx\iqenglish\tutoring\dto\TutoringGroupDTO.class
@@ -84,6 +85,7 @@ mx\iqenglish\tutoring\config\SecurityConfig.class
 mx\iqenglish\tutoring\security\UserPrincipal.class
 mx\iqenglish\tutoring\repository\BookRepository.class
 mx\iqenglish\tutoring\service\AcademicService.class
+mx\iqenglish\tutoring\dto\UpdateTutoringGroupDTO.class
 mx\iqenglish\tutoring\entity\Appointment.class
 mx\iqenglish\tutoring\controller\AuditController.class
 mx\iqenglish\tutoring\entity\AcademicProgram.class
@@ -114,6 +116,7 @@ mx\iqenglish\tutoring\entity\AcademicLevel.class
 mx\iqenglish\tutoring\entity\SessionStatus.class
 mx\iqenglish\tutoring\entity\GroupSession.class
 mx\iqenglish\tutoring\dto\AuthRequest.class
+mx\iqenglish\tutoring\dto\GroupReportItemDTO.class
 mx\iqenglish\tutoring\security\SecurityUtils.class
 mx\iqenglish\tutoring\dto\GroupSessionDTO.class
 mx\iqenglish\tutoring\service\ReportService.class

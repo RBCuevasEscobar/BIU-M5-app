@@ -351,81 +351,354 @@
       ]
     },
     {
-      "name": "4. Grupos y Horarios",
+      "name": "4. Gestion de Grupos de Tutoria (Group Management)",
       "item": [
         {
-          "name": "4.1 Listar Grupos",
+          "name": "4.1 Listar Grupos con Filtros",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "http://localhost:8080/api/v1/groups",
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups?campusId={{campusId}}&status=PUBLISHED",
               "host": [
-                "d{{baseUrl}}"
+                "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "v1",
+                "tutoring",
                 "groups"
+              ],
+              "query": [
+                {
+                  "key": "campusId",
+                  "value": "{{campusId}}"
+                },
+                {
+                  "key": "status",
+                  "value": "PUBLISHED"
+                }
               ]
-            }
-          }
+            },
+            "description": "Listado de grupos de tutoria con filtros opcionales de campus, modulo, docente, libro y estado."
+          },
+          "response": []
         },
         {
-          "name": "4.2 Crear Grupo Recurrente",
+          "name": "4.2 Obtener Grupo por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/{{groupId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "{{groupId}}"
+              ]
+            },
+            "description": "Consulta detallada de un grupo de tutoria por su identificador numerico."
+          },
+          "response": []
+        },
+        {
+          "name": "4.3 Crear Grupo de Tutoria",
           "request": {
             "method": "POST",
             "header": [
               {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Grupo B1 Matutino\",\n  \"campusId\": 1,\n  \"teacherId\": 1,\n  \"bookId\": 1,\n  \"dayOfWeek\": \"SATURDAY\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"capacity\": 5,\n  \"startDate\": \"2026-10-01\",\n  \"weeksCount\": 12\n}"
+              "raw": "{\n  \"name\": \"Tutoring Book 2 - Lesson 5B Speaking Practice\",\n  \"campusId\": 1,\n  \"teacherId\": 1,\n  \"moduleId\": 8,\n  \"capacity\": 12,\n  \"modality\": \"PRESENTIAL\",\n  \"initialSessionDate\": \"2026-09-30\",\n  \"initialStartTime\": \"16:00\",\n  \"durationMinutes\": 60,\n  \"roomOrLink\": \"Aula 204\"\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/v1/groups",
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups",
               "host": [
-                "d{{baseUrl}}"
+                "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "v1",
+                "tutoring",
                 "groups"
               ]
-            }
-          }
+            },
+            "description": "Creacion y publicacion de una nueva cohorte de tutoria con validacion de no solapamiento docente."
+          },
+          "response": []
         },
         {
-          "name": "4.3 Actualizar Capacidad",
+          "name": "4.4 Actualizar Grupo (Modificacion)",
           "request": {
             "method": "PUT",
             "header": [
               {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"capacity\": 6\n}"
+              "raw": "{\n  \"name\": \"Tutoring Book 2 - Lesson 5B Speaking Extended\",\n  \"campusId\": 1,\n  \"teacherId\": 1,\n  \"moduleId\": 8,\n  \"capacity\": 15,\n  \"modality\": \"PRESENTIAL\",\n  \"status\": \"PUBLISHED\"\n}"
             },
             "url": {
-              "raw": "http://localhost:8080/api/v1/groups/1/capacity",
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/{{groupId}}",
               "host": [
-                "d{{baseUrl}}"
+                "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "v1",
+                "tutoring",
                 "groups",
-                "1",
-                "capacity"
+                "{{groupId}}"
               ]
-            }
-          }
+            },
+            "description": "Modificacion de configuracion de grupo, docente asignado, modulo y capacidad (validando conflicto de sobrecupo)."
+          },
+          "response": []
+        },
+        {
+          "name": "4.5 Duplicar Grupo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newName\": \"Tutoring Book 2 - Lesson 5B (Copia Sabatina)\",\n  \"newTeacherId\": 1,\n  \"newSessionDate\": \"2026-10-03\",\n  \"newStartTime\": \"10:00\",\n  \"newEndTime\": \"11:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/{{groupId}}/duplicate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "{{groupId}}",
+                "duplicate"
+              ]
+            },
+            "description": "Duplicacion estructural de la configuracion de un grupo generando un nuevo identificador y codigo unico."
+          },
+          "response": []
+        },
+        {
+          "name": "4.6 Modificar Estado de Grupo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/{{groupId}}/status?status=INACTIVE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "{{groupId}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "INACTIVE"
+                }
+              ]
+            },
+            "description": "Transicion de estado operativo de un grupo (PUBLISHED, INACTIVE, CANCELLED)."
+          },
+          "response": []
+        },
+        {
+          "name": "4.7 Eliminar o Cancelar Grupo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/{{groupId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "{{groupId}}"
+              ]
+            },
+            "description": "Eliminacion fisica si el grupo esta vacio o eliminacion logica (CANCELLED) si contiene historial academico."
+          },
+          "response": []
+        },
+        {
+          "name": "4.8 Reporte Operativo de Grupos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/report?status=PUBLISHED",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "report"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PUBLISHED"
+                }
+              ]
+            },
+            "description": "Reporte consolidado de grupos, metricas de ocupacion y cupos disponibles (Admin/Supervisor: ALL, Teacher: OWN)."
+          },
+          "response": []
+        },
+        {
+          "name": "4.9 Exportar Reporte de Grupos a CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "text/csv",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutoring/groups/export/csv",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutoring",
+                "groups",
+                "export",
+                "csv"
+              ]
+            },
+            "description": "Descarga del padron y reporte operativo de grupos en formato normalizado RFC 4180 CSV."
+          },
+          "response": []
         }
       ]
     },

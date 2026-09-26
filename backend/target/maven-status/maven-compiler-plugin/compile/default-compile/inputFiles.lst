@@ -33,6 +33,8 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\DashboardSummaryDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\DuplicateGroupDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ErrorResponse.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\GroupReportDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\GroupReportItemDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\GroupSessionDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\ModuleDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\NotificationDTO.java
@@ -44,6 +46,7 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TeacherDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TopicDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\TutoringGroupDTO.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UpdateTutoringGroupDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UpdateUserRequest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserDTO.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\main\java\mx\iqenglish\tutoring\dto\UserReportDTO.java

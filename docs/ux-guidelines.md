@@ -6,7 +6,7 @@ Este documento detalla los estï¿½ndares visuales, tokens de diseï¿½o, tipografï¿
 
 ## 1. Paleta Cromatica Corporativa (Tokens de Color)
 
-| Rol de Color | CÃ³digo Pantone | HEX | CMYK | RGB | Uso Oficial | Contraste AA |
+| Rol de Color | Codigo Pantone | HEX | CMYK | RGB | Uso Oficial | Contraste AA |
 |------------|----------------|--------|-------------|------------|---------------------------|--------------|
 | **Primario** | Pantone 294 C | `#002e6d` | C:100 M:69 Y:0 K:56 | R:0 G:46 B:109 | Headers, Navbar, Botones Principales | 10.4:1 (vs blanco) |
 | **Secundario** | Pantone 2915 C | `#5eb3e4` | C:60 M:9 Y:0 K:0 | R:94 G:179 B:228 | Indicadores de Actividad, Hover, Acentos | 4.9:1 (vs primario) |
