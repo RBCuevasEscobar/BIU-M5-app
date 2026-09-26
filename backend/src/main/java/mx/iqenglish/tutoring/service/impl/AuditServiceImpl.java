@@ -7,6 +7,7 @@ import mx.iqenglish.tutoring.repository.AuditLogRepository;
 import mx.iqenglish.tutoring.security.SecurityUtils;
 import mx.iqenglish.tutoring.service.AuditService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void log(String action, String entityName, String entityId, String details) {
         Long userId = SecurityUtils.getCurrentUserId().orElse(null);
         String username = SecurityUtils.getCurrentUsername().orElse("SYSTEM");

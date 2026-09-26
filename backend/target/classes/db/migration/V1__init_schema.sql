@@ -210,6 +210,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     session_id BIGINT NOT NULL,
     student_id BIGINT NOT NULL,
     status VARCHAR(30) NOT NULL DEFAULT 'PRESENT',
+    grade DECIMAL(5,2),
     notes TEXT,
     recorded_by_teacher_id BIGINT NOT NULL,
     recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

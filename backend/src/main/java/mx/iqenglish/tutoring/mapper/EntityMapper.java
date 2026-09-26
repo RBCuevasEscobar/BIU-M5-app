@@ -301,6 +301,7 @@ public class EntityMapper {
         }
         dto.setStatus(att.getStatus() != null ? att.getStatus().name() : null);
         dto.setNotes(att.getNotes());
+        dto.setGrade(att.getGrade());
         if (att.getRecordedBy() != null) {
             dto.setRecordedByTeacherId(att.getRecordedBy().getId());
             if (att.getRecordedBy().getUser() != null) {

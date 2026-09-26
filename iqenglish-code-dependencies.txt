@@ -1,0 +1,351 @@
+External dependencies
+
+Source: backend\pom.xml
+- com.h2database:h2 (runtime)
+- com.mysql:mysql-connector-j (runtime)
+- io.jsonwebtoken:jjwt-api:${jjwt.version}
+- io.jsonwebtoken:jjwt-impl:${jjwt.version} (runtime)
+- io.jsonwebtoken:jjwt-jackson:${jjwt.version} (runtime)
+- org.flywaydb:flyway-core
+- org.flywaydb:flyway-mysql
+- org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc.version}
+- org.springframework.boot:spring-boot-starter-actuator
+- org.springframework.boot:spring-boot-starter-data-jpa
+- org.springframework.boot:spring-boot-starter-oauth2-resource-server
+- org.springframework.boot:spring-boot-starter-security
+- org.springframework.boot:spring-boot-starter-test (test)
+- org.springframework.boot:spring-boot-starter-validation
+- org.springframework.boot:spring-boot-starter-web
+- org.springframework.security:spring-security-test (test)
+
+Source: frontend\package-lock.json (resolved)
+- iq-english-tutoring-frontend 1.0.0
+
+Source: frontend\package.json (dependencies)
+- @tanstack/react-query ^5.56.2
+- clsx ^2.1.1
+- lucide-react ^0.441.0
+- react ^18.3.1
+- react-dom ^18.3.1
+- react-router-dom ^7.18.4
+
+Source: frontend\package.json (devDependencies)
+- @types/react ^18.3.8
+- @types/react-dom ^18.3.0
+- @vitejs/plugin-react ^4.3.1
+- typescript ^5.5.3
+- vite ^8.3.1
+- vitest ^5.0.1
+
+Internal dependency graph
+Nodes: 213
+Edges: 92
+
+Nodes:
+- .mvn\wrapper\maven-wrapper.properties
+- backend\pom.xml
+- backend\src\main\java\mx\iqenglish\tutoring\IQEnglishTutoringApplication.java
+- backend\src\main\java\mx\iqenglish\tutoring\config\CorsConfig.java
+- backend\src\main\java\mx\iqenglish\tutoring\config\OpenApiConfig.java
+- backend\src\main\java\mx\iqenglish\tutoring\config\SecurityConfig.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\AppointmentController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\AttendanceController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\AuditController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\AuthController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\CampusController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\GroupSessionController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\NotificationController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\ReportController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\TalkIOController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\TutoringGroupController.java
+- backend\src\main\java\mx\iqenglish\tutoring\controller\UserController.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AcademicLevelDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AcademicProgramDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AdminPasswordResetRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\ApiResponse.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AppointmentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AttendanceDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AuditLogDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AuthRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\AuthResponse.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\BookAppointmentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\BookDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\CampusDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\CancelAppointmentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\ChangePasswordRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\CreateSessionDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\CreateTutoringGroupDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\CreateUserRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\DashboardSummaryDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\DuplicateGroupDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\ErrorResponse.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\GroupReportDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\GroupReportItemDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\GroupSessionDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\ModuleDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\NotificationDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\PageResponse.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\RecordAttendanceDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\RescheduleAppointmentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\StudentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\TalkIOSessionDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\TeacherDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\TopicDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\TutoringGroupDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UpdateTutoringGroupDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UpdateUserRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UserDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UserReportDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UserRoleUpdateRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\UserStatusUpdateRequest.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicLevel.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicProgram.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AcademicProgress.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Appointment.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AppointmentStatus.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Attendance.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AttendanceStatus.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\AuditLog.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Book.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Campus.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\GroupSession.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\GroupStatus.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Modality.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Module.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Notification.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\NotificationType.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Permission.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Role.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\SessionStatus.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Student.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Teacher.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\Topic.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\TutoringGroup.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\User.java
+- backend\src\main\java\mx\iqenglish\tutoring\entity\UserStatus.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\AcademicLevelMismatchException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\BusinessException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\CapacityExceededException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\DoubleBookingException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\GlobalExceptionHandler.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\ResourceNotFoundException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\ScheduleConflictException.java
+- backend\src\main\java\mx\iqenglish\tutoring\exception\UnauthorizedActionException.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\calendar\CalendarEventDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\calendar\CalendarIntegrationService.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\calendar\GoogleCalendarIntegrationService.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\calendar\MockCalendarIntegrationService.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\talkio\TalkIOClient.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\talkio\TalkIOConfiguration.java
+- backend\src\main\java\mx\iqenglish\tutoring\integration\talkio\TalkIOService.java
+- backend\src\main\java\mx\iqenglish\tutoring\mapper\EntityMapper.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AcademicLevelRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AcademicProgramRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AcademicProgressRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AppointmentRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AttendanceRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\AuditLogRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\BookRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\CampusRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\GroupSessionRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\ModuleRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\NotificationRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\PermissionRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\RoleRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\StudentRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\TeacherRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\TopicRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\TutoringGroupRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\repository\UserRepository.java
+- backend\src\main\java\mx\iqenglish\tutoring\security\CustomUserDetailsServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\security\JwtAuthenticationFilter.java
+- backend\src\main\java\mx\iqenglish\tutoring\security\JwtTokenProvider.java
+- backend\src\main\java\mx\iqenglish\tutoring\security\SecurityUtils.java
+- backend\src\main\java\mx\iqenglish\tutoring\security\UserPrincipal.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AcademicProgressService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AcademicService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AppointmentService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AttendanceService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AuditService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\AuthService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\CampusService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\GroupSessionService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\NotificationService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\ReportService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\TutoringGroupService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\UserService.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AcademicProgressServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AcademicServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AppointmentServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AttendanceServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AuditServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\AuthServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\CampusServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\GroupSessionServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\NotificationServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\ReportServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\TutoringGroupServiceImpl.java
+- backend\src\main\java\mx\iqenglish\tutoring\service\impl\UserServiceImpl.java
+- backend\src\main\resources\application-local.yml
+- backend\src\main\resources\application-prod.yml
+- backend\src\main\resources\application-test.yml
+- backend\src\main\resources\application.yml
+- backend\src\test\java\mx\iqenglish\tutoring\controller\TutoringGroupControllerTest.java
+- backend\src\test\java\mx\iqenglish\tutoring\controller\UserControllerTest.java
+- backend\src\test\java\mx\iqenglish\tutoring\security\SecurityRbacTest.java
+- backend\src\test\java\mx\iqenglish\tutoring\service\AppointmentServiceTest.java
+- backend\src\test\java\mx\iqenglish\tutoring\service\TutoringGroupServiceTest.java
+- backend\src\test\java\mx\iqenglish\tutoring\service\UserServiceTest.java
+- backend\target\classes\application-local.yml
+- backend\target\classes\application-prod.yml
+- backend\target\classes\application-test.yml
+- backend\target\classes\application.yml
+- docker-compose.yml
+- e2e\playwright.config.ts
+- e2e\tutoring-flows.spec.ts
+- e2e\user-management.spec.ts
+- frontend\index.html
+- frontend\package-lock.json
+- frontend\package.json
+- frontend\src\App.test.tsx
+- frontend\src\App.tsx
+- frontend\src\components\Badge.tsx
+- frontend\src\components\Button.tsx
+- frontend\src\components\Card.tsx
+- frontend\src\components\EmptyState.tsx
+- frontend\src\components\LoadingSpinner.tsx
+- frontend\src\components\Logo.tsx
+- frontend\src\components\Modal.tsx
+- frontend\src\context\AuthContext.tsx
+- frontend\src\features\administration\AuditLogsPage.tsx
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx
+- frontend\src\features\auth\LoginPage.tsx
+- frontend\src\features\dashboard\DashboardPage.tsx
+- frontend\src\features\groups\GroupManagementPage.test.tsx
+- frontend\src\features\groups\GroupManagementPage.tsx
+- frontend\src\features\profile\ChangePasswordModal.tsx
+- frontend\src\features\talkio\TalkIOPracticePage.tsx
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx
+- frontend\src\features\tutoring\TutoringSearchPage.tsx
+- frontend\src\features\users\UserManagementPage.test.tsx
+- frontend\src\features\users\UserManagementPage.tsx
+- frontend\src\features\users\UserModals.tsx
+- frontend\src\layouts\MainLayout.tsx
+- frontend\src\main.tsx
+- frontend\src\routes\AppRoutes.tsx
+- frontend\src\services\api.ts
+- frontend\src\theme\tokens.css
+- frontend\src\theme\tokens.ts
+- frontend\src\types\index.ts
+- frontend\tsconfig.json
+- frontend\vite.config.ts
+- infra\keycloak\realm-export.json
+- postman\IQ_English_Local.postman_environment.json
+- postman\IQ_English_Tutoring_API.postman_collection.json
+- scripts\enrich_docs.js
+- scripts\gen_ctrl_part1.js
+- scripts\gen_ctrl_part2.js
+- scripts\gen_docs_1.js
+- scripts\gen_fe_admin_academic.js
+- scripts\gen_fe_appts.js
+- scripts\gen_fe_dash.js
+- scripts\gen_fe_part1.js
+- scripts\gen_fe_part2.js
+- scripts\gen_fe_part3.js
+- scripts\gen_fe_search.js
+- scripts\gen_tests.js
+- scripts\generator.js
+
+Edges:
+- frontend\src\App.test.tsx -> frontend\src\theme\tokens.ts (import)
+- frontend\src\App.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\App.tsx -> frontend\src\routes\AppRoutes.tsx (import)
+- frontend\src\App.tsx -> frontend\src\theme\tokens.css (import)
+- frontend\src\components\EmptyState.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\context\AuthContext.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\context\AuthContext.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\auth\LoginPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\auth\LoginPage.tsx -> frontend\src\components\Logo.tsx (import)
+- frontend\src\features\auth\LoginPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\dashboard\DashboardPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\groups\GroupManagementPage.test.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\EmptyState.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\components\Modal.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\groups\GroupManagementPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\profile\ChangePasswordModal.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\profile\ChangePasswordModal.tsx -> frontend\src\components\Modal.tsx (import)
+- frontend\src\features\profile\ChangePasswordModal.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\talkio\TalkIOPracticePage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\talkio\TalkIOPracticePage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\talkio\TalkIOPracticePage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\talkio\TalkIOPracticePage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\EmptyState.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\components\Modal.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\tutoring\MyAppointmentsPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\EmptyState.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\components\Modal.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\tutoring\TutoringSearchPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\users\UserManagementPage.test.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\components\Badge.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\components\Card.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\components\EmptyState.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\features\users\UserModals.tsx (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\services\api.ts (import)
+- frontend\src\features\users\UserManagementPage.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\features\users\UserModals.tsx -> frontend\src\components\Button.tsx (import)
+- frontend\src\features\users\UserModals.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\users\UserModals.tsx -> frontend\src\components\Modal.tsx (import)
+- frontend\src\features\users\UserModals.tsx -> frontend\src\types\index.ts (import)
+- frontend\src\layouts\MainLayout.tsx -> frontend\src\components\Logo.tsx (import)
+- frontend\src\layouts\MainLayout.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\layouts\MainLayout.tsx -> frontend\src\features\profile\ChangePasswordModal.tsx (import)
+- frontend\src\main.tsx -> frontend\src\App.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\context\AuthContext.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\administration\AuditLogsPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\attendance\AttendanceRegisterPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\auth\LoginPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\dashboard\DashboardPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\groups\GroupManagementPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\talkio\TalkIOPracticePage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\tutoring\MyAppointmentsPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\tutoring\TutoringSearchPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\features\users\UserManagementPage.tsx (import)
+- frontend\src\routes\AppRoutes.tsx -> frontend\src\layouts\MainLayout.tsx (import)
+- frontend\src\services\api.ts -> frontend\src\types\index.ts (import)

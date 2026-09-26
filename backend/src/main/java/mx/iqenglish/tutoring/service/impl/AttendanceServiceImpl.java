@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,28 +80,48 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setRecordedBy(teacher);
         attendance.setRecordedAt(LocalDateTime.now());
 
-        Attendance saved = attendanceRepository.save(attendance);
-
-        // Update appointment status to completed if present/attended
         if (attStatus == AttendanceStatus.PRESENT) {
+            if (dto.getGrade() == null ||
+                dto.getGrade().compareTo(new BigDecimal("50.00")) < 0 ||
+                dto.getGrade().compareTo(new BigDecimal("100.00")) > 0) {
+                throw new BusinessException("INVALID_GRADE", "Para asistencia Presente, la calificacion es obligatoria y debe ser un valor entre 50.00 y 100.00", HttpStatus.BAD_REQUEST);
+            }
+            BigDecimal validGrade = dto.getGrade().setScale(2, RoundingMode.HALF_UP);
+            attendance.setGrade(validGrade);
+
             appt.setStatus(AppointmentStatus.COMPLETED);
             appointmentRepository.save(appt);
-            // Update academic progress (R11)
+
+            // Update academic progress in database (Requirement 2 & 3)
             if (appt.getSession().getGroup().getModule() != null) {
-                progressService.recordModuleAttendance(appt.getStudent().getId(), appt.getSession().getGroup().getModule().getId());
+                progressService.recordModuleAttendance(
+                    appt.getStudent().getId(),
+                    appt.getSession().getGroup().getModule().getId(),
+                    validGrade
+                );
             }
+        } else if (attStatus == AttendanceStatus.ABSENT) {
+            attendance.setGrade(null);
+            appt.setStatus(AppointmentStatus.NO_SHOW);
+            appointmentRepository.save(appt);
+        } else if (attStatus == AttendanceStatus.EXCUSED) {
+            attendance.setGrade(null);
+            appt.setStatus(AppointmentStatus.CANCELLED);
+            appointmentRepository.save(appt);
         }
+
+        Attendance saved = attendanceRepository.save(attendance);
 
         notificationService.sendNotification(
             appt.getStudent().getUser(),
             "Asistencia Registrada",
-            "Tu asistencia a la sesión de " + appt.getSession().getGroup().getName() + " fue registrada como: " + attStatus.name(),
+            "Tu asistencia a la sesion de " + appt.getSession().getGroup().getName() + " fue registrada como: " + attStatus.name() + (attStatus == AttendanceStatus.PRESENT ? " con nota " + saved.getGrade() : ""),
             NotificationType.ATTENDANCE_RECORDED,
             "ATTENDANCE",
             saved.getId()
         );
 
-        auditService.log("ATTENDANCE_RECORDED", "ATTENDANCE", String.valueOf(saved.getId()), "Attendance: " + attStatus);
+        auditService.log("ATTENDANCE_RECORDED", "ATTENDANCE", String.valueOf(saved.getId()), "Attendance: " + attStatus + (saved.getGrade() != null ? ", Grade: " + saved.getGrade() : ""));
         return entityMapper.toAttendanceDTO(saved);
     }
 

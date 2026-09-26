@@ -82,6 +82,14 @@ public class AcademicServiceImpl implements AcademicService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ModuleDTO> getAllModules() {
+        return moduleRepository.findAll().stream()
+            .map(m -> entityMapper.toModuleDTO(m, getTopicsByModule(m.getId())))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<ModuleDTO> getModulesByBook(Long bookId) {
         return moduleRepository.findByBookIdOrderBySequenceOrderAsc(bookId).stream()
             .map(m -> entityMapper.toModuleDTO(m, getTopicsByModule(m.getId())))

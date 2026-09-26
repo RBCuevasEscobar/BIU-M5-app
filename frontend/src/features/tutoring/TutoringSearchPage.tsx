@@ -18,8 +18,8 @@ export const TutoringSearchPage: React.FC = () => {
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [campuses, setCampuses] = useState<Campus[]>([]);
 
-  const [selectedBookId, setSelectedBookId] = useState<number | ''>(studentProfile?.currentBookId || 2);
-  const [selectedModuleId, setSelectedModuleId] = useState<number | ''>(studentProfile?.currentModuleId || 8);
+  const [selectedBookId, setSelectedBookId] = useState<number | ''>('');
+  const [selectedModuleId, setSelectedModuleId] = useState<number | ''>('');
   const [selectedCampusId, setSelectedCampusId] = useState<number | ''>('');
   const [dateFrom, setDateFrom] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -47,25 +47,34 @@ export const TutoringSearchPage: React.FC = () => {
 
   useEffect(() => {
     if (selectedBookId) {
-      api.get<ModuleItem[]>(`/modules?bookId=${selectedBookId}`)
+      api.get<ModuleItem[]>('/modules?bookId=' + selectedBookId)
         .then(setModules)
-        .catch(console.error);
+        .catch(() => setModules([]));
     } else {
-      setModules([]);
+      api.get<ModuleItem[]>('/modules')
+        .then(setModules)
+        .catch(() => setModules([]));
     }
   }, [selectedBookId]);
+
+  const handleBookChange = (bookId: number | '') => {
+    setSelectedBookId(bookId);
+    setSelectedModuleId('');
+  };
 
   const executeSearch = async () => {
     setIsLoading(true);
     try {
-      let query = '/tutoring/sessions?';
-      if (selectedBookId) query += `bookId=${selectedBookId}&`;
-      if (selectedModuleId) query += `moduleId=${selectedModuleId}&`;
-      if (selectedCampusId) query += `campusId=${selectedCampusId}&`;
-      if (dateFrom) query += `dateFrom=${dateFrom}&`;
+      const params = new URLSearchParams();
+      if (selectedBookId) params.append('bookId', selectedBookId.toString());
+      if (selectedModuleId) params.append('moduleId', selectedModuleId.toString());
+      if (selectedCampusId) params.append('campusId', selectedCampusId.toString());
+      if (dateFrom) params.append('dateFrom', dateFrom);
 
-      const results = await api.get<GroupSession[]>(query);
-      setSessions(results);
+      const qs = params.toString();
+      const endpoint = qs ? '/tutoring/sessions?' + qs : '/tutoring/sessions';
+      const results = await api.get<GroupSession[]>(endpoint);
+      setSessions(results || []);
     } catch (err) {
       console.error('Search failed', err);
     } finally {
@@ -97,13 +106,13 @@ export const TutoringSearchPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>Buscar y Reservar Tutorías</h1>
-        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Selecciona tu módulo de avance o explora horarios y docentes disponibles</p>
+        <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>Buscar y Reservar Tutorias</h1>
+        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Selecciona tu modulo de avance o explora horarios y docentes disponibles</p>
       </div>
 
       <div style={{ display: 'flex', gap: '10px' }}>
         <button
-          onClick={() => { setSearchMethod('METHOD_A'); setSelectedModuleId(8); }}
+          onClick={() => { setSearchMethod('METHOD_A'); }}
           style={{
             flex: 1, padding: '12px 18px', borderRadius: 'var(--radius-md)',
             border: searchMethod === 'METHOD_A' ? '2px solid var(--iq-primary)' : '1px solid var(--border-color)',
@@ -113,7 +122,7 @@ export const TutoringSearchPage: React.FC = () => {
           }}
         >
           <BookOpen size={18} color="var(--iq-primary)" />
-          <span>Método A: Buscar por Módulo / Lección</span>
+          <span>Metodo A: Buscar por Modulo / Leccion</span>
         </button>
 
         <button
@@ -127,17 +136,17 @@ export const TutoringSearchPage: React.FC = () => {
           }}
         >
           <Calendar size={18} color="var(--iq-primary)" />
-          <span>Método B: Buscar por Fecha y Disponibilidad</span>
+          <span>Metodo B: Buscar por Fecha / Disponibilidad</span>
         </button>
       </div>
 
       <Card>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'flex-end' }}>
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Libro</label>
             <select
               value={selectedBookId}
-              onChange={(e) => setSelectedBookId(e.target.value ? Number(e.target.value) : '')}
+              onChange={(e) => handleBookChange(e.target.value ? Number(e.target.value) : '')}
               style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
             >
               <option value="">Todos los Libros</option>
@@ -145,18 +154,23 @@ export const TutoringSearchPage: React.FC = () => {
             </select>
           </div>
 
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Módulo / Lección</label>
-            <select
-              value={selectedModuleId}
-              onChange={(e) => setSelectedModuleId(e.target.value ? Number(e.target.value) : '')}
-              disabled={!selectedBookId}
-              style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
-            >
-              <option value="">Todas las Lecciones</option>
-              {modules.map(m => <option key={m.id} value={m.id}>{m.moduleCode} - {m.title}</option>)}
-            </select>
-          </div>
+          {searchMethod === 'METHOD_A' && (
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Modulo / Leccion</label>
+              <select
+                value={selectedModuleId}
+                onChange={(e) => setSelectedModuleId(e.target.value ? Number(e.target.value) : '')}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+              >
+                <option value="">Todos los Modulos</option>
+                {modules.map(m => (
+                  <option key={m.id} value={m.id}>
+                    {m.bookNumber ? '[B' + m.bookNumber + '] ' : ''}{m.moduleCode} - {m.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Plantel</label>
@@ -176,18 +190,28 @@ export const TutoringSearchPage: React.FC = () => {
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+              style={{ width: '100%', padding: '8.5px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
             />
+          </div>
+
+          <div>
+            <Button
+              variant="outline"
+              onClick={() => { setSelectedBookId(''); setSelectedModuleId(''); setSelectedCampusId(''); setDateFrom(''); }}
+              style={{ width: '100%' }}
+            >
+              Limpiar Filtros
+            </Button>
           </div>
         </div>
       </Card>
 
       {isLoading ? (
-        <LoadingSpinner message="Consultando cupos y sesiones disponibles..." />
+        <LoadingSpinner message="Buscando sesiones de tutoria disponibles..." />
       ) : sessions.length === 0 ? (
         <EmptyState
-          title="No encontramos tutorías con los filtros seleccionados"
-          description="Intenta seleccionando otra lección, ampliando el rango de fechas o eligiendo otro plantel."
+          title="No encontramos tutorias con estos criterios"
+          description="Intenta seleccionando otra leccion, ampliando el rango de fechas o eligiendo otro plantel."
           actionText="Limpiar Filtros"
           onAction={() => { setSelectedBookId(''); setSelectedModuleId(''); setSelectedCampusId(''); setDateFrom(''); }}
         />
@@ -209,7 +233,7 @@ export const TutoringSearchPage: React.FC = () => {
                     <Badge status={isFull ? 'FULL' : 'AVAILABLE'} size="sm" />
                   </div>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--iq-secondary-hover)', textTransform: 'uppercase' }}>
-                    {session.bookTitle} • {session.moduleCode}
+                    {session.bookTitle} - {session.moduleCode}
                   </div>
                   <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--iq-primary)', marginTop: '2px' }}>
                     {session.moduleTitle}
@@ -246,7 +270,7 @@ export const TutoringSearchPage: React.FC = () => {
       <Modal
         isOpen={!!selectedSessionForBooking}
         onClose={() => setSelectedSessionForBooking(null)}
-        title={bookingSuccessData ? '¡Tutoría Confirmada!' : 'Confirmar Reserva de Tutoría'}
+        title={bookingSuccessData ? 'Tutoria Confirmada!' : 'Confirmar Reserva de Tutoria'}
       >
         {bookingSuccessData ? (
           <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -254,12 +278,12 @@ export const TutoringSearchPage: React.FC = () => {
               <CheckCircle2 size={32} />
             </div>
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--iq-primary)' }}>Tu tutoría ha sido reservada correctamente</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--iq-primary)' }}>Tu tutoria ha sido reservada correctamente</h3>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginTop: '4px' }}>Hemos registrado tu espacio con el docente asignado.</p>
             </div>
             <div style={{ padding: '16px', backgroundColor: 'var(--iq-primary-light)', borderRadius: 'var(--radius-md)', textAlign: 'left', fontSize: '13.5px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div><strong>Folio:</strong> {bookingSuccessData.appointmentNumber}</div>
-              <div><strong>Módulo:</strong> {bookingSuccessData.session.moduleTitle}</div>
+              <div><strong>Modulo:</strong> {bookingSuccessData.session.moduleTitle}</div>
               <div><strong>Fecha y Hora:</strong> {bookingSuccessData.session.sessionDate} a las {bookingSuccessData.session.startTime} hrs</div>
               <div><strong>Docente:</strong> {bookingSuccessData.session.teacherName}</div>
               <div><strong>Plantel:</strong> {bookingSuccessData.session.campusName} ({bookingSuccessData.session.modality})</div>
@@ -282,10 +306,10 @@ export const TutoringSearchPage: React.FC = () => {
                 </div>
               </div>
             )}
-            <p style={{ fontSize: '14px', color: 'var(--text-main)' }}>Por favor revisa el resumen de tu sesión académica antes de confirmar:</p>
+            <p style={{ fontSize: '14px', color: 'var(--text-main)' }}>Por favor revisa el resumen de tu sesion academica antes de confirmar:</p>
             <div style={{ padding: '16px', backgroundColor: 'var(--bg-app)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13.5px' }}>
               <div><strong>Libro:</strong> {selectedSessionForBooking.bookTitle}</div>
-              <div><strong>Módulo:</strong> {selectedSessionForBooking.moduleTitle}</div>
+              <div><strong>Modulo:</strong> {selectedSessionForBooking.moduleTitle}</div>
               {selectedSessionForBooking.topicTitle && <div><strong>Tema:</strong> {selectedSessionForBooking.topicTitle}</div>}
               <div><strong>Docente:</strong> {selectedSessionForBooking.teacherName}</div>
               <div><strong>Fecha:</strong> {selectedSessionForBooking.sessionDate}</div>
@@ -294,7 +318,7 @@ export const TutoringSearchPage: React.FC = () => {
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
               <Button variant="ghost" onClick={() => setSelectedSessionForBooking(null)}>Cancelar</Button>
-              <Button isLoading={isBookingLoading} onClick={handleConfirmBooking}>Confirmar Tutoría</Button>
+              <Button isLoading={isBookingLoading} onClick={handleConfirmBooking}>Confirmar Tutoria</Button>
             </div>
           </div>
         ) : null}

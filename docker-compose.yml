@@ -8,7 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root_password_123!
       MYSQL_DATABASE: iqenglish_db
-      MYSQL_USER: iquser
+      MYSQL_USER: iqadmin
       MYSQL_PASSWORD: iqpassword_123!
     ports:
       - "3306:3306"
@@ -29,10 +29,10 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/iqnglish_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: iquser
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/iqenglish_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: iqadmin
       SPRING_DATASOURCE_PASSWORD: iqpassword_123!
-      JWT_SECRET: c2VjdXJlX2lxbXlzdGVyb3VzX10pdXRfemVkcmV0X2tleV9myjkgZW5nbGlzaF8yMDI2X0F1dGhlbnRpY2F0aW9uX3Rva2VuX1N5c3RlbV8yNTRiaXQ=
+      JWT_SECRET: c2VjdXJlX2lxbXlzdGVyb3VzX10pdXRfemVkcmV0X2tlZXl9myjkgZW5nbGlzaF8yMDI2X0F1dGhlbnRpY2F0aW9uX3Rva2VuX1N5c3RlbV8yNTRiaXQ=
       TALKIO_API_URL: https://api.talkik.ai/v1
       TALKIO_API_KEY: mock_talkio_prod_key_778899
     ports:

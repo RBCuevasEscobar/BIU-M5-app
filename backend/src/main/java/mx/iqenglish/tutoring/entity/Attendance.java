@@ -1,6 +1,7 @@
 package mx.iqenglish.tutoring.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +27,9 @@ public class Attendance {
     @Column(nullable = false, length = 30)
     private AttendanceStatus status = AttendanceStatus.PRESENT;
 
+    @Column(precision = 5, scale = 2)
+    private BigDecimal grade;
+
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -49,6 +53,9 @@ public class Attendance {
     public void setSession(GroupSession session) { this.session = session; }
     public Student getStudent() { return student; }
     public void setStudent(Student student) { this.student = student; }
+    public BigDecimal getGrade() { return grade; }
+    public void setGrade(BigDecimal grade) { this.grade = grade; }
+
     public AttendanceStatus getStatus() { return status; }
     public void setStatus(AttendanceStatus status) { this.status = status; }
     public String getNotes() { return notes; }

@@ -262,11 +262,17 @@ export interface DashboardSummary {
   teacherProfile?: TeacherProfile;
   upcomingAppointments?: Appointment[];
   activeGroups?: TutoringGroup[];
+  teacherSessions?: GroupSession[];
   recentNotifications?: NotificationItem[];
-  totalActiveGroups: number;
-  totalAppointmentsToday: number;
-  campusOccupancyRate: number;
-  unreadNotificationsCount: number;
+  totalActiveGroups?: number;
+  totalAppointmentsToday?: number;
+  campusOccupancyRate?: number;
+  unreadNotificationsCount?: number;
+  currentModuleAttendanceCount?: number;
+  currentModuleTotalRequired?: number;
+  currentModuleGrade?: number;
+  studentCurriculumProgress?: StudentModuleItem[];
+  suggestedTutoring?: SuggestedTutoring;
 }
 
 export interface AuditLog {
@@ -366,4 +372,45 @@ export interface GroupReport {
   inactiveCount: number;
   cancelledCount: number;
   items: GroupReportItem[];
+}
+
+export interface StudentModuleItem {
+  moduleId: number;
+  moduleCode: string;
+  moduleTitle: string;
+  bookId: number;
+  bookNumber: number;
+  bookTitle: string;
+  sequenceOrder: number;
+  status: 'COMPLETED' | 'CONFIRMED' | 'PENDING' | 'GROUP_PENDING';
+  completionDate?: string;
+  grade?: number;
+  attendanceCount?: number;
+  hasAvailableGroups: boolean;
+  appointmentId?: number;
+  appointmentDate?: string;
+  appointmentTime?: string;
+  teacherName?: string;
+  campusName?: string;
+}
+
+export interface SuggestedTutoring {
+  moduleId: number;
+  moduleCode: string;
+  moduleTitle: string;
+  bookTitle: string;
+  bookNumber: number;
+  hasGroup: boolean;
+  status: 'PENDING' | 'GROUP_PENDING';
+  groupId?: number;
+  groupCode?: string;
+  groupName?: string;
+  sessionId?: number;
+  sessionDate?: string;
+  startTime?: string;
+  endTime?: string;
+  teacherName?: string;
+  campusName?: string;
+  availableSeats?: number;
+  capacity?: number;
 }

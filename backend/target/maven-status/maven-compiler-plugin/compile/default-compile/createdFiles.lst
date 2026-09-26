@@ -98,7 +98,6 @@ mx\iqenglish\tutoring\dto\CampusDTO.class
 mx\iqenglish\tutoring\exception\UnauthorizedActionException.class
 mx\iqenglish\tutoring\security\JwtAuthenticationFilter.class
 mx\iqenglish\tutoring\service\impl\AcademicServiceImpl.class
-mx\iqenglish\tutoring\service\impl\ReportServiceImpl.class
 mx\iqenglish\tutoring\repository\AuditLogRepository.class
 mx\iqenglish\tutoring\entity\Notification.class
 mx\iqenglish\tutoring\dto\AttendanceDTO.class

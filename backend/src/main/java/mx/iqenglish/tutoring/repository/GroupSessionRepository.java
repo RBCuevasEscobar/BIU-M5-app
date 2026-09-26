@@ -18,6 +18,16 @@ public interface GroupSessionRepository extends JpaRepository<GroupSession, Long
     List<GroupSession> findBySessionDateGreaterThanEqual(LocalDate date);
 
     @Query("SELECT s FROM GroupSession s WHERE s.group.teacher.id = :teacherId " +
+           "AND s.status != 'CANCELLED' " +
+           "ORDER BY s.sessionDate ASC, s.startTime ASC")
+    List<GroupSession> findActiveSessionsByTeacherId(@Param("teacherId") Long teacherId);
+
+    @Query("SELECT s FROM GroupSession s WHERE s.group.module.id = :moduleId " +
+           "AND s.status = 'SCHEDULED' AND s.group.status = 'PUBLISHED' " +
+           "ORDER BY s.sessionDate ASC, s.startTime ASC")
+    List<GroupSession> findAvailableSessionsByModuleId(@Param("moduleId") Long moduleId);
+
+    @Query("SELECT s FROM GroupSession s WHERE s.group.teacher.id = :teacherId " +
            "AND s.sessionDate = :date " +
            "AND s.status != 'CANCELLED' " +
            "AND ((s.startTime < :endTime AND s.endTime > :startTime)) " +

@@ -42,9 +42,12 @@ public class AcademicCatalogController {
     }
 
     @GetMapping("/modules")
-    @Operation(summary = "List modules/lessons for a specific book")
-    public ResponseEntity<ApiResponse<List<ModuleDTO>>> getModules(@RequestParam Long bookId) {
-        return ResponseEntity.ok(ApiResponse.ok(academicService.getModulesByBook(bookId)));
+    @Operation(summary = "List modules/lessons for a specific book or all modules")
+    public ResponseEntity<ApiResponse<List<ModuleDTO>>> getModules(@RequestParam(required = false) Long bookId) {
+        if (bookId != null) {
+            return ResponseEntity.ok(ApiResponse.ok(academicService.getModulesByBook(bookId)));
+        }
+        return ResponseEntity.ok(ApiResponse.ok(academicService.getAllModules()));
     }
 
     @GetMapping("/modules/{id}")
