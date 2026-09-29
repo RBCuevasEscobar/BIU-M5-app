@@ -1,32 +1,66 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import mx.iqenglish.tutoring.dto.ChangePasswordRequest;
+import mx.iqenglish.tutoring.dto.CreateUserRequest;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.dto.UserReportDTO;
+import mx.iqenglish.tutoring.dto.UserRoleUpdateRequest;
+import mx.iqenglish.tutoring.entity.Role;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.entity.UserStatus;
 import mx.iqenglish.tutoring.exception.BusinessException;
-import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AcademicLevelRepository;
+import mx.iqenglish.tutoring.repository.AuditLogRepository;
+import mx.iqenglish.tutoring.repository.BookRepository;
+import mx.iqenglish.tutoring.repository.CampusRepository;
+import mx.iqenglish.tutoring.repository.ModuleRepository;
+import mx.iqenglish.tutoring.repository.RoleRepository;
+import mx.iqenglish.tutoring.repository.StudentRepository;
+import mx.iqenglish.tutoring.repository.TeacherRepository;
+import mx.iqenglish.tutoring.repository.UserRepository;
 import mx.iqenglish.tutoring.security.UserPrincipal;
 import mx.iqenglish.tutoring.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -36,6 +70,7 @@ class UserServiceTest {
     @Mock private CampusRepository campusRepository;
     @Mock private AcademicLevelRepository academicLevelRepository;
     @Mock private BookRepository bookRepository;
+    @Mock private ModuleRepository moduleRepository;
     @Mock private StudentRepository studentRepository;
     @Mock private TeacherRepository teacherRepository;
     @Mock private AuditLogRepository auditLogRepository;
@@ -60,50 +95,58 @@ class UserServiceTest {
         adminUser.setId(1L);
         adminUser.setUsername("admin.alberto");
         adminUser.setEmail("admin@iqenglish.mx");
-        adminUser.setPasswordHash("$2a$10$hashedAdminPassword");
         adminUser.setFirstName("Alberto");
-        adminUser.setLastName("Castillo");
+        adminUser.setLastName("Rodriguez");
         adminUser.setStatus(UserStatus.ACTIVE);
         adminUser.setRoles(new HashSet<>(Collections.singletonList(adminRole)));
+        adminUser.setPasswordHash("$2a$10$hashedAdminPassword");
+        adminUser.setCreatedAt(LocalDateTime.now().minusDays(10));
 
         studentUser = new User();
         studentUser.setId(2L);
         studentUser.setUsername("student.carlos");
-        studentUser.setEmail("student@iqenglish.mx");
-        studentUser.setPasswordHash("$2a$10$hashedStudentPassword");
+        studentUser.setEmail("carlos@iqenglish.mx");
         studentUser.setFirstName("Carlos");
-        studentUser.setLastName("Hernandez");
+        studentUser.setLastName("Mendoza");
         studentUser.setStatus(UserStatus.ACTIVE);
         studentUser.setRoles(new HashSet<>(Collections.singletonList(studentRole)));
+        studentUser.setPasswordHash("$2a$10$hashedStudentPassword");
+        studentUser.setCreatedAt(LocalDateTime.now().minusDays(5));
     }
 
     @Test
-    @DisplayName("Create User - Success")
+    @DisplayName("Create User - Success with Role Teacher and Encoded Password")
     void createUser_Success() {
         CreateUserRequest request = new CreateUserRequest();
         request.setUsername("teacher.new");
-        request.setEmail("teacher.new@iqenglish.mx");
+        request.setEmail("newteacher@iqenglish.mx");
         request.setPassword("Password123!");
-        request.setFirstName("Ana");
-        request.setLastName("Gomez");
+        request.setFirstName("Laura");
+        request.setLastName("Morales");
         request.setRole("ROLE_TEACHER");
 
-        when(userRepository.existsByUsername(request.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPass");
-
         Role teacherRole = new Role("ROLE_TEACHER", "Teacher");
-        when(roleRepository.findByName("ROLE_TEACHER")).thenReturn(Optional.of(teacherRole));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-            User u = invocation.getArgument(0);
-            u.setId(3L);
-            return u;
-        });
 
-        UserDTO mockDto = new UserDTO();
-        mockDto.setId(3L);
-        mockDto.setUsername("teacher.new");
-        when(entityMapper.toUserDTO(any(User.class))).thenReturn(mockDto);
+        when(userRepository.existsByUsername("teacher.new")).thenReturn(false);
+        when(userRepository.existsByEmail("newteacher@iqenglish.mx")).thenReturn(false);
+        when(passwordEncoder.encode("Password123!")).thenReturn("$2a$10$encodedPassword");
+        when(roleRepository.findByName("ROLE_TEACHER")).thenReturn(Optional.of(teacherRole));
+
+        User savedUser = new User();
+        savedUser.setId(3L);
+        savedUser.setUsername("teacher.new");
+        savedUser.setEmail("newteacher@iqenglish.mx");
+        savedUser.setFirstName("Laura");
+        savedUser.setLastName("Morales");
+        savedUser.setRoles(Collections.singleton(teacherRole));
+        savedUser.setStatus(UserStatus.ACTIVE);
+
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(3L);
+        userDTO.setUsername("teacher.new");
+        when(entityMapper.toUserDTO(savedUser)).thenReturn(userDTO);
 
         UserDTO result = userService.createUser(request);
 
@@ -156,7 +199,6 @@ class UserServiceTest {
     @Test
     @DisplayName("Delete User - Soft Deletes User Account")
     void deleteUser_Success_SetsStatusInactive() {
-        // Mock current authenticated user as admin (ID 1) deleting student (ID 2)
         UserPrincipal principal = UserPrincipal.create(adminUser);
         SecurityContextHolder.getContext().setAuthentication(
             new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities())
@@ -251,7 +293,10 @@ class UserServiceTest {
         assertEquals(8L, report.getActiveUsers());
         assertEquals(1L, report.getInactiveUsers());
         assertEquals(1L, report.getSuspendedUsers());
-        assertEquals(2L, report.getRoleDistribution().get("ADMIN"));
+        assertEquals(2L, report.getRoleDistribution().get("ROLE_ADMIN"));
+        assertEquals(2L, report.getRoleDistribution().get("ROLE_SUPERVISOR"));
+        assertEquals(3L, report.getRoleDistribution().get("ROLE_TEACHER"));
+        assertEquals(3L, report.getRoleDistribution().get("ROLE_STUDENT"));
         assertEquals(4L, report.getRecentRegistrations30Days());
         verify(auditService).log(eq("USER_REPORT_GENERATED"), eq("Report"), anyString(), anyString());
     }

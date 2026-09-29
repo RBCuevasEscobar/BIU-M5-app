@@ -1,22 +1,30 @@
 package mx.iqenglish.tutoring.service.impl;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.CreateSessionDTO;
+import mx.iqenglish.tutoring.dto.GroupSessionDTO;
+import mx.iqenglish.tutoring.entity.Appointment;
+import mx.iqenglish.tutoring.entity.AppointmentStatus;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.NotificationType;
+import mx.iqenglish.tutoring.entity.SessionStatus;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
 import mx.iqenglish.tutoring.exception.BusinessException;
 import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
 import mx.iqenglish.tutoring.exception.ScheduleConflictException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AppointmentRepository;
+import mx.iqenglish.tutoring.repository.GroupSessionRepository;
+import mx.iqenglish.tutoring.repository.TutoringGroupRepository;
 import mx.iqenglish.tutoring.service.AuditService;
 import mx.iqenglish.tutoring.service.GroupSessionService;
 import mx.iqenglish.tutoring.service.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GroupSessionServiceImpl implements GroupSessionService {

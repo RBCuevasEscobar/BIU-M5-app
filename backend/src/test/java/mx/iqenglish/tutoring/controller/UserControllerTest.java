@@ -1,8 +1,13 @@
 package mx.iqenglish.tutoring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.UserStatus;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import mx.iqenglish.tutoring.dto.CreateUserRequest;
+import mx.iqenglish.tutoring.dto.PageResponse;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.dto.UserReportDTO;
 import mx.iqenglish.tutoring.service.AuthService;
 import mx.iqenglish.tutoring.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -16,14 +21,20 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc

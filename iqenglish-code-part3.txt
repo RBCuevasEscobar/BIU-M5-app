@@ -1,0 +1,2307 @@
+
+
+================ scripts\gen_fe_dash.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('frontend/src');
+function w(relPath, content) {
+  const full = path.join(base, relPath);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, content.trim() + '\n', 'utf8');
+  console.log('Generated:', relPath);
+}
+
+w('features/dashboard/DashboardPage.tsx', `
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { api } from '../../services/api';
+import { DashboardSummary } from '../../types';
+import { Card } from '../../components/Card';
+import { Badge } from '../../components/Badge';
+import { Button } from '../../components/Button';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Clock, MapPin, BookOpen, Users, CheckCircle, AlertTriangle, Sparkles, CalendarCheck, TrendingUp } from 'lucide-react';
+
+export const DashboardPage: React.FC = () => {
+  const { user, studentProfile, teacherProfile, hasRole } = useAuth();
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function loadSummary() {
+      try {
+        const data = await api.get<DashboardSummary>('/reports/dashboard');
+        setSummary(data);
+      } catch (err) {
+        console.error('Failed to load dashboard summary', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSummary();
+  }, [user]);
+
+  if (isLoading) return <LoadingSpinner message="Cargando tu panel de control..." />;
+
+  const isStudent = hasRole('STUDENT');
+  const isTeacher = hasRole('TEACHER');
+  const isSupervisor = hasRole('SUPERVISOR');
+  const isAdmin = hasRole('ADMIN');
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div className="iq-texture-bg" style={{ borderRadius: 'var(--radius-lg)', padding: '28px 32px', color: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: 'var(--shadow-md)' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--iq-secondary)', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <Sparkles size={16} />
+            <span>Portal Académico IQ English</span>
+          </div>
+          <h1 style={{ fontSize: '24px', fontWeight: 800, marginTop: '6px' }}>¡Hola, {user?.firstName || 'Estudiante'}!</h1>
+          <p style={{ fontSize: '14px', color: '#cbd5e1', marginTop: '4px', maxWidth: '600px' }}>
+            {isStudent && 'Continúa desarrollando tu fluidez comunicativa con tus sesiones de tutoría personalizada y práctica de IA.'}
+            {isTeacher && 'Bienvenido a tu panel docente. Revisa tus sesiones programadas de hoy y gestiona la asistencia de tus alumnos.'}
+            {(isSupervisor || isAdmin) && 'Panel de control operativo: supervisión de planteles, grupos activos, docentes y cupos.'}
+          </p>
+        </div>
+        {isStudent && (
+          <Button onClick={() => navigate('/tutoring/search')} variant="secondary" size="lg" icon={<CalendarCheck size={18} />}>
+            Buscar Tutoría
+          </Button>
+        )}
+      </div>
+
+      {isStudent && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          <Card title="Tu Contexto Académico Actual" subtitle="Basado en tu avance en el programa de inglés natural">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px', backgroundColor: 'var(--iq-primary-light)', borderRadius: 'var(--radius-md)' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '10px', backgroundColor: 'var(--iq-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                  <BookOpen size={22} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--iq-primary)', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {studentProfile?.currentLevelName || 'Level 2 - Intermedio'}
+                  </div>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--iq-primary)' }}>
+                    {studentProfile?.currentBookTitle || 'Book 2: Interactive Fluency'}
+                  </div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                    Módulo Actual: {studentProfile?.currentModuleTitle || 'Lesson 5B: Requests, Excuses & Apologies'}
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Progreso en Módulo:</span>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--iq-primary)' }}>1 de 4 tutorías</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--iq-gray-light)', borderRadius: '999px', overflow: 'hidden' }}>
+                <div style={{ width: '25%', height: '100%', backgroundColor: 'var(--iq-secondary)' }} />
+              </div>
+            </div>
+          </Card>
+
+          <Card title="Próxima Tutoría Confirmada" subtitle="Tu siguiente cita programada en plantel">
+            {summary?.upcomingAppointments && summary.upcomingAppointments.length > 0 ? (
+              (() => {
+                const appt = summary.upcomingAppointments[0];
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <Badge status={appt.status} />
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Folio: {appt.appointmentNumber}</span>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--iq-primary)' }}>{appt.session.moduleTitle}</h4>
+                      <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>Tema: {appt.session.topicTitle || 'Práctica comunicativa'}</p>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={15} color="var(--iq-primary)" /><span>{appt.session.sessionDate}</span></div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={15} color="var(--iq-primary)" /><span>{appt.session.startTime} hrs</span></div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={15} color="var(--iq-primary)" /><span>Docente: {appt.session.teacherName}</span></div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={15} color="var(--iq-primary)" /><span>{appt.session.campusName}</span></div>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => navigate('/tutoring/my-appointments')}>
+                      Ver Mis Tutorías / Reprogramar
+                    </Button>
+                  </div>
+                );
+              })()
+            ) : (
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>No tienes tutorías programadas para esta semana.</p>
+                <Button size="sm" onClick={() => navigate('/tutoring/search')}>Reservar una Tutoría</Button>
+              </div>
+            )}
+          </Card>
+        </div>
+      )}
+
+      {isTeacher && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          <Card title="Tus Grupos Asignados" subtitle="Grupos académicos de tutoría a tu cargo">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {summary?.activeGroups && summary.activeGroups.length > 0 ? (
+                summary.activeGroups.map(group => (
+                  <div key={group.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }}>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '14px', color: 'var(--iq-primary)' }}>{group.code} - {group.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{group.moduleTitle} • {group.modality}</div>
+                    </div>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: group.full ? 'var(--status-danger)' : 'var(--iq-primary)' }}>
+                      {group.currentEnrollment} / {group.capacity} Alumnos
+                    </span>
+                  </div>
+                ))
+              ) : <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No hay grupos asignados.</p>}
+            </div>
+          </Card>
+
+          <Card title="Acceso Rápido Docente" subtitle="Herramientas operativas de clase">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <Button onClick={() => navigate('/attendance')} icon={<CheckCircle size={16} />}>Registrar Asistencia de Sesión</Button>
+              <Button onClick={() => navigate('/academic')} variant="outline" icon={<BookOpen size={16} />}>Consultar Contenidos y Vocabulario (Books 1, 2, 3)</Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {(isSupervisor || isAdmin) && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <Card>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'var(--iq-primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--iq-primary)' }}><Users size={24} /></div>
+              <div><div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Grupos Activos</div><div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>{summary?.totalActiveGroups || 5}</div></div>
+            </div>
+          </Card>
+          <Card>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'var(--iq-secondary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--iq-secondary-hover)' }}><TrendingUp size={24} /></div>
+              <div><div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Ocupación de Planteles</div><div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>{summary?.campusOccupancyRate || 42}%</div></div>
+            </div>
+          </Card>
+          <Card>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#b45309' }}><AlertTriangle size={24} /></div>
+              <div><div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Capacidad Crítica</div><div style={{ fontSize: '24px', fontWeight: 800, color: '#b45309' }}>1 Grupo Lleno</div></div>
+            </div>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+`);
+console.log('Dashboard generated');
+
+
+================ scripts\gen_fe_part1.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('frontend/src');
+
+function w(relPath, content) {
+  const full = path.join(base, relPath);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, content.trim() + '\n', 'utf8');
+  console.log('Generated frontend:', relPath);
+}
+
+// 1. Theme CSS tokens & styles
+w('theme/tokens.css', `
+:root {
+  /* IQ English Brand Colors (Manual de Identidad) */
+  --iq-primary: #002e6d;        /* Pantone 294 C */
+  --iq-primary-hover: #00204d;
+  --iq-primary-light: #e6edf7;
+  --iq-secondary: #5eb3e4;      /* Pantone 2915 C */
+  --iq-secondary-hover: #489ecd;
+  --iq-secondary-light: #eaf5fc;
+  --iq-gray: #758592;           /* Pantone 7544 C */
+  --iq-gray-light: #f1f4f7;
+  --iq-gold: #c5a059;           /* Corporate Gold Accent */
+  --iq-gold-light: #fdfaf3;
+  --iq-dark: #121e28;
+
+  /* Semantic UI Colors */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --border-color: #e2e8f0;
+  --border-color-focus: #5eb3e4;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  /* Status Colors (Accessible with icons & text) */
+  --status-success: #10b981;
+  --status-success-bg: #ecfdf5;
+  --status-warning: #f59e0b;
+  --status-warning-bg: #fffbeb;
+  --status-danger: #ef4444;
+  --status-danger-bg: #fef2f2;
+  --status-info: #3b82f6;
+  --status-info-bg: #eff6ff;
+
+  /* Typography */
+  --font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* Texture pattern utility */
+.iq-texture-bg {
+  background-color: var(--iq-primary);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(94, 179, 228, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(197, 160, 89, 0.2) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(0, 46, 109, 0.95) 0%, rgba(18, 30, 40, 0.98) 100%);
+}
+`);
+
+// 2. Types
+w('types/index.ts', `
+export type RoleName = 'ROLE_STUDENT' | 'ROLE_TEACHER' | 'ROLE_SUPERVISOR' | 'ROLE_ADMIN';
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  phone?: string;
+  status: string;
+  avatarUrl?: string;
+  roles: string[];
+  permissions: string[];
+}
+
+export interface StudentProfile {
+  id: number;
+  userId: number;
+  studentNumber: string;
+  fullName: string;
+  email: string;
+  campusId: number;
+  campusName: string;
+  currentLevelId: number;
+  currentLevelName: string;
+  currentBookId: number;
+  currentBookNumber: number;
+  currentBookTitle: string;
+  currentModuleId: number;
+  currentModuleCode: string;
+  currentModuleTitle: string;
+  enrollmentDate: string;
+  status: string;
+}
+
+export interface TeacherProfile {
+  id: number;
+  userId: number;
+  employeeNumber: string;
+  fullName: string;
+  email: string;
+  campusId: number;
+  campusName: string;
+  specialty?: string;
+  hireDate: string;
+  status: string;
+}
+
+export interface Campus {
+  id: number;
+  code: string;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  phone?: string;
+  email?: string;
+  isActive: boolean;
+}
+
+export interface Book {
+  id: number;
+  levelId: number;
+  levelName: string;
+  bookNumber: number;
+  title: string;
+  description?: string;
+  coverImage?: string;
+  modules?: ModuleItem[];
+}
+
+export interface ModuleItem {
+  id: number;
+  bookId: number;
+  bookNumber?: number;
+  bookTitle?: string;
+  moduleCode: string;
+  title: string;
+  description?: string;
+  sequenceOrder: number;
+  topics?: TopicItem[];
+}
+
+export interface TopicItem {
+  id: number;
+  moduleId: number;
+  topicCode: string;
+  title: string;
+  grammarFocus?: string;
+  vocabularyFocus?: string;
+  speakingFocus?: string;
+}
+
+export interface TutoringGroup {
+  id: number;
+  code: string;
+  name: string;
+  campusId: number;
+  campusName: string;
+  teacherId: number;
+  teacherName: string;
+  bookId: number;
+  bookNumber: number;
+  bookTitle: string;
+  moduleId: number;
+  moduleCode: string;
+  moduleTitle: string;
+  topicId?: number;
+  topicTitle?: string;
+  capacity: number;
+  currentEnrollment: number;
+  availableSeats: number;
+  full: boolean;
+  status: string;
+  modality: string;
+  sessions?: GroupSession[];
+  createdAt: string;
+}
+
+export interface GroupSession {
+  id: number;
+  groupId: number;
+  groupCode: string;
+  groupName: string;
+  campusId: number;
+  campusName: string;
+  teacherId: number;
+  teacherName: string;
+  bookId: number;
+  bookNumber: number;
+  bookTitle: string;
+  moduleId: number;
+  moduleCode: string;
+  moduleTitle: string;
+  topicId?: number;
+  topicTitle?: string;
+  grammarFocus?: string;
+  vocabularyFocus?: string;
+  speakingFocus?: string;
+  sessionDate: string;
+  startTime: string;
+  endTime: string;
+  durationMinutes: number;
+  roomOrLink?: string;
+  capacity: number;
+  currentEnrollment: number;
+  availableSeats: number;
+  full: boolean;
+  modality: string;
+  status: string;
+}
+
+export interface Appointment {
+  id: number;
+  appointmentNumber: string;
+  studentId: number;
+  studentName: string;
+  studentNumber: string;
+  session: GroupSession;
+  status: 'CONFIRMED' | 'CANCELLED' | 'COMPLETED' | 'RESCHEDULED' | 'NO_SHOW';
+  bookedAt: string;
+  cancelledAt?: string;
+  cancellationReason?: string;
+  previousAppointmentId?: number;
+  attendanceStatus?: string;
+  attendanceNotes?: string;
+}
+
+export interface Attendance {
+  id: number;
+  appointmentId: number;
+  sessionId: number;
+  studentId: number;
+  studentName: string;
+  studentNumber: string;
+  status: 'PRESENT' | 'ABSENT' | 'EXCUSED';
+  notes?: string;
+  recordedByTeacherId: number;
+  teacherName: string;
+  recordedAt: string;
+}
+
+export interface NotificationItem {
+  id: number;
+  userId: number;
+  title: string;
+  message: string;
+  type: string;
+  isRead: boolean;
+  relatedEntityType?: string;
+  relatedEntityId?: number;
+  createdAt: string;
+}
+
+export interface DashboardSummary {
+  role: string;
+  userFullName: string;
+  studentProfile?: StudentProfile;
+  teacherProfile?: TeacherProfile;
+  upcomingAppointments?: Appointment[];
+  activeGroups?: TutoringGroup[];
+  recentNotifications?: NotificationItem[];
+  totalActiveGroups: number;
+  totalAppointmentsToday: number;
+  campusOccupancyRate: number;
+  unreadNotificationsCount: number;
+}
+
+export interface AuditLog {
+  id: number;
+  userId?: number;
+  username: string;
+  action: string;
+  entityName: string;
+  entityId: string;
+  details: string;
+  ipAddress: string;
+  traceId: string;
+  createdAt: string;
+}
+
+export interface TalkIOSession {
+  sessionId: string;
+  studentName: string;
+  moduleCode: string;
+  topicTitle: string;
+  avatarName: string;
+  promptText: string;
+  responseAudioUrl?: string;
+  feedbackText: string;
+  pronunciationScore: number;
+  grammarScore: number;
+  vocabularyScore: number;
+}
+`);
+
+// 3. API Client Abstraction
+w('services/api.ts', `
+const API_BASE = '/api/v1';
+
+export class ApiError extends Error {
+  status: number;
+  code: string;
+  traceId?: string;
+
+  constructor(message: string, status: number, code: string = 'ERROR', traceId?: string) {
+    super(message);
+    this.status = status;
+    this.code = code;
+    this.traceId = traceId;
+  }
+}
+
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = localStorage.getItem('iq_token');
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (token) {
+    headers['Authorization'] = \`Bearer \${token}\`;
+  }
+
+  const response = await fetch(\`\${API_BASE}\${endpoint}\`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    let errorData = null;
+    try {
+      errorData = await response.json();
+    } catch {
+      // response is not json
+    }
+
+    const message = errorData?.message || \`Request failed with status \${response.status}\`;
+    const code = errorData?.code || 'HTTP_' + response.status;
+    const traceId = errorData?.traceId;
+
+    throw new ApiError(message, response.status, code, traceId);
+  }
+
+  if (response.status === 204) {
+    return {} as T;
+  }
+
+  const json = await response.json();
+  return json.data !== undefined ? json.data : json;
+}
+
+export const api = {
+  get: <T>(endpoint: string) => request<T>(endpoint, { method: 'GET' }),
+  post: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
+  put: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
+  patch: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
+  delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
+};
+`);
+
+console.log('Frontend Part 1 (Theme, Types, API) generated');
+
+
+================ scripts\gen_fe_part2.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('frontend/src');
+
+function w(relPath, content) {
+  const full = path.join(base, relPath);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, content.trim() + '\n', 'utf8');
+  console.log('Generated frontend:', relPath);
+}
+
+// 1. AuthContext
+w('context/AuthContext.tsx', `
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User, StudentProfile, TeacherProfile } from '../types';
+import { api } from '../services/api';
+
+interface AuthContextType {
+  user: User | null;
+  studentProfile: StudentProfile | null;
+  teacherProfile: TeacherProfile | null;
+  token: string | null;
+  isLoading: boolean;
+  login: (username: string, password?: string) => Promise<void>;
+  logout: () => void;
+  hasRole: (role: string) => boolean;
+  hasPermission: (permission: string) => boolean;
+  switchDemoRole: (role: 'STUDENT' | 'TEACHER' | 'SUPERVISOR' | 'ADMIN') => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
+  const [teacherProfile, setTeacherProfile] = useState<TeacherProfile | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('iq_token'));
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function loadUser() {
+      if (token) {
+        try {
+          const userData = await api.get<User>('/auth/me');
+          setUser(userData);
+          // Load specific profile if student
+          if (userData.roles.includes('ROLE_STUDENT')) {
+            try {
+              const summary = await api.get<any>('/reports/dashboard');
+              if (summary.studentProfile) setStudentProfile(summary.studentProfile);
+            } catch (e) {
+              console.warn('Could not load student profile', e);
+            }
+          }
+          if (userData.roles.includes('ROLE_TEACHER')) {
+            try {
+              const summary = await api.get<any>('/reports/dashboard');
+              if (summary.teacherProfile) setTeacherProfile(summary.teacherProfile);
+            } catch (e) {
+              console.warn('Could not load teacher profile', e);
+            }
+          }
+        } catch (err) {
+          console.error('Session restore failed, logging out', err);
+          logout();
+        }
+      }
+      setIsLoading(false);
+    }
+    loadUser();
+  }, [token]);
+
+  const login = async (username: string, password = 'Password123!') => {
+    setIsLoading(true);
+    try {
+      const resp = await api.post<any>('/auth/login', { username, password });
+      const jwt = resp.token;
+      localStorage.setItem('iq_token', jwt);
+      setToken(jwt);
+
+      const currentUser: User = {
+        id: resp.userId,
+        username: resp.username,
+        email: resp.email,
+        firstName: resp.fullName.split(' ')[0],
+        lastName: resp.fullName.split(' ').slice(1).join(' '),
+        fullName: resp.fullName,
+        status: 'ACTIVE',
+        roles: resp.roles,
+        permissions: resp.permissions,
+      };
+
+      setUser(currentUser);
+      if (resp.roles.includes('ROLE_STUDENT') && resp.profile) {
+        setStudentProfile(resp.profile);
+      } else if (resp.roles.includes('ROLE_TEACHER') && resp.profile) {
+        setTeacherProfile(resp.profile);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('iq_token');
+    setToken(null);
+    setUser(null);
+    setStudentProfile(null);
+    setTeacherProfile(null);
+  };
+
+  const switchDemoRole = async (role: 'STUDENT' | 'TEACHER' | 'SUPERVISOR' | 'ADMIN') => {
+    const userMap = {
+      STUDENT: 'student.carlos',
+      TEACHER: 'teacher.ana',
+      SUPERVISOR: 'supervisor.patricia',
+      ADMIN: 'admin.alberto',
+    };
+    await login(userMap[role], 'Password123!');
+  };
+
+  const hasRole = (roleName: string) => {
+    if (!user || !user.roles) return false;
+    const formatted = roleName.startsWith('ROLE_') ? roleName : \`ROLE_\${roleName}\`;
+    return user.roles.includes(formatted);
+  };
+
+  const hasPermission = (permissionName: string) => {
+    if (!user || !user.permissions) return false;
+    return user.permissions.includes(permissionName) || user.roles.includes('ROLE_ADMIN');
+  };
+
+  return (
+    <AuthContext.Provider value={{
+      user,
+      studentProfile,
+      teacherProfile,
+      token,
+      isLoading,
+      login,
+      logout,
+      hasRole,
+      hasPermission,
+      switchDemoRole,
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
+};
+`);
+
+// 2. Logo Component (Corporate Identity)
+w('components/Logo.tsx', `
+import React from 'react';
+
+interface LogoProps {
+  variant?: 'light' | 'dark' | 'positive';
+  size?: 'sm' | 'md' | 'lg';
+  showTagline?: boolean;
+}
+
+export const Logo: React.FC<LogoProps> = ({ variant = 'positive', size = 'md', showTagline = true }) => {
+  const textColor = variant === 'light' ? '#ffffff' : '#002e6d';
+  const accentColor = variant === 'light' ? '#5eb3e4' : '#5eb3e4';
+  const bulbColor = variant === 'light' ? '#c5a059' : '#002e6d';
+
+  const scale = size === 'sm' ? 0.75 : size === 'lg' ? 1.3 : 1;
+
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: \`\${12 * scale}px\`, textDecoration: 'none' }}>
+      {/* Brain/Bulb Icon */}
+      <svg width={38 * scale} height={38 * scale} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 15C33.4315 15 20 28.4315 20 45C20 54.5 24.5 62.8 31.4 68.2C33.5 69.8 35 72.3 35 75V80C35 82.8 37.2 85 40 85H60C62.8 85 65 82.8 65 80V75C65 72.3 66.5 69.8 68.6 68.2C75.5 62.8 80 54.5 80 45C80 28.4315 66.5685 15 50 15Z" stroke={bulbColor} strokeWidth="5" fill="none"/>
+        <path d="M42 85V90C42 91.7 43.3 93 45 93H55C56.7 93 58 91.7 58 90V85" stroke={bulbColor} strokeWidth="5" fill="none"/>
+        {/* Brain Synapse Filaments */}
+        <path d="M38 40C38 35 43 32 50 32C57 32 62 35 62 40C62 45 57 48 50 48C43 48 38 51 38 56" stroke={accentColor} strokeWidth="4" strokeLinecap="round"/>
+        <circle cx="50" cy="40" r="3" fill={accentColor}/>
+      </svg>
+
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+          <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 800, fontSize: \`\${20 * scale}px\`, color: textColor, letterSpacing: '0.5px' }}>
+            IQ
+          </span>
+          <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 400, fontSize: \`\${20 * scale}px\`, color: accentColor, letterSpacing: '2px' }}>
+            ENGLISH
+          </span>
+        </div>
+        {showTagline && (
+          <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: \`\${8.5 * scale}px\`, color: variant === 'light' ? '#cbd5e1' : '#758592', letterSpacing: '2.5px', textTransform: 'uppercase', marginTop: '-2px' }}>
+            LEARNING + INNOVATION
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+`);
+
+// 3. UI Components: Badge, Button, Card, EmptyState, LoadingSpinner
+w('components/Badge.tsx', `
+import React from 'react';
+import { CheckCircle2, AlertCircle, Clock, Users, XCircle, Video, MapPin } from 'lucide-react';
+
+interface BadgeProps {
+  status: string;
+  size?: 'sm' | 'md';
+}
+
+export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
+  const s = status ? status.toUpperCase() : 'UNKNOWN';
+
+  let bg = '#f1f5f9';
+  let color = '#475569';
+  let icon = <Clock size={14} />;
+  let label = s;
+
+  switch (s) {
+    case 'CONFIRMED':
+    case 'PRESENT':
+    case 'ACTIVE':
+    case 'PUBLISHED':
+      bg = '#ecfdf5';
+      color = '#065f46';
+      icon = <CheckCircle2 size={13} />;
+      label = s === 'CONFIRMED' ? 'Confirmada' : s === 'PRESENT' ? 'Presente' : 'Activo';
+      break;
+    case 'FULL':
+      bg = '#fef2f2';
+      color = '#991b1b';
+      icon = <Users size={13} />;
+      label = 'Grupo Lleno (0 Cupos)';
+      break;
+    case 'AVAILABLE':
+      bg = '#eff6ff';
+      color = '#1e40af';
+      icon = <CheckCircle2 size={13} />;
+      label = 'Disponible';
+      break;
+    case 'CANCELLED':
+    case 'ABSENT':
+      bg = '#fef2f2';
+      color = '#991b1b';
+      icon = <XCircle size={13} />;
+      label = s === 'CANCELLED' ? 'Cancelada' : 'Ausente';
+      break;
+    case 'RESCHEDULED':
+    case 'EXCUSED':
+      bg = '#fffbeb';
+      color = '#92400e';
+      icon = <Clock size={13} />;
+      label = s === 'RESCHEDULED' ? 'Reprogramada' : 'Justificado';
+      break;
+    case 'COMPLETED':
+      bg = '#f0fdf4';
+      color = '#15803d';
+      icon = <CheckCircle2 size={13} />;
+      label = 'Completada';
+      break;
+    case 'ONLINE':
+      bg = '#f5f3ff';
+      color = '#6d28d9';
+      icon = <Video size={13} />;
+      label = 'Online';
+      break;
+    case 'PRESENTIAL':
+      bg = '#eaf5fc';
+      color = '#002e6d';
+      icon = <MapPin size={13} />;
+      label = 'Presencial';
+      break;
+  }
+
+  const padding = size === 'sm' ? '2px 8px' : '4px 12px';
+  const fontSize = size === 'sm' ? '11px' : '12px';
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '5px',
+        backgroundColor: bg,
+        color: color,
+        padding: padding,
+        borderRadius: '9999px',
+        fontSize: fontSize,
+        fontWeight: 600,
+        fontFamily: 'Montserrat, sans-serif',
+      }}
+      role="status"
+    >
+      {icon}
+      <span>{label}</span>
+    </span>
+  );
+};
+`);
+
+w('components/Button.tsx', `
+import React from 'react';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  icon?: React.ReactNode;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = 'primary',
+  size = 'md',
+  isLoading = false,
+  icon,
+  style,
+  disabled,
+  ...props
+}) => {
+  let bg = 'var(--iq-primary)';
+  let color = '#ffffff';
+  let border = 'none';
+
+  if (variant === 'secondary') {
+    bg = 'var(--iq-secondary)';
+    color = '#ffffff';
+  } else if (variant === 'outline') {
+    bg = 'transparent';
+    color = 'var(--iq-primary)';
+    border = '1.5px solid var(--iq-primary)';
+  } else if (variant === 'danger') {
+    bg = 'var(--status-danger)';
+    color = '#ffffff';
+  } else if (variant === 'ghost') {
+    bg = 'transparent';
+    color = 'var(--text-main)';
+  }
+
+  const padding = size === 'sm' ? '6px 14px' : size === 'lg' ? '12px 24px' : '9px 18px';
+  const fontSize = size === 'sm' ? '12.5px' : size === 'lg' ? '15px' : '14px';
+
+  return (
+    <button
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px',
+        backgroundColor: disabled ? '#cbd5e1' : bg,
+        color: disabled ? '#64748b' : color,
+        border: border,
+        borderRadius: 'var(--radius-md)',
+        padding: padding,
+        fontSize: fontSize,
+        fontWeight: 600,
+        cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
+        transition: 'all 0.2s ease',
+        boxShadow: variant === 'primary' && !disabled ? 'var(--shadow-sm)' : 'none',
+        ...style,
+      }}
+      disabled={disabled || isLoading}
+      {...props}
+    >
+      {isLoading ? (
+        <span style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      ) : icon}
+      {children}
+    </button>
+  );
+};
+`);
+
+w('components/Card.tsx', `
+import React from 'react';
+
+interface CardProps {
+  children: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  headerAction?: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export const Card: React.FC<CardProps> = ({ children, title, subtitle, headerAction, style }) => {
+  return (
+    <div
+      style={{
+        backgroundColor: 'var(--bg-surface)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border-color)',
+        boxShadow: 'var(--shadow-sm)',
+        padding: '24px',
+        ...style,
+      }}
+    >
+      {(title || headerAction) && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '18px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+          <div>
+            {title && <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--iq-primary)', margin: 0 }}>{title}</h3>}
+            {subtitle && <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '3px' }}>{subtitle}</p>}
+          </div>
+          {headerAction && <div>{headerAction}</div>}
+        </div>
+      )}
+      {children}
+    </div>
+  );
+};
+`);
+
+w('components/Modal.tsx', `
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  maxWidth?: string;
+}
+
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidth = '560px' }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(15, 23, 42, 0.65)',
+        backdropFilter: 'blur(4px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: '20px',
+      }}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: 'var(--radius-lg)',
+          width: '100%',
+          maxWidth: maxWidth,
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          boxShadow: 'var(--shadow-lg)',
+          padding: '28px',
+          animation: 'fadeIn 0.2s ease',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '14px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--iq-primary)', margin: 0 }}>{title}</h2>
+          <button
+            onClick={onClose}
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
+            aria-label="Cerrar modal"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+`);
+
+w('components/EmptyState.tsx', `
+import React from 'react';
+import { CalendarX, Search } from 'lucide-react';
+import { Button } from './Button';
+
+interface EmptyStateProps {
+  title: string;
+  description: string;
+  actionText?: string;
+  onAction?: () => void;
+  icon?: React.ReactNode;
+}
+
+export const EmptyState: React.FC<EmptyStateProps> = ({
+  title,
+  description,
+  actionText,
+  onAction,
+  icon = <CalendarX size={44} color="var(--iq-secondary)" />,
+}) => {
+  return (
+    <div
+      style={{
+        textAlign: 'center',
+        padding: '48px 24px',
+        backgroundColor: 'var(--bg-surface)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1.5px dashed var(--border-color)',
+        margin: '16px 0',
+      }}
+    >
+      <div style={{ marginBottom: '14px' }}>{icon}</div>
+      <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--iq-primary)', marginBottom: '6px' }}>{title}</h3>
+      <p style={{ fontSize: '14px', color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 20px auto' }}>
+        {description}
+      </p>
+      {actionText && onAction && (
+        <Button onClick={onAction} icon={<Search size={16} />}>
+          {actionText}
+        </Button>
+      )}
+    </div>
+  );
+};
+`);
+
+w('components/LoadingSpinner.tsx', `
+import React from 'react';
+
+export const LoadingSpinner: React.FC<{ message?: string }> = ({ message = 'Cargando información...' }) => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', gap: '14px' }}>
+      <div style={{
+        width: '38px',
+        height: '38px',
+        border: '3.5px solid var(--iq-primary-light)',
+        borderTopColor: 'var(--iq-primary)',
+        borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite',
+      }} />
+      <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-muted)' }}>{message}</span>
+    </div>
+  );
+};
+`);
+
+console.log('Frontend Part 2 generated');
+
+
+================ scripts\gen_fe_part3.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('frontend/src');
+
+function w(relPath, content) {
+  const full = path.join(base, relPath);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, content.trim() + '\n', 'utf8');
+  console.log('Generated frontend:', relPath);
+}
+
+w('layouts/MainLayout.tsx', `
+import React, { useState } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Logo } from '../components/Logo';
+import {
+  LayoutDashboard,
+  Search,
+  CalendarCheck,
+  BookOpen,
+  Users,
+  CheckSquare,
+  Bot,
+  ShieldCheck,
+  LogOut,
+  Bell,
+  Menu,
+  X,
+  ChevronRight,
+  User as UserIcon,
+  Sparkles
+} from 'lucide-react';
+
+export const MainLayout: React.FC = () => {
+  const { user, studentProfile, teacherProfile, logout, switchDemoRole, hasRole } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
+
+  const navItems = [
+    { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Buscar Tutorías', path: '/tutoring/search', icon: <Search size={19} />, roles: ['STUDENT', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Mis Tutorías', path: '/tutoring/my-appointments', icon: <CalendarCheck size={19} />, roles: ['STUDENT'] },
+    { label: 'Gestión de Grupos', path: '/groups', icon: <Users size={19} />, roles: ['SUPERVISOR', 'ADMIN'] },
+    { label: 'Registro Asistencia', path: '/attendance', icon: <CheckSquare size={19} />, roles: ['TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Programa Académico', path: '/academic', icon: <BookOpen size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Práctica IA TalkIO', path: '/talkio', icon: <Bot size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
+    { label: 'Auditoría & Sistema', path: '/admin/audit', icon: <ShieldCheck size={19} />, roles: ['ADMIN'] },
+  ];
+
+  const filteredNav = navItems.filter(item => item.roles.some(r => hasRole(r)));
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-app)' }}>
+      {/* Sidebar Desktop */}
+      <aside
+        style={{
+          width: '270px',
+          backgroundColor: '#ffffff',
+          borderRight: '1px solid var(--border-color)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          zIndex: 40,
+        }}
+      >
+        {/* Brand Header */}
+        <div style={{ padding: '24px 20px', borderBottom: '1px solid var(--border-color)' }}>
+          <Logo size="md" />
+        </div>
+
+        {/* Academic Context Badge (for Student) */}
+        {studentProfile && (
+          <div style={{ margin: '14px 16px', padding: '12px', backgroundColor: 'var(--iq-primary-light)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(0,46,109,0.1)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--iq-primary)', fontWeight: 700, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <Sparkles size={14} color="var(--iq-gold)" />
+              <span>Tu Nivel Actual</span>
+            </div>
+            <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--iq-primary)', marginTop: '4px' }}>
+              {studentProfile.currentBookTitle}
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              {studentProfile.currentModuleTitle || 'Lesson 5B'}
+            </div>
+          </div>
+        )}
+
+        {/* Nav Links */}
+        <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' }}>
+          {filteredNav.map((item) => {
+            const active = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '10px 14px',
+                  borderRadius: 'var(--radius-md)',
+                  color: active ? '#ffffff' : 'var(--text-main)',
+                  backgroundColor: active ? 'var(--iq-primary)' : 'transparent',
+                  fontWeight: active ? 600 : 500,
+                  fontSize: '13.5px',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{ color: active ? 'var(--iq-secondary)' : 'var(--iq-gray)' }}>{item.icon}</span>
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {active && <ChevronRight size={16} color="var(--iq-secondary)" />}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Demo Fast Role Switcher */}
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-app)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--iq-gray)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Demo Rol Activo
+            </span>
+            <button
+              onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
+              style={{ fontSize: '11px', color: 'var(--iq-secondary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+            >
+              {showRoleSwitcher ? 'Ocultar' : 'Cambiar'}
+            </button>
+          </div>
+
+          {showRoleSwitcher && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
+              <button
+                onClick={() => switchDemoRole('STUDENT')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('STUDENT') ? 'var(--iq-primary)' : '#fff', color: hasRole('STUDENT') ? '#fff' : 'inherit', cursor: 'pointer' }}
+              >
+                Estudiante
+              </button>
+              <button
+                onClick={() => switchDemoRole('TEACHER')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('TEACHER') ? 'var(--iq-primary)' : '#fff', color: hasRole('TEACHER') ? '#fff' : 'inherit', cursor: 'pointer' }}
+              >
+                Docente
+              </button>
+              <button
+                onClick={() => switchDemoRole('SUPERVISOR')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('SUPERVISOR') ? 'var(--iq-primary)' : '#fff', color: hasRole('SUPERVISOR') ? '#fff' : 'inherit', cursor: 'pointer' }}
+              >
+                Supervisor
+              </button>
+              <button
+                onClick={() => switchDemoRole('ADMIN')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ADMIN') ? 'var(--iq-primary)' : '#fff', color: hasRole('ADMIN') ? '#fff' : 'inherit', cursor: 'pointer' }}
+              >
+                Admin
+              </button>
+            </div>
+          )}
+
+          {/* User profile footer */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+              <div style={{ width: '34px', height: '34px', borderRadius: '50%', backgroundColor: 'var(--iq-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '13px' }}>
+                {user?.firstName?.[0] || 'U'}
+              </div>
+              <div style={{ overflow: 'hidden' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user?.fullName || 'Usuario IQ'}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  {user?.roles?.[0]?.replace('ROLE_', '') || 'ONLINE'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={logout}
+              style={{ background: 'none', border: 'none', color: 'var(--iq-gray)', cursor: 'pointer', padding: '6px' }}
+              title="Cerrar sesión"
+            >
+              <LogOut size={17} />
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Top Navbar */}
+        <header
+          style={{
+            height: '68px',
+            backgroundColor: '#ffffff',
+            borderBottom: '1px solid var(--border-color)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 28px',
+            position: 'sticky',
+            top: 0,
+            zIndex: 30,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--iq-primary)' }}>
+              IQ English – Tutoring Management System
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Campus Tag */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', backgroundColor: 'var(--iq-gray-light)', borderRadius: 'var(--radius-full)', fontSize: '12px', fontWeight: 600, color: 'var(--iq-primary)' }}>
+              <span>Plantel:</span>
+              <span style={{ color: 'var(--iq-secondary-hover)' }}>{studentProfile?.campusName || teacherProfile?.campusName || 'Plantel Tlaxcala'}</span>
+            </div>
+
+            {/* Logout button */}
+            <button
+              onClick={logout}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '6px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}
+            >
+              <LogOut size={14} />
+              <span>Salir</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main style={{ flex: 1, padding: '28px', maxWidth: '1350px', width: '100%', margin: '0 auto' }}>
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+`);
+
+w('features/auth/LoginPage.tsx', `
+import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { Logo } from '../../components/Logo';
+import { Button } from '../../components/Button';
+import { Shield, BookOpen, GraduationCap, Lock, User as UserIcon, CheckCircle } from 'lucide-react';
+
+export const LoginPage: React.FC = () => {
+  const { login, switchDemoRole } = useAuth();
+  const [username, setUsername] = useState('student.carlos');
+  const [password, setPassword] = useState('Password123!');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setIsLoading(true);
+    try {
+      await login(username, password);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#002e6d',
+        backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(94, 179, 228, 0.3) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(197, 160, 89, 0.25) 0%, transparent 40%), linear-gradient(135deg, #002e6d 0%, #121e28 100%)',
+        padding: '24px',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '460px',
+          backgroundColor: '#ffffff',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
+          padding: '36px',
+          border: '1px solid rgba(255,255,255,0.2)',
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <Logo size="lg" />
+          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--iq-primary)', marginTop: '20px' }}>
+            Portal de Gestión de Tutorías
+          </h2>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+            Ingresa con tu cuenta institucional o selecciona un perfil de demostración
+          </p>
+        </div>
+
+        {errorMsg && (
+          <div style={{ padding: '12px 14px', backgroundColor: 'var(--status-danger-bg)', color: 'var(--status-danger)', borderRadius: 'var(--radius-md)', fontSize: '13px', marginBottom: '18px', border: '1px solid rgba(239,68,68,0.2)' }}>
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Usuario o Correo Institucional
+            </label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--iq-gray)' }}>
+                <UserIcon size={17} />
+              </span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 12px 10px 38px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-color)',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Contraseña
+            </label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--iq-gray)' }}>
+                <Lock size={17} />
+              </span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 12px 10px 38px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-color)',
+                  fontSize: '14px',
+                }}
+              />
+            </div>
+          </div>
+
+          <Button type="submit" size="lg" isLoading={isLoading} style={{ marginTop: '8px' }}>
+            Iniciar Sesión
+          </Button>
+        </form>
+
+        {/* Quick Demo Access Switchers */}
+        <div style={{ marginTop: '28px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+          <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: 'var(--iq-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center', marginBottom: '12px' }}>
+            Acceso Rápido para Pruebas (Perfiles Demo)
+          </span>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <button
+              onClick={() => switchDemoRole('STUDENT')}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--iq-secondary)', backgroundColor: 'var(--iq-secondary-light)', cursor: 'pointer', textAlign: 'left' }}
+            >
+              <GraduationCap size={18} color="var(--iq-primary)" />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--iq-primary)' }}>Carlos (Alumno)</div>
+                <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Book 2 - Intermedio</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => switchDemoRole('TEACHER')}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--iq-primary)', backgroundColor: 'var(--iq-primary-light)', cursor: 'pointer', textAlign: 'left' }}
+            >
+              <BookOpen size={18} color="var(--iq-primary)" />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--iq-primary)' }}>Ana (Docente)</div>
+                <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Tutorías & Asistencia</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => switchDemoRole('SUPERVISOR')}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid #f59e0b', backgroundColor: '#fffbeb', cursor: 'pointer', textAlign: 'left' }}
+            >
+              <Shield size={18} color="#b45309" />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: '#92400e' }}>Patricia (Supervisora)</div>
+                <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Grupos & Horarios</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => switchDemoRole('ADMIN')}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid #10b981', backgroundColor: '#ecfdf5', cursor: 'pointer', textAlign: 'left' }}
+            >
+              <CheckCircle size={18} color="#047857" />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 700, color: '#065f46' }}>Alberto (Admin)</div>
+                <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Auditoría & Sistema</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+`);
+
+console.log('Frontend Part 3 (MainLayout, LoginPage) generated');
+
+
+================ scripts\gen_fe_search.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('frontend/src');
+function w(relPath, content) {
+  const full = path.join(base, relPath);
+  fs.mkdirSync(path.dirname(full), { recursive: true });
+  fs.writeFileSync(full, content.trim() + '\n', 'utf8');
+  console.log('Generated:', relPath);
+}
+
+w('features/tutoring/TutoringSearchPage.tsx', `
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { api } from '../../services/api';
+import { GroupSession, Book, ModuleItem, Campus, Appointment } from '../../types';
+import { Card } from '../../components/Card';
+import { Badge } from '../../components/Badge';
+import { Button } from '../../components/Button';
+import { Modal } from '../../components/Modal';
+import { EmptyState } from '../../components/EmptyState';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { Calendar, Clock, MapPin, BookOpen, User as UserIcon, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
+
+export const TutoringSearchPage: React.FC = () => {
+  const { studentProfile } = useAuth();
+  const [searchMethod, setSearchMethod] = useState<'METHOD_A' | 'METHOD_B'>('METHOD_A');
+  const [sessions, setSessions] = useState<GroupSession[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [modules, setModules] = useState<ModuleItem[]>([]);
+  const [campuses, setCampuses] = useState<Campus[]>([]);
+
+  const [selectedBookId, setSelectedBookId] = useState<number | ''>(studentProfile?.currentBookId || 2);
+  const [selectedModuleId, setSelectedModuleId] = useState<number | ''>(studentProfile?.currentModuleId || 8);
+  const [selectedCampusId, setSelectedCampusId] = useState<number | ''>('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [selectedSessionForBooking, setSelectedSessionForBooking] = useState<GroupSession | null>(null);
+  const [isBookingLoading, setIsBookingLoading] = useState<boolean>(false);
+  const [bookingSuccessData, setBookingSuccessData] = useState<Appointment | null>(null);
+  const [bookingError, setBookingError] = useState<string>('');
+
+  useEffect(() => {
+    async function loadCatalog() {
+      try {
+        const [booksData, campusData] = await Promise.all([
+          api.get<Book[]>('/books'),
+          api.get<Campus[]>('/campuses'),
+        ]);
+        setBooks(booksData);
+        setCampuses(campusData);
+      } catch (err) {
+        console.error('Failed to load initial catalog', err);
+      }
+    }
+    loadCatalog();
+  }, []);
+
+  useEffect(() => {
+    if (selectedBookId) {
+      api.get<ModuleItem[]>(\`/modules?bookId=\${selectedBookId}\`)
+        .then(setModules)
+        .catch(console.error);
+    } else {
+      setModules([]);
+    }
+  }, [selectedBookId]);
+
+  const executeSearch = async () => {
+    setIsLoading(true);
+    try {
+      let query = '/tutoring/sessions?';
+      if (selectedBookId) query += \`bookId=\${selectedBookId}&\`;
+      if (selectedModuleId) query += \`moduleId=\${selectedModuleId}&\`;
+      if (selectedCampusId) query += \`campusId=\${selectedCampusId}&\`;
+      if (dateFrom) query += \`dateFrom=\${dateFrom}&\`;
+
+      const results = await api.get<GroupSession[]>(query);
+      setSessions(results);
+    } catch (err) {
+      console.error('Search failed', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    executeSearch();
+  }, [selectedBookId, selectedModuleId, selectedCampusId, dateFrom]);
+
+  const handleConfirmBooking = async () => {
+    if (!selectedSessionForBooking) return;
+    setIsBookingLoading(true);
+    setBookingError('');
+    try {
+      const resp = await api.post<Appointment>('/appointments', {
+        sessionId: selectedSessionForBooking.id,
+      });
+      setBookingSuccessData(resp);
+      executeSearch();
+    } catch (err: any) {
+      setBookingError(err.message || 'No fue posible reservar este espacio.');
+    } finally {
+      setIsBookingLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div>
+        <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>Buscar y Reservar Tutorías</h1>
+        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Selecciona tu módulo de avance o explora horarios y docentes disponibles</p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <button
+          onClick={() => { setSearchMethod('METHOD_A'); setSelectedModuleId(8); }}
+          style={{
+            flex: 1, padding: '12px 18px', borderRadius: 'var(--radius-md)',
+            border: searchMethod === 'METHOD_A' ? '2px solid var(--iq-primary)' : '1px solid var(--border-color)',
+            backgroundColor: searchMethod === 'METHOD_A' ? 'var(--iq-primary-light)' : '#ffffff',
+            color: 'var(--iq-primary)', fontWeight: 700, fontSize: '14px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+          }}
+        >
+          <BookOpen size={18} color="var(--iq-primary)" />
+          <span>Método A: Buscar por Módulo / Lección</span>
+        </button>
+
+        <button
+          onClick={() => { setSearchMethod('METHOD_B'); setSelectedModuleId(''); }}
+          style={{
+            flex: 1, padding: '12px 18px', borderRadius: 'var(--radius-md)',
+            border: searchMethod === 'METHOD_B' ? '2px solid var(--iq-primary)' : '1px solid var(--border-color)',
+            backgroundColor: searchMethod === 'METHOD_B' ? 'var(--iq-primary-light)' : '#ffffff',
+            color: 'var(--iq-primary)', fontWeight: 700, fontSize: '14px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+          }}
+        >
+          <Calendar size={18} color="var(--iq-primary)" />
+          <span>Método B: Buscar por Fecha y Disponibilidad</span>
+        </button>
+      </div>
+
+      <Card>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Libro</label>
+            <select
+              value={selectedBookId}
+              onChange={(e) => setSelectedBookId(e.target.value ? Number(e.target.value) : '')}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+            >
+              <option value="">Todos los Libros</option>
+              {books.map(b => <option key={b.id} value={b.id}>Book {b.bookNumber}: {b.title}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Módulo / Lección</label>
+            <select
+              value={selectedModuleId}
+              onChange={(e) => setSelectedModuleId(e.target.value ? Number(e.target.value) : '')}
+              disabled={!selectedBookId}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+            >
+              <option value="">Todas las Lecciones</option>
+              {modules.map(m => <option key={m.id} value={m.id}>{m.moduleCode} - {m.title}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>Plantel</label>
+            <select
+              value={selectedCampusId}
+              onChange={(e) => setSelectedCampusId(e.target.value ? Number(e.target.value) : '')}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+            >
+              <option value="">Todos los Planteles</option>
+              {campuses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>A partir de</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontSize: '13.5px' }}
+            />
+          </div>
+        </div>
+      </Card>
+
+      {isLoading ? (
+        <LoadingSpinner message="Consultando cupos y sesiones disponibles..." />
+      ) : sessions.length === 0 ? (
+        <EmptyState
+          title="No encontramos tutorías con los filtros seleccionados"
+          description="Intenta seleccionando otra lección, ampliando el rango de fechas o eligiendo otro plantel."
+          actionText="Limpiar Filtros"
+          onAction={() => { setSelectedBookId(''); setSelectedModuleId(''); setSelectedCampusId(''); setDateFrom(''); }}
+        />
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
+          {sessions.map((session) => {
+            const isFull = session.full || session.availableSeats <= 0;
+            return (
+              <div
+                key={session.id}
+                style={{
+                  backgroundColor: '#ffffff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-sm)', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '16px'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <Badge status={session.modality} size="sm" />
+                    <Badge status={isFull ? 'FULL' : 'AVAILABLE'} size="sm" />
+                  </div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--iq-secondary-hover)', textTransform: 'uppercase' }}>
+                    {session.bookTitle} • {session.moduleCode}
+                  </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--iq-primary)', marginTop: '2px' }}>
+                    {session.moduleTitle}
+                  </h3>
+                  {session.topicTitle && (
+                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Tema: {session.topicTitle}</p>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', backgroundColor: 'var(--bg-app)', borderRadius: 'var(--radius-md)', fontSize: '13px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Calendar size={15} color="var(--iq-primary)" /><span style={{ fontWeight: 600 }}>{session.sessionDate}</span></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Clock size={15} color="var(--iq-primary)" /><span>{session.startTime} - {session.endTime} ({session.durationMinutes} min)</span></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><UserIcon size={15} color="var(--iq-primary)" /><span>Docente: <strong>{session.teacherName}</strong></span></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><MapPin size={15} color="var(--iq-primary)" /><span>{session.campusName} ({session.roomOrLink || 'Aula 1'})</span></div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '6px' }}>
+                  <div>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Disponibilidad: </span>
+                    <strong style={{ fontSize: '13.5px', color: isFull ? 'var(--status-danger)' : 'var(--iq-primary)' }}>
+                      {session.availableSeats} / {session.capacity} cupos
+                    </strong>
+                  </div>
+                  <Button size="sm" disabled={isFull} onClick={() => { setSelectedSessionForBooking(session); setBookingSuccessData(null); setBookingError(''); }}>
+                    {isFull ? 'Agotado' : 'Reservar'}
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <Modal
+        isOpen={!!selectedSessionForBooking}
+        onClose={() => setSelectedSessionForBooking(null)}
+        title={bookingSuccessData ? '¡Tutoría Confirmada!' : 'Confirmar Reserva de Tutoría'}
+      >
+        {bookingSuccessData ? (
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: 'var(--status-success-bg)', color: 'var(--status-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+              <CheckCircle2 size={32} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--iq-primary)' }}>Tu tutoría ha sido reservada correctamente</h3>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginTop: '4px' }}>Hemos registrado tu espacio con el docente asignado.</p>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'var(--iq-primary-light)', borderRadius: 'var(--radius-md)', textAlign: 'left', fontSize: '13.5px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div><strong>Folio:</strong> {bookingSuccessData.appointmentNumber}</div>
+              <div><strong>Módulo:</strong> {bookingSuccessData.session.moduleTitle}</div>
+              <div><strong>Fecha y Hora:</strong> {bookingSuccessData.session.sessionDate} a las {bookingSuccessData.session.startTime} hrs</div>
+              <div><strong>Docente:</strong> {bookingSuccessData.session.teacherName}</div>
+              <div><strong>Plantel:</strong> {bookingSuccessData.session.campusName} ({bookingSuccessData.session.modality})</div>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '8px' }}>
+              <Button variant="outline" icon={<ExternalLink size={15} />} onClick={() => window.open('https://calendar.google.com/calendar/r/eventedit', '_blank')}>
+                Agregar a Google Calendar
+              </Button>
+              <Button onClick={() => setSelectedSessionForBooking(null)}>Aceptar</Button>
+            </div>
+          </div>
+        ) : selectedSessionForBooking ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            {bookingError && (
+              <div style={{ padding: '12px 14px', backgroundColor: 'var(--status-danger-bg)', color: 'var(--status-danger)', borderRadius: 'var(--radius-md)', fontSize: '13.5px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <div>
+                  <div style={{ fontWeight: 700 }}>No fue posible completar la reserva</div>
+                  <div style={{ fontSize: '13px' }}>{bookingError}</div>
+                </div>
+              </div>
+            )}
+            <p style={{ fontSize: '14px', color: 'var(--text-main)' }}>Por favor revisa el resumen de tu sesión académica antes de confirmar:</p>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-app)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13.5px' }}>
+              <div><strong>Libro:</strong> {selectedSessionForBooking.bookTitle}</div>
+              <div><strong>Módulo:</strong> {selectedSessionForBooking.moduleTitle}</div>
+              {selectedSessionForBooking.topicTitle && <div><strong>Tema:</strong> {selectedSessionForBooking.topicTitle}</div>}
+              <div><strong>Docente:</strong> {selectedSessionForBooking.teacherName}</div>
+              <div><strong>Fecha:</strong> {selectedSessionForBooking.sessionDate}</div>
+              <div><strong>Horario:</strong> {selectedSessionForBooking.startTime} - {selectedSessionForBooking.endTime} hrs</div>
+              <div><strong>Plantel:</strong> {selectedSessionForBooking.campusName}</div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+              <Button variant="ghost" onClick={() => setSelectedSessionForBooking(null)}>Cancelar</Button>
+              <Button isLoading={isBookingLoading} onClick={handleConfirmBooking}>Confirmar Tutoría</Button>
+            </div>
+          </div>
+        ) : null}
+      </Modal>
+    </div>
+  );
+};
+`);
+console.log('Search page generated');
+
+
+================ scripts\gen_tests.js ================
+
+const fs = require('fs');
+const path = require('path');
+const base = path.resolve('backend/src/test/java/mx/iqenglish/tutoring');
+function w(p, s) {
+  const f = path.join(base, p);
+  fs.mkdirSync(path.dirname(f), { recursive: true });
+  fs.writeFileSync(f, s.trim() + '\n', 'utf8');
+}
+
+w('service/AppointmentServiceTest.java', `package mx.iqenglish.tutoring.service;
+
+import mx.iqenglish.tutoring.dto.*;
+import mx.iqenglish.tutoring.entity.*;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.exception.*;
+import mx.iqenglish.tutoring.mapper.EntityMapper;
+import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.service.impl.AppointmentServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class AppointmentServiceTest {
+
+    @Mock private AppointmentRepository appointmentRepository;
+    @Mock private GroupSessionRepository sessionRepository;
+    @Mock private TutoringGroupRepository groupRepository;
+    @Mock private StudentRepository studentRepository;
+    @Mock private AttendanceRepository attendanceRepository;
+    @Mock private NotificationService notificationService;
+    @Mock private AuditService auditService;
+    @Mock private EntityMapper entityMapper;
+
+    @InjectMocks
+    private AppointmentServiceImpl appointmentService;
+
+    private Student mockStudent;
+    private TutoringGroup mockGroup;
+    private GroupSession mockSession;
+    private Book mockBook;
+    private Module mockModule;
+
+    @BeforeEach
+    void setUp() {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("student.carlos");
+        user.setFirstName("Carlos");
+        user.setLastName("Mendoza");
+
+        AcademicLevel level = new AcademicLevel();
+        level.setId(2L);
+        level.setName("Level 2 - Intermediate");
+
+        mockBook = new Book();
+        mockBook.setId(2L);
+        mockBook.setBookNumber(2);
+        mockBook.setTitle("Book 2 - Interactive Fluency");
+        mockBook.setLevel(level);
+
+        mockModule = new Module();
+        mockModule.setId(8L);
+        mockModule.setModuleCode("B2-L05B");
+        mockModule.setTitle("Lesson 5B: Requests, Excuses and Apologies");
+        mockModule.setBook(mockBook);
+
+        Campus campus = new Campus();
+        campus.setId(1L);
+        campus.setName("Plantel Tlaxcala");
+
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setUser(user);
+
+        mockStudent = new Student();
+        mockStudent.setId(1L);
+        mockStudent.setUser(user);
+        mockStudent.setStudentNumber("STU-001");
+        mockStudent.setCurrentBook(mockBook);
+        mockStudent.setCurrentModule(mockModule);
+
+        mockGroup = new TutoringGroup();
+        mockGroup.setId(1L);
+        mockGroup.setCode("TUT-B2-01");
+        mockGroup.setName("Group Book 2 Lesson 5B");
+        mockGroup.setCampus(campus);
+        mockGroup.setTeacher(teacher);
+        mockGroup.setModule(mockModule);
+        mockGroup.setCapacity(12);
+        mockGroup.setCurrentEnrollment(0);
+        mockGroup.setStatus(GroupStatus.PUBLISHED);
+
+        mockSession = new GroupSession();
+        mockSession.setId(1L);
+        mockSession.setGroup(mockGroup);
+        mockSession.setSessionDate(LocalDate.now().plusDays(3));
+        mockSession.setStartTime(LocalTime.of(17, 0));
+        mockSession.setEndTime(LocalTime.of(18, 0));
+        mockSession.setStatus(SessionStatus.SCHEDULED);
+    }
+
+    @Test
+    @DisplayName("Test 1: Student cannot book overlapping appointment (Rule R1)")
+    void testStudentCannotBookOverlappingAppointment() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(mockSession));
+        when(appointmentRepository.findActiveByStudentAndSession(1L, 1L)).thenReturn(Optional.empty());
+
+        Appointment existingAppt = new Appointment();
+        existingAppt.setId(99L);
+        existingAppt.setSession(mockSession);
+        when(appointmentRepository.findStudentOverlappingAppointments(eq(1L), any(), any(), any(), isNull()))
+            .thenReturn(List.of(existingAppt));
+
+        BookAppointmentDTO dto = new BookAppointmentDTO(1L);
+        dto.setStudentId(1L);
+
+        assertThrows(ScheduleConflictException.class, () -> appointmentService.bookAppointment(dto));
+        verify(appointmentRepository, never()).save(any(Appointment.class));
+    }
+
+    @Test
+    @DisplayName("Test 3: Group cannot exceed capacity (Rule R3)")
+    void testGroupCannotExceedCapacity() {
+        mockGroup.setCapacity(5);
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(mockSession));
+        when(appointmentRepository.findActiveByStudentAndSession(1L, 1L)).thenReturn(Optional.empty());
+        when(appointmentRepository.findStudentOverlappingAppointments(eq(1L), any(), any(), any(), isNull()))
+            .thenReturn(Collections.emptyList());
+        when(appointmentRepository.countConfirmedBySessionId(1L)).thenReturn(5L); // Session is full!
+
+        BookAppointmentDTO dto = new BookAppointmentDTO(1L);
+        dto.setStudentId(1L);
+
+        assertThrows(CapacityExceededException.class, () -> appointmentService.bookAppointment(dto));
+        verify(appointmentRepository, never()).save(any(Appointment.class));
+    }
+
+    @Test
+    @DisplayName("Test 4: Cancelled appointment releases capacity (Rule R8)")
+    void testCancelledAppointmentReleasesCapacity() {
+        mockGroup.setCurrentEnrollment(3);
+
+        Appointment appt = new Appointment();
+        appt.setId(10L);
+        appt.setAppointmentNumber("APT-100");
+        appt.setStudent(mockStudent);
+        appt.setSession(mockSession);
+        appt.setStatus(AppointmentStatus.CONFIRMED);
+
+        when(appointmentRepository.findById(10L)).thenReturn(Optional.of(appt));
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(appt);
+        when(entityMapper.toAppointmentDTO(any(Appointment.class))).thenReturn(new AppointmentDTO());
+
+        CancelAppointmentDTO cancelDto = new CancelAppointmentDTO("Personal conflict");
+        appointmentService.cancelAppointment(10L, cancelDto);
+
+        assertEquals(2, mockGroup.getCurrentEnrollment()); // Capacity decreased by 1
+        assertEquals(AppointmentStatus.CANCELLED, appt.getStatus());
+        verify(groupRepository).save(mockGroup);
+        verify(notificationService).sendNotification(any(), anyString(), anyString(), eq(NotificationType.APPOINTMENT_CANCELLED), anyString(), any());
+    }
+
+    @Test
+    @DisplayName("Test 5: Rescheduling maintains original appointment if target slot fails (Rule R10)")
+    void testReschedulingMaintainsOriginalAppointmentIfNewSlotFails() {
+        Appointment originalAppt = new Appointment();
+        originalAppt.setId(10L);
+        originalAppt.setAppointmentNumber("APT-10");
+        originalAppt.setStudent(mockStudent);
+        originalAppt.setSession(mockSession);
+        originalAppt.setStatus(AppointmentStatus.CONFIRMED);
+
+        GroupSession targetSession = new GroupSession();
+        targetSession.setId(2L);
+        TutoringGroup fullTargetGroup = new TutoringGroup();
+        fullTargetGroup.setId(2L);
+        fullTargetGroup.setCapacity(2);
+        fullTargetGroup.setStatus(GroupStatus.PUBLISHED);
+        targetSession.setGroup(fullTargetGroup);
+        targetSession.setSessionDate(LocalDate.now().plusDays(5));
+        targetSession.setStartTime(LocalTime.of(19, 0));
+        targetSession.setEndTime(LocalTime.of(20, 0));
+        targetSession.setStatus(SessionStatus.SCHEDULED);
+
+        when(appointmentRepository.findById(10L)).thenReturn(Optional.of(originalAppt));
+        when(sessionRepository.findById(2L)).thenReturn(Optional.of(targetSession));
+        when(appointmentRepository.findActiveByStudentAndSession(1L, 2L)).thenReturn(Optional.empty());
+        when(appointmentRepository.findStudentOverlappingAppointments(eq(1L), any(), any(), any(), eq(10L)))
+            .thenReturn(Collections.emptyList());
+        when(appointmentRepository.countConfirmedBySessionId(2L)).thenReturn(2L); // Target session FULL!
+
+        RescheduleAppointmentDTO reschedDto = new RescheduleAppointmentDTO(2L, "Prefer evening");
+
+        assertThrows(CapacityExceededException.class, () -> appointmentService.rescheduleAppointment(10L, reschedDto));
+
+        // Original appointment remains CONFIRMED
+        assertEquals(AppointmentStatus.CONFIRMED, originalAppt.getStatus());
+    }
+
+    @Test
+    @DisplayName("Test 12: Double booking in the same session is prevented (Rule R12)")
+    void testDoubleBookingIsPrevented() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(mockSession));
+        
+        Appointment existing = new Appointment();
+        existing.setId(55L);
+        when(appointmentRepository.findActiveByStudentAndSession(1L, 1L)).thenReturn(Optional.of(existing));
+
+        BookAppointmentDTO dto = new BookAppointmentDTO(1L);
+        dto.setStudentId(1L);
+
+        assertThrows(DoubleBookingException.class, () -> appointmentService.bookAppointment(dto));
+    }
+}
+`);
+
+w('service/TutoringGroupServiceTest.java', `package mx.iqenglish.tutoring.service;
+
+import mx.iqenglish.tutoring.dto.CreateTutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.entity.*;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.exception.ScheduleConflictException;
+import mx.iqenglish.tutoring.mapper.EntityMapper;
+import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.service.impl.TutoringGroupServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class TutoringGroupServiceTest {
+
+    @Mock private TutoringGroupRepository groupRepository;
+    @Mock private GroupSessionRepository sessionRepository;
+    @Mock private CampusRepository campusRepository;
+    @Mock private TeacherRepository teacherRepository;
+    @Mock private ModuleRepository moduleRepository;
+    @Mock private TopicRepository topicRepository;
+    @Mock private UserRepository userRepository;
+    @Mock private EntityMapper entityMapper;
+    @Mock private AuditService auditService;
+
+    @InjectMocks
+    private TutoringGroupServiceImpl groupService;
+
+    private Campus mockCampus;
+    private Teacher mockTeacher;
+    private Module mockModule;
+
+    @BeforeEach
+    void setUp() {
+        mockCampus = new Campus();
+        mockCampus.setId(1L);
+        mockCampus.setName("Campus Tlaxcala");
+
+        User teacherUser = new User();
+        teacherUser.setFirstName("Ana");
+        teacherUser.setLastName("García");
+
+        mockTeacher = new Teacher();
+        mockTeacher.setId(1L);
+        mockTeacher.setUser(teacherUser);
+
+        mockModule = new Module();
+        mockModule.setId(8L);
+        mockModule.setTitle("Lesson 5B");
+    }
+
+    @Test
+    @DisplayName("Test 2: Teacher cannot have overlapping sessions (Rule R2)")
+    void testTeacherCannotHaveOverlappingSessions() {
+        when(campusRepository.findById(1L)).thenReturn(Optional.of(mockCampus));
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(mockTeacher));
+        when(moduleRepository.findById(8L)).thenReturn(Optional.of(mockModule));
+
+        GroupSession existingSession = new GroupSession();
+        existingSession.setId(90L);
+        when(sessionRepository.findTeacherOverlappingSessions(eq(1L), any(LocalDate.class), any(LocalTime.class), any(LocalTime.class), isNull()))
+            .thenReturn(List.of(existingSession));
+
+        CreateTutoringGroupDTO dto = new CreateTutoringGroupDTO();
+        dto.setName("New Group");
+        dto.setCampusId(1L);
+        dto.setTeacherId(1L);
+        dto.setModuleId(8L);
+        dto.setCapacity(10);
+        dto.setInitialSessionDate(LocalDate.now().plusDays(2));
+        dto.setInitialStartTime(LocalTime.of(17, 0));
+        dto.setInitialEndTime(LocalTime.of(18, 0));
+
+        assertThrows(ScheduleConflictException.class, () -> groupService.createGroup(dto));
+        verify(groupRepository, never()).save(any(TutoringGroup.class));
+    }
+}
+`);
+
+w('security/SecurityRbacTest.java', `package mx.iqenglish.tutoring.security;
+
+import mx.iqenglish.tutoring.entity.Permission;
+import mx.iqenglish.tutoring.entity.Role;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.entity.UserStatus;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SecurityRbacTest {
+
+    @Test
+    @DisplayName("Test 6, 7, 8: RBAC Permission Mapping for Student, Supervisor, and Admin")
+    void testRbacPermissionMapping() {
+        // 1. Student setup
+        Role studentRole = new Role("ROLE_STUDENT", "Student");
+        Permission bookPerm = new Permission("TUTORING_BOOK", "Book tutoring", "TUTORING");
+        studentRole.setPermissions(Set.of(bookPerm));
+
+        User studentUser = new User();
+        studentUser.setId(1L);
+        studentUser.setUsername("student.carlos");
+        studentUser.setEmail("carlos@iqenglish.mx");
+        studentUser.setPasswordHash("hash");
+        studentUser.setFirstName("Carlos");
+        studentUser.setLastName("Mendoza");
+        studentUser.setStatus(UserStatus.ACTIVE);
+        studentUser.setRoles(Set.of(studentRole));
+
+        UserPrincipal principal = UserPrincipal.create(studentUser);
+        Set<String> authorities = principal.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toSet());
+
+        assertTrue(authorities.contains("ROLE_STUDENT"));
+        assertTrue(authorities.contains("TUTORING_BOOK"));
+        assertFalse(authorities.contains("GROUP_CREATE")); // Student cannot create groups (Rule R6 check)
+
+        // 2. Supervisor setup
+        Role supervisorRole = new Role("ROLE_SUPERVISOR", "Supervisor");
+        Permission groupCreatePerm = new Permission("GROUP_CREATE", "Create groups", "TUTORING");
+        supervisorRole.setPermissions(Set.of(groupCreatePerm));
+
+        User supervisorUser = new User();
+        supervisorUser.setId(2L);
+        supervisorUser.setUsername("supervisor.patricia");
+        supervisorUser.setEmail("patricia@iqenglish.mx");
+        supervisorUser.setPasswordHash("hash");
+        supervisorUser.setFirstName("Patricia");
+        supervisorUser.setLastName("Veloz");
+        supervisorUser.setStatus(UserStatus.ACTIVE);
+        supervisorUser.setRoles(Set.of(supervisorRole));
+
+        UserPrincipal superPrincipal = UserPrincipal.create(supervisorUser);
+        Set<String> superAuths = superPrincipal.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toSet());
+
+        assertTrue(superAuths.contains("ROLE_SUPERVISOR"));
+        assertTrue(superAuths.contains("GROUP_CREATE")); // Supervisor can manage groups
+    }
+}
+`);
+
+console.log('Unit and RBAC tests written successfully');

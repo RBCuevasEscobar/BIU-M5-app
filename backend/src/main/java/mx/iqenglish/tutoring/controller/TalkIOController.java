@@ -7,7 +7,10 @@ import mx.iqenglish.tutoring.dto.TalkIOSessionDTO;
 import mx.iqenglish.tutoring.integration.talkio.TalkIOService;
 import mx.iqenglish.tutoring.security.SecurityUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/talkio")

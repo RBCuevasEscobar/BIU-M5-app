@@ -1,10 +1,38 @@
 package mx.iqenglish.tutoring.service.impl;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
-import mx.iqenglish.tutoring.exception.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.UUID;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.BookAppointmentDTO;
+import mx.iqenglish.tutoring.dto.CancelAppointmentDTO;
+import mx.iqenglish.tutoring.dto.RescheduleAppointmentDTO;
+import mx.iqenglish.tutoring.entity.Appointment;
+import mx.iqenglish.tutoring.entity.AppointmentStatus;
+import mx.iqenglish.tutoring.entity.Book;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.GroupStatus;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.NotificationType;
+import mx.iqenglish.tutoring.entity.SessionStatus;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.exception.BusinessException;
+import mx.iqenglish.tutoring.exception.CapacityExceededException;
+import mx.iqenglish.tutoring.exception.DoubleBookingException;
+import mx.iqenglish.tutoring.exception.AcademicLevelMismatchException;
+import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
+import mx.iqenglish.tutoring.exception.ScheduleConflictException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AppointmentRepository;
+import mx.iqenglish.tutoring.repository.AttendanceRepository;
+import mx.iqenglish.tutoring.repository.GroupSessionRepository;
+import mx.iqenglish.tutoring.repository.StudentRepository;
+import mx.iqenglish.tutoring.repository.TutoringGroupRepository;
 import mx.iqenglish.tutoring.security.SecurityUtils;
 import mx.iqenglish.tutoring.service.AppointmentService;
 import mx.iqenglish.tutoring.service.AuditService;
@@ -15,13 +43,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -76,11 +97,17 @@ public class AppointmentServiceImpl implements AppointmentService {
         TutoringGroup group = session.getGroup();
 
         // R14: Not allow booking inactive groups
+        if (group.getStatus() == GroupStatus.COMPLETED) {
+            throw new BusinessException("GROUP_ALREADY_COMPLETED", "No es posible registrarse en este grupo porque la tutoria ya ha sido completada y cerrada.", HttpStatus.BAD_REQUEST);
+        }
         if (group.getStatus() != GroupStatus.PUBLISHED) {
             throw new BusinessException("GROUP_INACTIVE", "Cannot book session for inactive tutoring group.", HttpStatus.BAD_REQUEST);
         }
 
         // R15: Not allow booking cancelled sessions
+        if (session.getStatus() == SessionStatus.COMPLETED) {
+            throw new BusinessException("SESSION_ALREADY_COMPLETED", "No es posible registrarse en esta sesion porque la tutoria ya ha sido completada y cerrada.", HttpStatus.BAD_REQUEST);
+        }
         if (session.getStatus() == SessionStatus.CANCELLED) {
             throw new BusinessException("SESSION_CANCELLED", "Cannot book a cancelled session.", HttpStatus.BAD_REQUEST);
         }

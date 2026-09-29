@@ -1,5 +1,10 @@
 import {
+  Appointment,
   TutoringGroup,
+  CreateTutoringGroupPayload,
+  UpdateTutoringGroupPayload,
+  DuplicateTutoringGroupPayload,
+  GroupReport,
   User,
   PageResponse,
   CreateUserPayload,
@@ -67,9 +72,9 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 export const api = {
   get: <T>(endpoint: string) => request<T>(endpoint, { method: 'GET' }),
-  post: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
-  put: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
-  patch: <T>(endpoint: string, body?: any) => request<T>(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
+  post: <T>(endpoint: string, body?: unknown) => request<T>(endpoint, { method: 'POST', body: JSON.stringify(body) }),
+  put: <T>(endpoint: string, body?: unknown) => request<T>(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
+  patch: <T>(endpoint: string, body?: unknown) => request<T>(endpoint, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
 
   // User Management Service API
@@ -86,10 +91,10 @@ export const api = {
       return request<TutoringGroup[]>(`/tutoring/groups?${q.toString()}`, { method: 'GET' });
     },
     getById: (id: number) => request<TutoringGroup>(`/tutoring/groups/${id}`, { method: 'GET' }),
-    create: (data: any) => request<TutoringGroup>('/tutoring/groups', { method: 'POST', body: JSON.stringify(data) }),
-    update: (id: number, data: any) => request<TutoringGroup>(`/tutoring/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    create: (data: CreateTutoringGroupPayload) => request<TutoringGroup>('/tutoring/groups', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id: number, data: UpdateTutoringGroupPayload) => request<TutoringGroup>(`/tutoring/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: number) => request<void>(`/tutoring/groups/${id}`, { method: 'DELETE' }),
-    duplicate: (id: number, data: any) => request<TutoringGroup>(`/tutoring/groups/${id}/duplicate`, { method: 'POST', body: JSON.stringify(data) }),
+    duplicate: (id: number, data: DuplicateTutoringGroupPayload) => request<TutoringGroup>(`/tutoring/groups/${id}/duplicate`, { method: 'POST', body: JSON.stringify(data) }),
     updateStatus: (id: number, status: string) => request<TutoringGroup>(`/tutoring/groups/${id}/status?status=${status}`, { method: 'PATCH' }),
     getReport: (filters?: { campusId?: number; moduleId?: number; teacherId?: number; bookId?: number; status?: string }) => {
       const q = new URLSearchParams();
@@ -98,7 +103,38 @@ export const api = {
       if (filters?.teacherId) q.append('teacherId', filters.teacherId.toString());
       if (filters?.bookId) q.append('bookId', filters.bookId.toString());
       if (filters?.status) q.append('status', filters.status);
-      return request<any>(`/tutoring/groups/report?${q.toString()}`, { method: 'GET' });
+      return request<GroupReport>(`/tutoring/groups/report?${q.toString()}`, { method: 'GET' });
+    },
+    getEnrolledStudents: (groupId: number) => {
+      return request<Appointment[]>(`/tutoring/groups/${groupId}/students`, { method: 'GET' });
+    },
+    downloadEnrolledStudentsCsv: async (groupId?: number, filters?: { campusId?: number; moduleId?: number; teacherId?: number }) => {
+      const q = new URLSearchParams();
+      if (groupId) q.append('groupId', groupId.toString());
+      if (filters?.campusId) q.append('campusId', filters.campusId.toString());
+      if (filters?.moduleId) q.append('moduleId', filters.moduleId.toString());
+      if (filters?.teacherId) q.append('teacherId', filters.teacherId.toString());
+
+      const token = localStorage.getItem('iq_token');
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/tutoring/groups/students/export/csv?${q.toString()}`, {
+        method: 'GET',
+        headers,
+      });
+
+      if (!res.ok) throw new Error('Error al descargar el reporte CSV de alumnos inscritos');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `alumnos_inscritos_${groupId ? 'grupo_' + groupId : 'todos'}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     },
     downloadCsv: async (filters?: { campusId?: number; moduleId?: number; teacherId?: number; bookId?: number; status?: string }) => {
       const q = new URLSearchParams();

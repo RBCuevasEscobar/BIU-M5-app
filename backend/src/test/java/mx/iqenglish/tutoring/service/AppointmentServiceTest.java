@@ -1,30 +1,59 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
-import mx.iqenglish.tutoring.entity.Module;
-import mx.iqenglish.tutoring.exception.*;
-import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
-import mx.iqenglish.tutoring.service.impl.AppointmentServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.BookAppointmentDTO;
+import mx.iqenglish.tutoring.dto.CancelAppointmentDTO;
+import mx.iqenglish.tutoring.dto.RescheduleAppointmentDTO;
+import mx.iqenglish.tutoring.entity.AcademicLevel;
+import mx.iqenglish.tutoring.entity.Appointment;
+import mx.iqenglish.tutoring.entity.AppointmentStatus;
+import mx.iqenglish.tutoring.entity.Book;
+import mx.iqenglish.tutoring.entity.Campus;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.GroupStatus;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.NotificationType;
+import mx.iqenglish.tutoring.entity.SessionStatus;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.exception.BusinessException;
+import mx.iqenglish.tutoring.exception.CapacityExceededException;
+import mx.iqenglish.tutoring.exception.DoubleBookingException;
+import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
+import mx.iqenglish.tutoring.exception.ScheduleConflictException;
+import mx.iqenglish.tutoring.mapper.EntityMapper;
+import mx.iqenglish.tutoring.repository.AppointmentRepository;
+import mx.iqenglish.tutoring.repository.AttendanceRepository;
+import mx.iqenglish.tutoring.repository.GroupSessionRepository;
+import mx.iqenglish.tutoring.repository.StudentRepository;
+import mx.iqenglish.tutoring.repository.TutoringGroupRepository;
+import mx.iqenglish.tutoring.service.impl.AppointmentServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
 
 @ExtendWith(MockitoExtension.class)
 class AppointmentServiceTest {

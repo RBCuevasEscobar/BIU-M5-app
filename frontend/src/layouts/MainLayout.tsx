@@ -26,15 +26,15 @@ export const MainLayout: React.FC = () => {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const navItems = [
-    { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Buscar Tutorias', path: '/tutoring/search', icon: <Search size={19} />, roles: ['STUDENT', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Mis Tutorias', path: '/tutoring/my-appointments', icon: <CalendarCheck size={19} />, roles: ['STUDENT'] },
-    { label: 'Gestion de Grupos', path: '/groups', icon: <Users size={19} />, roles: ['SUPERVISOR', 'ADMIN'] },
-    { label: 'Gestion de Usuarios', path: '/users', icon: <UserCog size={19} />, roles: ['ADMIN', 'SUPERVISOR'] },
-    { label: 'Registro Asistencia', path: '/attendance', icon: <CheckSquare size={19} />, roles: ['TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Programa Academico', path: '/academic', icon: <BookOpen size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Practica IA TalkIO', path: '/talkio', icon: <Bot size={19} />, roles: ['STUDENT', 'TEACHER', 'SUPERVISOR', 'ADMIN'] },
-    { label: 'Auditoria & Sistema', path: '/admin/audit', icon: <ShieldCheck size={19} />, roles: ['ADMIN'] },
+    { label: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={19} />, roles: ['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Buscar Tutorias', path: '/tutoring/search', icon: <Search size={19} />, roles: ['ROLE_STUDENT', 'ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Mis Tutorias', path: '/tutoring/my-appointments', icon: <CalendarCheck size={19} />, roles: ['ROLE_STUDENT'] },
+    { label: 'Gestion de Grupos', path: '/groups', icon: <Users size={19} />, roles: ['ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Gestion de Usuarios', path: '/users', icon: <UserCog size={19} />, roles: ['ROLE_ADMIN', 'ROLE_SUPERVISOR'] },
+    { label: 'Registro Asistencia', path: '/attendance', icon: <CheckSquare size={19} />, roles: ['ROLE_TEACHER', 'ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Programa Academico', path: '/academic', icon: <BookOpen size={19} />, roles: ['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Practica IA TalkIO', path: '/talkio', icon: <Bot size={19} />, roles: ['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_SUPERVISOR', 'ROLE_ADMIN'] },
+    { label: 'Auditoria & Sistema', path: '/admin/audit', icon: <ShieldCheck size={19} />, roles: ['ROLE_ADMIN'] },
   ];
 
   const filteredNav = navItems.filter(item => item.roles.some(r => hasRole(r)));
@@ -123,28 +123,28 @@ export const MainLayout: React.FC = () => {
           {showRoleSwitcher && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
               <button
-                onClick={() => switchDemoRole('STUDENT')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('STUDENT') ? 'var(--iq-primary)' : '#fff', color: hasRole('STUDENT') ? '#fff' : 'inherit', cursor: 'pointer' }}
+                onClick={() => switchDemoRole('ROLE_STUDENT')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ROLE_STUDENT') ? 'var(--iq-primary)' : '#fff', color: hasRole('ROLE_STUDENT') ? '#fff' : 'inherit', cursor: 'pointer' }}
               >
-                Estudiante
+                ROLE_STUDENT
               </button>
               <button
-                onClick={() => switchDemoRole('TEACHER')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('TEACHER') ? 'var(--iq-primary)' : '#fff', color: hasRole('TEACHER') ? '#fff' : 'inherit', cursor: 'pointer' }}
+                onClick={() => switchDemoRole('ROLE_TEACHER')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ROLE_TEACHER') ? 'var(--iq-primary)' : '#fff', color: hasRole('ROLE_TEACHER') ? '#fff' : 'inherit', cursor: 'pointer' }}
               >
-                Docente
+                ROLE_TEACHER
               </button>
               <button
-                onClick={() => switchDemoRole('SUPERVISOR')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('SUPERVISOR') ? 'var(--iq-primary)' : '#fff', color: hasRole('SUPERVISOR') ? '#fff' : 'inherit', cursor: 'pointer' }}
+                onClick={() => switchDemoRole('ROLE_SUPERVISOR')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ROLE_SUPERVISOR') ? 'var(--iq-primary)' : '#fff', color: hasRole('ROLE_SUPERVISOR') ? '#fff' : 'inherit', cursor: 'pointer' }}
               >
-                Supervisor
+                ROLE_SUPERVISOR
               </button>
               <button
-                onClick={() => switchDemoRole('ADMIN')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ADMIN') ? 'var(--iq-primary)' : '#fff', color: hasRole('ADMIN') ? '#fff' : 'inherit', cursor: 'pointer' }}
+                onClick={() => switchDemoRole('ROLE_ADMIN')}
+                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ROLE_ADMIN') ? 'var(--iq-primary)' : '#fff', color: hasRole('ROLE_ADMIN') ? '#fff' : 'inherit', cursor: 'pointer' }}
               >
-                Admin
+                ROLE_ADMIN
               </button>
             </div>
           )}

@@ -31,7 +31,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="academic" element={<AcademicCatalogPage />} />
         <Route path="talkio" element={<TalkIOPracticePage />} />
         <Route path="admin/audit" element={<AuditLogsPage />} />
-        <Route path="users" element={hasRole('ADMIN') || hasRole('SUPERVISOR') ? <UserManagementPage /> : <Navigate to="/dashboard" replace />} />
+        <Route path="users" element={hasRole('ROLE_ADMIN') || hasRole('ROLE_SUPERVISOR') ? <UserManagementPage /> : <Navigate to="/dashboard" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

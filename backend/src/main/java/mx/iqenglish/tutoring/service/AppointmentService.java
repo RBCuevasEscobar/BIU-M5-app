@@ -1,6 +1,11 @@
 package mx.iqenglish.tutoring.service;
-import mx.iqenglish.tutoring.dto.*;
+
 import java.util.List;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.BookAppointmentDTO;
+import mx.iqenglish.tutoring.dto.CancelAppointmentDTO;
+import mx.iqenglish.tutoring.dto.RescheduleAppointmentDTO;
+
 public interface AppointmentService {
     AppointmentDTO bookAppointment(BookAppointmentDTO dto);
     AppointmentDTO cancelAppointment(Long appointmentId, CancelAppointmentDTO dto);

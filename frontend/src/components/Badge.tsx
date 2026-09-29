@@ -45,28 +45,31 @@ export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
       bg = '#fee2e2';
       color = '#991b1b';
       icon = <Shield size={13} />;
-      label = 'Administrador';
+      label = 'ROLE_ADMIN';
       break;
     case 'ROLE_SUPERVISOR':
     case 'SUPERVISOR':
       bg = '#fef3c7';
       color = '#92400e';
       icon = <Shield size={13} />;
-      label = 'Supervisor';
+      label = 'ROLE_SUPERVISOR';
       break;
     case 'ROLE_TEACHER':
     case 'TEACHER':
+    case 'DOCENTE':
       bg = '#e0f2fe';
       color = '#0369a1';
       icon = <Briefcase size={13} />;
-      label = 'Docente';
+      label = 'ROLE_TEACHER';
       break;
     case 'ROLE_STUDENT':
     case 'STUDENT':
+    case 'ALUMNO':
+    case 'ESTUDIANTE':
       bg = '#f0fdf4';
       color = '#15803d';
       icon = <GraduationCap size={13} />;
-      label = 'Estudiante';
+      label = 'ROLE_STUDENT';
       break;
     case 'FULL':
       bg = '#fef2f2';
@@ -84,7 +87,7 @@ export const Badge: React.FC<BadgeProps> = ({ status, size = 'md' }) => {
       bg = '#f0fdf4';
       color = '#15803d';
       icon = <CheckCircle2 size={13} />;
-      label = 'Completada';
+      label = 'Cerrado / Completado';
       break;
     case 'ONLINE':
       bg = '#f5f3ff';

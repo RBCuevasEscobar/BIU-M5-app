@@ -1,7 +1,13 @@
 package mx.iqenglish.tutoring.service.impl;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.util.Set;
+import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.AuthRequest;
+import mx.iqenglish.tutoring.dto.AuthResponse;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.entity.Permission;
+import mx.iqenglish.tutoring.entity.Role;
+import mx.iqenglish.tutoring.entity.User;
 import mx.iqenglish.tutoring.exception.BusinessException;
 import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
@@ -16,13 +22,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {

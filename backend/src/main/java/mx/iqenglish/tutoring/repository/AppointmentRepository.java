@@ -14,6 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+
+    @Query("SELECT a FROM Appointment a WHERE a.session.group.id = :groupId AND (a.status = 'CONFIRMED' OR a.status = 'COMPLETED') ORDER BY a.student.user.lastName ASC, a.student.user.firstName ASC")
+    List<Appointment> findEnrolledByGroupId(@Param("groupId") Long groupId);
+
+    @Query("SELECT a FROM Appointment a WHERE a.session.group.teacher.id = :teacherId AND (a.status = 'CONFIRMED' OR a.status = 'COMPLETED') ORDER BY a.session.group.code ASC, a.student.user.lastName ASC, a.student.user.firstName ASC")
+    List<Appointment> findEnrolledByTeacherId(@Param("teacherId") Long teacherId);
+
     Optional<Appointment> findByAppointmentNumber(String appointmentNumber);
     List<Appointment> findByStudentId(Long studentId);
     List<Appointment> findByStudentIdAndStatus(Long studentId, AppointmentStatus status);

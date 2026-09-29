@@ -1,10 +1,34 @@
 package mx.iqenglish.tutoring.service.impl;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.DashboardSummaryDTO;
+import mx.iqenglish.tutoring.dto.GroupSessionDTO;
+import mx.iqenglish.tutoring.dto.StudentModuleItemDTO;
+import mx.iqenglish.tutoring.dto.SuggestedTutoringDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.entity.AcademicProgress;
+import mx.iqenglish.tutoring.entity.Appointment;
+import mx.iqenglish.tutoring.entity.Attendance;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.GroupStatus;
 import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AcademicProgressRepository;
+import mx.iqenglish.tutoring.repository.AppointmentRepository;
+import mx.iqenglish.tutoring.repository.GroupSessionRepository;
+import mx.iqenglish.tutoring.repository.ModuleRepository;
+import mx.iqenglish.tutoring.repository.StudentRepository;
+import mx.iqenglish.tutoring.repository.TeacherRepository;
+import mx.iqenglish.tutoring.repository.TutoringGroupRepository;
 import mx.iqenglish.tutoring.security.SecurityUtils;
 import mx.iqenglish.tutoring.service.AppointmentService;
 import mx.iqenglish.tutoring.service.NotificationService;
@@ -12,9 +36,6 @@ import mx.iqenglish.tutoring.service.ReportService;
 import mx.iqenglish.tutoring.service.TutoringGroupService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -76,7 +97,7 @@ public class ReportServiceImpl implements ReportService {
 
         if (userId != null) {
             studentRepository.findByUserId(userId).ifPresent(s -> {
-                summary.setRole("STUDENT");
+                summary.setRole("ROLE_STUDENT");
                 summary.setUserFullName(s.getUser().getFullName());
                 summary.setStudentProfile(entityMapper.toStudentDTO(s));
 
@@ -219,7 +240,7 @@ public class ReportServiceImpl implements ReportService {
             });
 
             teacherRepository.findByUserId(userId).ifPresent(t -> {
-                summary.setRole("TEACHER");
+                summary.setRole("ROLE_TEACHER");
                 summary.setUserFullName(t.getUser().getFullName());
                 summary.setTeacherProfile(entityMapper.toTeacherDTO(t));
                 List<TutoringGroupDTO> teacherGroups = groupService.filterGroups(null, null, t.getId(), null, GroupStatus.PUBLISHED);

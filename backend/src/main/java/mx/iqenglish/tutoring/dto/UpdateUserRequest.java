@@ -1,8 +1,10 @@
 package mx.iqenglish.tutoring.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 public class UpdateUserRequest {
 
@@ -24,6 +26,25 @@ public class UpdateUserRequest {
 
     private String status;
     private String avatarUrl;
+    private Long campusId;
+
+    // Student fields
+    @Size(max = 50, message = "Student number cannot exceed 50 characters")
+    private String studentNumber;
+
+    private Long currentLevelId;
+    private Long currentBookId;
+    private Long currentModuleId;
+
+    // Teacher fields
+    @Size(max = 50, message = "Employee number cannot exceed 50 characters")
+    private String employeeNumber;
+
+    @Size(max = 150, message = "Specialty cannot exceed 150 characters")
+    private String specialty;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate hireDate;
 
     public UpdateUserRequest() {}
 
@@ -39,4 +60,26 @@ public class UpdateUserRequest {
     public void setStatus(String status) { this.status = status; }
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public Long getCampusId() { return campusId; }
+    public void setCampusId(Long campusId) { this.campusId = campusId; }
+    public String getStudentNumber() { return studentNumber; }
+    public void setStudentNumber(String studentNumber) { this.studentNumber = studentNumber; }
+    public Long getCurrentLevelId() { return currentLevelId; }
+    public void setCurrentLevelId(Long currentLevelId) { this.currentLevelId = currentLevelId; }
+    public Long getLevelId() { return currentLevelId; }
+    public void setLevelId(Long levelId) { this.currentLevelId = levelId; }
+    public Long getCurrentBookId() { return currentBookId; }
+    public void setCurrentBookId(Long currentBookId) { this.currentBookId = currentBookId; }
+    public Long getBookId() { return currentBookId; }
+    public void setBookId(Long bookId) { this.currentBookId = bookId; }
+    public Long getCurrentModuleId() { return currentModuleId; }
+    public void setCurrentModuleId(Long currentModuleId) { this.currentModuleId = currentModuleId; }
+    public Long getModuleId() { return currentModuleId; }
+    public void setModuleId(Long moduleId) { this.currentModuleId = moduleId; }
+    public String getEmployeeNumber() { return employeeNumber; }
+    public void setEmployeeNumber(String employeeNumber) { this.employeeNumber = employeeNumber; }
+    public String getSpecialty() { return specialty; }
+    public void setSpecialty(String specialty) { this.specialty = specialty; }
+    public LocalDate getHireDate() { return hireDate; }
+    public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
 }

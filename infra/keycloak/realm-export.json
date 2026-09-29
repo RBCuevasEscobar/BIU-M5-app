@@ -3,10 +3,10 @@
   "enabled": true,
   "roles": {
     "realm": [
-      { "name": "ADMIN", "description": "Administrator" },
-      { "name": "SUPERVISOR", "description": "Supervisor" },
-      { "name": "TEACHER", "description": "Teacher" },
-      { "name": "STUDENT", "description": "Student" }
+      { "name": "ROLE_ADMIN", "description": "Administrator" },
+      { "name": "ROLE_SUPERVISOR", "description": "Supervisor" },
+      { "name": "ROLE_TEACHER", "description": "Teacher" },
+      { "name": "ROLE_STUDENT", "description": "Student" }
     ]
   },
   "clients": [

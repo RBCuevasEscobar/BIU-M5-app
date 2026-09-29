@@ -1,6 +1,7 @@
-mx\iqenglish\tutoring\service\UserServiceTest.class
 mx\iqenglish\tutoring\service\AppointmentServiceTest.class
 mx\iqenglish\tutoring\controller\TutoringGroupControllerTest.class
 mx\iqenglish\tutoring\security\SecurityRbacTest.class
 mx\iqenglish\tutoring\controller\UserControllerTest.class
+mx\iqenglish\tutoring\service\AttendanceServiceTest.class
+mx\iqenglish\tutoring\service\UserServiceTest.class
 mx\iqenglish\tutoring\service\TutoringGroupServiceTest.class

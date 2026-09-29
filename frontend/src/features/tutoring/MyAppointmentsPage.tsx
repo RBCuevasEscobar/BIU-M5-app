@@ -34,7 +34,7 @@ export const MyAppointmentsPage: React.FC = () => {
     try {
       const data = await api.get<Appointment[]>('/appointments/my');
       setAppointments(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load appointments', err);
     } finally {
       setIsLoading(false);
@@ -53,7 +53,7 @@ export const MyAppointmentsPage: React.FC = () => {
       // Find other sessions for the same module
       const results = await api.get<GroupSession[]>(`/tutoring/sessions?moduleId=${appt.session.moduleId}`);
       setAvailableSlots(results.filter(s => s.id !== appt.session.id && !s.full));
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load slots for rescheduling', err);
     }
   };

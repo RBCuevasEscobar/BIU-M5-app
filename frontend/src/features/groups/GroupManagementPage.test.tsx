@@ -4,7 +4,8 @@ import {
   CreateTutoringGroupPayload, 
   UpdateTutoringGroupPayload, 
   DuplicateGroupPayload, 
-  GroupReport 
+  GroupReport,
+  Appointment 
 } from '../../types';
 
 describe('Group Management Model & Domain Logic (Phase 10)', () => {
@@ -37,6 +38,54 @@ describe('Group Management Model & Domain Logic (Phase 10)', () => {
     expect(group.status).toBe('PUBLISHED');
     expect(group.availableSeats).toBe(group.capacity - group.currentEnrollment);
     expect(group.full).toBe(false);
+  });
+
+  it('validates enrolled students roster mapping for teacher reporting', () => {
+    const enrolledStudents: Appointment[] = [
+      {
+        id: 501,
+        appointmentNumber: 'APT-2026-0001',
+        studentId: 10,
+        studentName: 'Carlos Mendoza',
+        studentNumber: 'STU-2026-00010',
+        status: 'CONFIRMED',
+        bookedAt: '2026-09-26T10:00:00Z',
+        attendanceStatus: 'PRESENT',
+        grade: 95.5,
+        session: {
+          id: 1,
+          groupId: 100,
+          groupCode: 'TUT-B2-01',
+          groupName: 'Group 1',
+          campusId: 1,
+          campusName: 'Campus Tlaxcala',
+          teacherId: 1,
+          teacherName: 'Ana Garcia',
+          bookId: 2,
+          bookNumber: 2,
+          bookTitle: 'Book 2',
+          moduleId: 8,
+          moduleCode: 'MOD-05B',
+          moduleTitle: 'Lesson 5B',
+          sessionDate: '2026-09-28',
+          startTime: '10:00',
+          endTime: '11:00',
+          durationMinutes: 60,
+          capacity: 12,
+          currentEnrollment: 1,
+          availableSeats: 11,
+          full: false,
+          modality: 'PRESENTIAL',
+          status: 'SCHEDULED'
+        }
+      }
+    ];
+
+    expect(enrolledStudents).toHaveLength(1);
+    expect(enrolledStudents[0].studentName).toBe('Carlos Mendoza');
+    expect(enrolledStudents[0].studentNumber).toBe('STU-2026-00010');
+    expect(enrolledStudents[0].attendanceStatus).toBe('PRESENT');
+    expect(enrolledStudents[0].grade).toBe(95.5);
   });
 
   it('validates CreateTutoringGroupPayload schema contract', () => {

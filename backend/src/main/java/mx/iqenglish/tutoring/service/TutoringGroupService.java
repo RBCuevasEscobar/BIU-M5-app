@@ -1,11 +1,17 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
+import java.util.List;
+import mx.iqenglish.tutoring.dto.CreateTutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.DuplicateGroupDTO;
+import mx.iqenglish.tutoring.dto.GroupReportDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.UpdateTutoringGroupDTO;
 import mx.iqenglish.tutoring.entity.GroupStatus;
 
-import java.util.List;
-
 public interface TutoringGroupService {
+    List<mx.iqenglish.tutoring.dto.AppointmentDTO> getEnrolledStudentsByGroup(Long groupId);
+    byte[] exportEnrolledStudentsCsv(Long groupId, Long campusId, Long moduleId, Long teacherId);
+
     List<TutoringGroupDTO> getAllGroups();
     TutoringGroupDTO getGroupById(Long id);
     TutoringGroupDTO createGroup(CreateTutoringGroupDTO dto);

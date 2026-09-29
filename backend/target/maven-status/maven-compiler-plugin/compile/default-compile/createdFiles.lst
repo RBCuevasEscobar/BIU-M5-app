@@ -6,6 +6,7 @@ mx\iqenglish\tutoring\service\AuthService.class
 mx\iqenglish\tutoring\service\AppointmentService.class
 mx\iqenglish\tutoring\dto\StudentDTO.class
 mx\iqenglish\tutoring\dto\ModuleDTO.class
+mx\iqenglish\tutoring\dto\StudentModuleItemDTO.class
 mx\iqenglish\tutoring\service\impl\UserServiceImpl.class
 mx\iqenglish\tutoring\dto\NotificationDTO.class
 mx\iqenglish\tutoring\dto\DashboardSummaryDTO.class
@@ -36,6 +37,7 @@ mx\iqenglish\tutoring\repository\AcademicLevelRepository.class
 mx\iqenglish\tutoring\repository\AcademicProgressRepository.class
 mx\iqenglish\tutoring\exception\GlobalExceptionHandler.class
 mx\iqenglish\tutoring\integration\calendar\GoogleCalendarIntegrationService.class
+mx\iqenglish\tutoring\config\DatabaseSeeder.class
 mx\iqenglish\tutoring\integration\talkio\TalkIOClient.class
 mx\iqenglish\tutoring\repository\UserRepository.class
 mx\iqenglish\tutoring\exception\DoubleBookingException.class
@@ -98,6 +100,7 @@ mx\iqenglish\tutoring\dto\CampusDTO.class
 mx\iqenglish\tutoring\exception\UnauthorizedActionException.class
 mx\iqenglish\tutoring\security\JwtAuthenticationFilter.class
 mx\iqenglish\tutoring\service\impl\AcademicServiceImpl.class
+mx\iqenglish\tutoring\service\impl\ReportServiceImpl.class
 mx\iqenglish\tutoring\repository\AuditLogRepository.class
 mx\iqenglish\tutoring\entity\Notification.class
 mx\iqenglish\tutoring\dto\AttendanceDTO.class
@@ -116,6 +119,7 @@ mx\iqenglish\tutoring\entity\SessionStatus.class
 mx\iqenglish\tutoring\entity\GroupSession.class
 mx\iqenglish\tutoring\dto\AuthRequest.class
 mx\iqenglish\tutoring\dto\GroupReportItemDTO.class
+mx\iqenglish\tutoring\dto\SuggestedTutoringDTO.class
 mx\iqenglish\tutoring\security\SecurityUtils.class
 mx\iqenglish\tutoring\dto\GroupSessionDTO.class
 mx\iqenglish\tutoring\service\ReportService.class
@@ -139,4 +143,5 @@ mx\iqenglish\tutoring\repository\RoleRepository.class
 mx\iqenglish\tutoring\entity\UserStatus.class
 mx\iqenglish\tutoring\entity\Module.class
 mx\iqenglish\tutoring\service\TutoringGroupService.class
+mx\iqenglish\tutoring\config\FlywayConfig.class
 mx\iqenglish\tutoring\service\impl\AcademicProgressServiceImpl.class

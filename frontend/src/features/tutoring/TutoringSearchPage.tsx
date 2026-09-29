@@ -38,7 +38,7 @@ export const TutoringSearchPage: React.FC = () => {
         ]);
         setBooks(booksData);
         setCampuses(campusData);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to load initial catalog', err);
       }
     }
@@ -75,7 +75,7 @@ export const TutoringSearchPage: React.FC = () => {
       const endpoint = qs ? '/tutoring/sessions?' + qs : '/tutoring/sessions';
       const results = await api.get<GroupSession[]>(endpoint);
       setSessions(results || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Search failed', err);
     } finally {
       setIsLoading(false);
@@ -218,6 +218,7 @@ export const TutoringSearchPage: React.FC = () => {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
           {sessions.map((session) => {
+            const isCompleted = session.status === 'COMPLETED' || (session as any).groupStatus === 'COMPLETED';
             const isFull = session.full || session.availableSeats <= 0;
             return (
               <div
@@ -230,7 +231,7 @@ export const TutoringSearchPage: React.FC = () => {
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <Badge status={session.modality} size="sm" />
-                    <Badge status={isFull ? 'FULL' : 'AVAILABLE'} size="sm" />
+                    {isCompleted ? <Badge status="COMPLETED" size="sm" /> : <Badge status={isFull ? 'FULL' : 'AVAILABLE'} size="sm" />}
                   </div>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--iq-secondary-hover)', textTransform: 'uppercase' }}>
                     {session.bookTitle} - {session.moduleCode}
@@ -257,8 +258,8 @@ export const TutoringSearchPage: React.FC = () => {
                       {session.availableSeats} / {session.capacity} cupos
                     </strong>
                   </div>
-                  <Button size="sm" disabled={isFull} onClick={() => { setSelectedSessionForBooking(session); setBookingSuccessData(null); setBookingError(''); }}>
-                    {isFull ? 'Agotado' : 'Reservar'}
+                  <Button size="sm" disabled={isFull || isCompleted} onClick={() => { setSelectedSessionForBooking(session); setBookingSuccessData(null); setBookingError(''); }}>
+                    {isCompleted ? 'Cerrado' : isFull ? 'Agotado' : 'Reservar'}
                   </Button>
                 </div>
               </div>

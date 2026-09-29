@@ -13,7 +13,10 @@ import {
   UpdateUserPayload,
   UserReport,
   AuditLog,
-  Campus
+  Campus,
+  AcademicLevel,
+  Book,
+  ModuleItem
 } from '../../types';
 import {
   CreateUserModal,
@@ -53,6 +56,9 @@ export const UserManagementPage: React.FC = () => {
   const [usersPage, setUsersPage] = useState<PageResponse<User> | null>(null);
   const [report, setReport] = useState<UserReport | null>(null);
   const [campuses, setCampuses] = useState<Campus[]>([]);
+  const [academicLevels, setAcademicLevels] = useState<AcademicLevel[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [modules, setModules] = useState<ModuleItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -90,6 +96,13 @@ export const UserManagementPage: React.FC = () => {
     role: 'ROLE_STUDENT',
     status: 'ACTIVE',
     campusId: undefined,
+    studentNumber: '',
+    currentLevelId: undefined,
+    currentBookId: undefined,
+    currentModuleId: undefined,
+    specialty: '',
+    hireDate: '',
+    employeeNumber: '',
   });
 
   const [editForm, setEditForm] = useState<UpdateUserPayload>({
@@ -98,6 +111,14 @@ export const UserManagementPage: React.FC = () => {
     email: '',
     phone: '',
     status: 'ACTIVE',
+    campusId: undefined,
+    studentNumber: '',
+    currentLevelId: undefined,
+    currentBookId: undefined,
+    currentModuleId: undefined,
+    specialty: '',
+    hireDate: '',
+    employeeNumber: '',
   });
 
   const [newRole, setNewRole] = useState<string>('ROLE_STUDENT');
@@ -113,7 +134,7 @@ export const UserManagementPage: React.FC = () => {
       const resp = await api.users.getPaged({
         page,
         size,
-        sort: `${sortField},${sortDir}`,
+        sort: sortField + ',' + sortDir,
         search: search.trim() || undefined,
         role: roleFilter || undefined,
         status: statusFilter || undefined,
@@ -147,6 +168,21 @@ export const UserManagementPage: React.FC = () => {
     }
   };
 
+  const fetchAcademicCatalogs = async () => {
+    try {
+      const [lvls, bks, mods] = await Promise.all([
+        api.get<AcademicLevel[]>('/academic-levels'),
+        api.get<Book[]>('/books'),
+        api.get<ModuleItem[]>('/modules'),
+      ]);
+      setAcademicLevels(lvls || []);
+      setBooks(bks || []);
+      setModules(mods || []);
+    } catch (e) {
+      console.warn('Could not load academic catalogs', e);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [page, size, roleFilter, statusFilter, sortField, sortDir]);
@@ -154,6 +190,7 @@ export const UserManagementPage: React.FC = () => {
   useEffect(() => {
     fetchReport();
     fetchCampuses();
+    fetchAcademicCatalogs();
   }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -179,12 +216,21 @@ export const UserManagementPage: React.FC = () => {
 
   const openEditModal = (u: User) => {
     setSelectedUser(u);
+    const cId = u.studentProfile?.campusId || u.teacherProfile?.campusId || undefined;
     setEditForm({
       firstName: u.firstName,
       lastName: u.lastName,
       email: u.email,
       phone: u.phone || '',
       status: u.status,
+      campusId: cId,
+      studentNumber: u.studentProfile?.studentNumber || '',
+      currentLevelId: u.studentProfile?.currentLevelId || undefined,
+      currentBookId: u.studentProfile?.currentBookId || undefined,
+      currentModuleId: u.studentProfile?.currentModuleId || undefined,
+      specialty: u.teacherProfile?.specialty || '',
+      hireDate: u.teacherProfile?.hireDate || '',
+      employeeNumber: u.teacherProfile?.employeeNumber || '',
     });
     setFormError(null);
     setIsEditOpen(true);
@@ -250,6 +296,13 @@ export const UserManagementPage: React.FC = () => {
         role: 'ROLE_STUDENT',
         status: 'ACTIVE',
         campusId: campuses[0]?.id,
+        studentNumber: '',
+        currentLevelId: undefined,
+        currentBookId: undefined,
+        currentModuleId: undefined,
+        specialty: '',
+        hireDate: '',
+        employeeNumber: '',
       });
       fetchUsers();
       fetchReport();
@@ -323,9 +376,10 @@ export const UserManagementPage: React.FC = () => {
     try {
       await api.users.adminResetPassword(selectedUser.id, { newPassword: adminNewPassword });
       setIsPasswordResetOpen(false);
-      alert(`Contrasena restablecida exitosamente para el usuario ${selectedUser.username}`);
+      setAdminNewPassword('');
+      alert('Contrasena restablecida exitosamente para ' + selectedUser.username);
     } catch (err: any) {
-      setFormError(err instanceof ApiError ? err.message : 'Error al restablecer contrasena');
+      setFormError(err instanceof ApiError ? err.message : 'Error al restablecer la contrasena');
     } finally {
       setIsSubmitting(false);
     }
@@ -341,7 +395,7 @@ export const UserManagementPage: React.FC = () => {
       fetchUsers();
       fetchReport();
     } catch (err: any) {
-      setFormError(err instanceof ApiError ? err.message : 'Error al desactivar usuario');
+      setFormError(err instanceof ApiError ? err.message : 'Error al eliminar usuario');
     } finally {
       setIsSubmitting(false);
     }
@@ -349,139 +403,114 @@ export const UserManagementPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Header Banner */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '16px',
-        backgroundColor: '#ffffff',
-        padding: '24px',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-color)',
-        boxShadow: 'var(--shadow-sm)',
-      }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--iq-primary-light)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--iq-primary)',
-            }}>
-              <Users size={22} />
-            </div>
-            <div>
-              <h1 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--iq-primary)', margin: 0 }}>
-                Gestion de Usuarios
-              </h1>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '2px 0 0' }}>
-                Administracion integral de cuentas, roles, permisos y estados en la plataforma IQ English
-              </p>
-            </div>
-          </div>
+          <h1 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--iq-primary)' }}>Gestion Integral de Usuarios</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Administra cuentas, roles, permisos y estatus academico del personal y estudiantes</p>
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Button variant="outline" onClick={() => setIsReportOpen(true)}>
-            <BarChart3 size={16} />
-            <span>Estadisticas</span>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Button
+            variant="outline"
+            icon={<Download size={16} />}
+            onClick={handleExportCsv}
+          >
+            Exportar CSV
           </Button>
-          <Button variant="outline" onClick={handleExportCsv}>
-            <Download size={16} />
-            <span>Exportar CSV</span>
+          <Button
+            variant="outline"
+            icon={<BarChart3 size={16} />}
+            onClick={() => setIsReportOpen(true)}
+          >
+            Metricas Globales
           </Button>
-          <Button variant="primary" onClick={() => setIsCreateOpen(true)}>
-            <Plus size={16} />
-            <span>Nuevo Usuario</span>
+          <Button
+            icon={<Plus size={16} />}
+            onClick={() => {
+              setFormError(null);
+              setIsCreateOpen(true);
+            }}
+          >
+            Nuevo Usuario
           </Button>
         </div>
       </div>
 
-      {/* KPI Metric Cards */}
+      {/* KPI Cards */}
       {report && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--iq-primary-light)', color: 'var(--iq-primary)' }}>
-                <Users size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'var(--iq-primary-light)', color: 'var(--iq-primary)' }}>
+                <Users size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Usuarios</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Total Usuarios</div>
                 <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-primary)' }}>{report.totalUsers}</div>
               </div>
             </div>
           </Card>
-
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(16, 185, 129, 0.1)', color: 'var(--iq-success)' }}>
-                <UserCheck size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: '#e6f4ea', color: 'var(--iq-success)' }}>
+                <UserCheck size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Usuarios Activos</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Usuarios Activos</div>
                 <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-success)' }}>{report.activeUsers}</div>
               </div>
             </div>
           </Card>
-
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--iq-danger)' }}>
-                <UserX size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: '#feefe3', color: 'var(--iq-danger)' }}>
+                <UserX size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Inactivos / Susp.</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Inactivos / Bloqueados</div>
                 <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-danger)' }}>{report.inactiveUsers + report.suspendedUsers}</div>
               </div>
             </div>
           </Card>
-
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(94, 179, 228, 0.15)', color: 'var(--iq-secondary-hover)' }}>
-                <Briefcase size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: '#e8f0fe', color: 'var(--iq-secondary)' }}>
+                <GraduationCap size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Docentes</div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-secondary-hover)' }}>{report.roleDistribution?.TEACHER || 0}</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Estudiantes</div>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-secondary)' }}>{report.roleDistribution ? report.roleDistribution['ROLE_STUDENT'] || 0 : 0}</div>
               </div>
             </div>
           </Card>
-
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ padding: '10px', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: 'var(--iq-gold)' }}>
-                <GraduationCap size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: '#fef7e0', color: 'var(--iq-gold)' }}>
+                <Briefcase size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Estudiantes</div>
-                <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-gold)' }}>{report.roleDistribution?.STUDENT || 0}</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Docentes</div>
+                <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--iq-gold)' }}>{report.roleDistribution ? report.roleDistribution['ROLE_TEACHER'] || 0 : 0}</div>
               </div>
             </div>
           </Card>
         </div>
       )}
 
-      {/* Filter & Search Bar */}
+      {/* Filter and Search Bar */}
       <Card>
         <form onSubmit={handleSearchSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-          <div style={{ flex: '1 1 250px', position: 'relative' }}>
-            <Search size={16} color="var(--iq-gray)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+          <div style={{ flex: 1, minWidth: '240px', position: 'relative' }}>
+            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
             <input
               type="text"
+              placeholder="Buscar por nombre, apellido, usuario, correo, matricula o nomina..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar por nombre, usuario, email o telefono..."
               style={{
                 width: '100%',
                 padding: '9px 12px 9px 36px',
-                borderRadius: 'var(--radius-md)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-color)',
                 fontSize: '13.5px',
                 outline: 'none',
@@ -489,185 +518,159 @@ export const UserManagementPage: React.FC = () => {
             />
           </div>
 
-          <div style={{ flex: '0 1 180px' }}>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <select
               value={roleFilter}
               onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }}
-              style={{
-                width: '100%',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-color)',
-                fontSize: '13.5px',
-                backgroundColor: '#ffffff',
-                outline: 'none',
-              }}
+              style={{ padding: '9px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '13.5px', outline: 'none' }}
             >
               <option value="">Todos los Roles</option>
-              <option value="ROLE_ADMIN">ADMINISTRADOR</option>
-              <option value="ROLE_SUPERVISOR">SUPERVISOR</option>
-              <option value="ROLE_TEACHER">DOCENTE</option>
-              <option value="ROLE_STUDENT">ESTUDIANTE</option>
+              <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+              <option value="ROLE_SUPERVISOR">ROLE_SUPERVISOR</option>
+              <option value="ROLE_TEACHER">ROLE_TEACHER</option>
+              <option value="ROLE_STUDENT">ROLE_STUDENT</option>
             </select>
-          </div>
 
-          <div style={{ flex: '0 1 160px' }}>
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
-              style={{
-                width: '100%',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-color)',
-                fontSize: '13.5px',
-                backgroundColor: '#ffffff',
-                outline: 'none',
-              }}
+              style={{ padding: '9px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '13.5px', outline: 'none' }}
             >
               <option value="">Todos los Estados</option>
-              <option value="ACTIVE">ACTIVO</option>
-              <option value="INACTIVE">INACTIVO</option>
-              <option value="SUSPENDED">SUSPENDIDO</option>
+              <option value="ACTIVE">Activos</option>
+              <option value="INACTIVE">Inactivos</option>
+              <option value="SUSPENDED">Suspendidos</option>
+              <option value="PENDING_VERIFICATION">Pendientes</option>
             </select>
-          </div>
 
-          <Button type="submit" variant="primary">
-            <Filter size={15} />
-            <span>Filtrar</span>
-          </Button>
-
-          {(search || roleFilter || statusFilter) && (
-            <Button type="button" variant="ghost" onClick={handleResetFilters}>
-              <RotateCcw size={15} />
-              <span>Limpiar</span>
+            <Button type="submit" variant="secondary" icon={<Filter size={14} />}>
+              Filtrar
             </Button>
-          )}
+
+            {(search || roleFilter || statusFilter) && (
+              <Button type="button" variant="outline" icon={<RotateCcw size={14} />} onClick={handleResetFilters}>
+                Limpiar
+              </Button>
+            )}
+          </div>
         </form>
       </Card>
 
       {/* Users Table */}
       <Card>
         {isLoading ? (
-          <div style={{ padding: '48px', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ padding: '40px 0', textAlign: 'center' }}>
             <LoadingSpinner message="Cargando directorio de usuarios..." />
           </div>
         ) : error ? (
           <div style={{ padding: '24px', textAlign: 'center', color: 'var(--iq-danger)' }}>
-            <AlertTriangle size={32} style={{ margin: '0 auto 8px' }} />
+            <AlertTriangle size={32} style={{ marginBottom: '8px' }} />
             <div>{error}</div>
-            <Button variant="outline" onClick={fetchUsers} style={{ marginTop: '12px' }}>Reintentar</Button>
+            <Button variant="outline" size="sm" onClick={fetchUsers} style={{ marginTop: '12px' }}>
+              Reintentar
+            </Button>
           </div>
         ) : !usersPage || usersPage.content.length === 0 ? (
           <EmptyState
+            icon={<Users size={48} />}
             title="No se encontraron usuarios"
-            description="Intenta ajustar tus criterios de busqueda o filtros."
-            actionText="Limpiar Filtros"
-            onAction={handleResetFilters}
-            icon={<Users size={48} color="var(--iq-secondary)" />}
+            description="Intenta ajustar tus criterios de busqueda o agrega un nuevo usuario al sistema."
           />
         ) : (
           <div>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-app)' }}>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px' }}>Usuario</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px' }}>Contacto</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px' }}>Rol</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px' }}>Estado</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px' }}>Registro</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--iq-primary)', textTransform: 'uppercase', fontSize: '11.5px', letterSpacing: '0.5px', textAlign: 'right' }}>Acciones</th>
+                  <tr style={{ borderBottom: '2px solid var(--border-color)', backgroundColor: 'var(--bg-card-header)' }}>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Usuario</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Nombre Completo</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Rol</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Plantel</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Estado</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)' }}>Registro</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--text-muted)', textAlign: 'right' }}>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {usersPage.content.map((u) => (
-                    <tr key={u.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.15s' }}>
-                      <td style={{ padding: '12px 16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <div style={{
-                            width: '34px',
-                            height: '34px',
-                            borderRadius: '50%',
-                            backgroundColor: u.roles?.includes('ROLE_ADMIN') ? 'var(--iq-primary)' : 'var(--iq-secondary)',
-                            color: '#ffffff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 700,
-                            fontSize: '13px',
-                          }}>
-                            {u.firstName?.[0] || 'U'}
+                  {usersPage.content.map((u) => {
+                    const campusLabel = u.studentProfile?.campusName || u.teacherProfile?.campusName || 'General / Central';
+                    return (
+                      <tr key={u.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.15s' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ fontWeight: 700, color: 'var(--iq-primary)' }}>{u.username}</div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.email}</div>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ fontWeight: 600 }}>{u.firstName} {u.lastName}</div>
+                          {u.phone && <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.phone}</div>}
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                            {u.roles?.map(r => (
+                              <Badge key={r} status={r} />
+                            ))}
                           </div>
-                          <div>
-                            <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{u.fullName || `${u.firstName} ${u.lastName}`}</div>
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>@{u.username}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <div>{u.email}</div>
-                        {u.phone && <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{u.phone}</div>}
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <Badge status={u.roles?.[0] || 'ROLE_STUDENT'} />
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <Badge status={u.status} />
-                      </td>
-                      <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '12.5px' }}>
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX') : 'N/A'}
-                      </td>
-                      <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
-                          <button
-                            onClick={() => openEditModal(u)}
-                            title="Editar Perfil"
-                            style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--text-main)' }}
-                          >
-                            <Edit2 size={14} />
-                          </button>
-                          <button
-                            onClick={() => openRoleModal(u)}
-                            title="Modificar Rol"
-                            style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-secondary-hover)' }}
-                          >
-                            <Shield size={14} />
-                          </button>
-                          <button
-                            onClick={() => openStatusModal(u)}
-                            title={u.status === 'ACTIVE' ? 'Desactivar Usuario' : 'Activar Usuario'}
-                            style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: u.status === 'ACTIVE' ? 'var(--iq-danger)' : 'var(--iq-success)' }}
-                          >
-                            {u.status === 'ACTIVE' ? <UserX size={14} /> : <UserCheck size={14} />}
-                          </button>
-                          <button
-                            onClick={() => openPasswordResetModal(u)}
-                            title="Restablecer Contrasena"
-                            style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-gold)' }}
-                          >
-                            <KeyRound size={14} />
-                          </button>
-                          <button
-                            onClick={() => openAuditModal(u)}
-                            title="Historial de Auditoria"
-                            style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--text-muted)' }}
-                          >
-                            <History size={14} />
-                          </button>
-                          {currentUser?.id !== u.id && (
+                        </td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-main)' }}>
+                          {campusLabel}
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <Badge status={u.status} />
+                        </td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '12.5px' }}>
+                          {u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX') : 'N/A'}
+                        </td>
+                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
                             <button
-                              onClick={() => openDeleteModal(u)}
-                              title="Desactivar / Eliminar"
-                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-danger)' }}
+                              onClick={() => openEditModal(u)}
+                              title="Editar Perfil"
+                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--text-main)' }}
                             >
-                              <Trash2 size={14} />
+                              <Edit2 size={14} />
                             </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            <button
+                              onClick={() => openRoleModal(u)}
+                              title="Modificar Rol"
+                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-secondary-hover)' }}
+                            >
+                              <Shield size={14} />
+                            </button>
+                            <button
+                              onClick={() => openStatusModal(u)}
+                              title={u.status === 'ACTIVE' ? 'Desactivar Usuario' : 'Activar Usuario'}
+                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: u.status === 'ACTIVE' ? 'var(--iq-danger)' : 'var(--iq-success)' }}
+                            >
+                              {u.status === 'ACTIVE' ? <UserX size={14} /> : <UserCheck size={14} />}
+                            </button>
+                            <button
+                              onClick={() => openPasswordResetModal(u)}
+                              title="Restablecer Contrasena"
+                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-gold)' }}
+                            >
+                              <KeyRound size={14} />
+                            </button>
+                            <button
+                              onClick={() => openAuditModal(u)}
+                              title="Historial de Auditoria"
+                              style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--text-muted)' }}
+                            >
+                              <History size={14} />
+                            </button>
+                            {currentUser?.id !== u.id && (
+                              <button
+                                onClick={() => openDeleteModal(u)}
+                                title="Desactivar / Eliminar"
+                                style={{ padding: '6px', border: '1px solid var(--border-color)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--iq-danger)' }}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -737,6 +740,9 @@ export const UserManagementPage: React.FC = () => {
         setForm={setCreateForm}
         onSubmit={handleCreateSubmit}
         campuses={campuses}
+        levels={academicLevels}
+        books={books}
+        modules={modules}
         formError={formError}
         isSubmitting={isSubmitting}
       />
@@ -748,6 +754,10 @@ export const UserManagementPage: React.FC = () => {
         form={editForm}
         setForm={setEditForm}
         onSubmit={handleEditSubmit}
+        campuses={campuses}
+        levels={academicLevels}
+        books={books}
+        modules={modules}
         formError={formError}
         isSubmitting={isSubmitting}
       />
@@ -756,8 +766,8 @@ export const UserManagementPage: React.FC = () => {
         isOpen={isRoleOpen}
         onClose={() => setIsRoleOpen(false)}
         user={selectedUser}
-        role={newRole}
-        setRole={setNewRole}
+        newRole={newRole}
+        setNewRole={setNewRole}
         onSubmit={handleRoleSubmit}
         formError={formError}
         isSubmitting={isSubmitting}
@@ -767,7 +777,7 @@ export const UserManagementPage: React.FC = () => {
         isOpen={isStatusOpen}
         onClose={() => setIsStatusOpen(false)}
         user={selectedUser}
-        onToggle={handleStatusToggle}
+        onConfirm={handleStatusToggle}
         formError={formError}
         isSubmitting={isSubmitting}
       />

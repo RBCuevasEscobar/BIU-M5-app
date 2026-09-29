@@ -32,10 +32,10 @@ export const DashboardPage: React.FC = () => {
 
   if (isLoading) return <LoadingSpinner message="Cargando tu panel de control..." />;
 
-  const isStudent = hasRole('STUDENT');
-  const isTeacher = hasRole('TEACHER');
-  const isSupervisor = hasRole('SUPERVISOR');
-  const isAdmin = hasRole('ADMIN');
+  const isStudent = hasRole('ROLE_STUDENT');
+  const isTeacher = hasRole('ROLE_TEACHER');
+  const isSupervisor = hasRole('ROLE_SUPERVISOR');
+  const isAdmin = hasRole('ROLE_ADMIN');
 
   // Academic progress calculations (Requirement 2)
   const attendanceCount = summary?.currentModuleAttendanceCount || 0;

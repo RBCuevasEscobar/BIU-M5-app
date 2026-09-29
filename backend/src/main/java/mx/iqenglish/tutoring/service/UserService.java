@@ -1,10 +1,17 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
+import java.util.List;
+import mx.iqenglish.tutoring.dto.AdminPasswordResetRequest;
+import mx.iqenglish.tutoring.dto.AuditLogDTO;
+import mx.iqenglish.tutoring.dto.ChangePasswordRequest;
+import mx.iqenglish.tutoring.dto.CreateUserRequest;
+import mx.iqenglish.tutoring.dto.PageResponse;
+import mx.iqenglish.tutoring.dto.UpdateUserRequest;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.dto.UserReportDTO;
+import mx.iqenglish.tutoring.dto.UserRoleUpdateRequest;
 import mx.iqenglish.tutoring.entity.UserStatus;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface UserService {
     List<UserDTO> getAllUsers();

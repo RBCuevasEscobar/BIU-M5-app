@@ -24,8 +24,55 @@ describe('User Management Model & Domain Logic', () => {
     expect(user.permissions).toContain('USER_CREATE');
   });
 
-  it('validates CreateUserPayload schema contract', () => {
-    const payload: CreateUserPayload = {
+  it('correctly identifies SUPERVISOR role without mapping to student or alumno', () => {
+    const supervisorUser: User = {
+      id: 4,
+      username: 'supervisor.laura',
+      email: 'laura.supervisor@iqenglish.mx',
+      firstName: 'Laura',
+      lastName: 'Gomez',
+      fullName: 'Laura Gomez',
+      status: 'ACTIVE',
+      roles: ['ROLE_SUPERVISOR'],
+      permissions: ['CAMPUS_MANAGE', 'TEACHER_SCHEDULE_VIEW', 'GROUP_READ'],
+    };
+
+    const roleTag = supervisorUser.roles[0];
+    const badgeStatus = roleTag === 'ROLE_ADMIN' ? 'ROLE_ADMIN' : roleTag === 'ROLE_SUPERVISOR' ? 'ROLE_SUPERVISOR' : roleTag === 'ROLE_TEACHER' ? 'ROLE_TEACHER' : 'ROLE_STUDENT';
+    expect(badgeStatus).toBe('ROLE_SUPERVISOR');
+    expect(badgeStatus).not.toBe('ALUMNO');
+    expect(badgeStatus).not.toBe('ESTUDIANTE');
+  });
+
+  it('validates CreateUserPayload schema for student with academic fields', () => {
+    const studentPayload: CreateUserPayload = {
+      username: 'student.carlos',
+      email: 'carlos.mendoza@iqenglish.mx',
+      password: 'SecurePassword123!',
+      firstName: 'Carlos',
+      lastName: 'Mendoza',
+      phone: '+52 246 999 8877',
+      role: 'ROLE_STUDENT',
+      status: 'ACTIVE',
+      campusId: 1,
+      currentLevelId: 1,
+      currentBookId: 1,
+      currentModuleId: 1,
+      studentNumber: 'STU-2026-00101',
+    };
+
+    expect(studentPayload.username.length).toBeGreaterThanOrEqual(3);
+    expect(studentPayload.password.length).toBeGreaterThanOrEqual(6);
+    expect(studentPayload.role).toBe('ROLE_STUDENT');
+    expect(studentPayload.currentLevelId).toBe(1);
+    expect(studentPayload.currentBookId).toBe(1);
+    expect(studentPayload.currentModuleId).toBe(1);
+    expect(studentPayload.studentNumber).toBe('STU-2026-00101');
+    expect(studentPayload.email).toContain('@');
+  });
+
+  it('validates CreateUserPayload schema for teacher with employment fields', () => {
+    const teacherPayload: CreateUserPayload = {
       username: 'teacher.ana',
       email: 'teacher.ana@iqenglish.mx',
       password: 'SecurePassword123!',
@@ -35,26 +82,51 @@ describe('User Management Model & Domain Logic', () => {
       role: 'ROLE_TEACHER',
       status: 'ACTIVE',
       campusId: 1,
+      specialty: 'Grammar and Business English',
+      hireDate: '2026-01-15',
+      employeeNumber: 'TCH-2026-00045',
     };
 
-    expect(payload.username.length).toBeGreaterThanOrEqual(3);
-    expect(payload.password.length).toBeGreaterThanOrEqual(6);
-    expect(payload.role).toBe('ROLE_TEACHER');
-    expect(payload.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+    expect(teacherPayload.role).toBe('ROLE_TEACHER');
+    expect(teacherPayload.specialty).toBe('Grammar and Business English');
+    expect(teacherPayload.hireDate).toBe('2026-01-15');
+    expect(teacherPayload.employeeNumber).toBe('TCH-2026-00045');
+    expect(teacherPayload.specialty?.length).toBeLessThanOrEqual(150);
   });
 
-  it('validates UpdateUserPayload schema contract', () => {
-    const payload: UpdateUserPayload = {
-      firstName: 'Alberto',
-      lastName: 'Castillo',
-      email: 'alberto.castillo@iqenglish.mx',
+  it('validates UpdateUserPayload schema for student academic update', () => {
+    const updateStudent: UpdateUserPayload = {
+      firstName: 'Carlos',
+      lastName: 'Mendoza',
+      email: 'carlos.mendoza@iqenglish.mx',
       phone: '+52 246 111 2233',
       status: 'ACTIVE',
+      currentLevelId: 2,
+      currentBookId: 4,
+      currentModuleId: 13,
+      studentNumber: 'STU-2026-00101',
     };
 
-    expect(payload.firstName).toBe('Alberto');
-    expect(payload.email).toContain('@');
-    expect(payload.status).toBe('ACTIVE');
+    expect(updateStudent.currentLevelId).toBe(2);
+    expect(updateStudent.currentBookId).toBe(4);
+    expect(updateStudent.currentModuleId).toBe(13);
+  });
+
+  it('validates UpdateUserPayload schema for teacher employment update', () => {
+    const updateTeacher: UpdateUserPayload = {
+      firstName: 'Ana',
+      lastName: 'Rodriguez',
+      email: 'ana.rodriguez@iqenglish.mx',
+      phone: '+52 246 111 2233',
+      status: 'ACTIVE',
+      specialty: 'Phonetics & Advanced Fluency',
+      hireDate: '2026-01-15',
+      employeeNumber: 'TCH-2026-00045',
+    };
+
+    expect(updateTeacher.specialty).toBe('Phonetics & Advanced Fluency');
+    expect(updateTeacher.hireDate).toBe('2026-01-15');
+    expect(updateTeacher.employeeNumber).toBe('TCH-2026-00045');
   });
 
   it('handles PageResponse pagination calculation accurately', () => {
@@ -92,10 +164,10 @@ describe('User Management Model & Domain Logic', () => {
       inactiveUsers: 2,
       suspendedUsers: 0,
       roleDistribution: {
-        ADMIN: 2,
-        SUPERVISOR: 3,
-        TEACHER: 8,
-        STUDENT: 12,
+        ROLE_ADMIN: 2,
+        ROLE_SUPERVISOR: 3,
+        ROLE_TEACHER: 8,
+        ROLE_STUDENT: 12,
       },
       statusDistribution: {
         ACTIVE: 23,
@@ -106,7 +178,7 @@ describe('User Management Model & Domain Logic', () => {
     };
 
     expect(report.totalUsers).toBe(report.activeUsers + report.inactiveUsers + report.suspendedUsers);
-    expect(report.roleDistribution.ADMIN).toBe(2);
+    expect(report.roleDistribution.ROLE_ADMIN).toBe(2);
     expect(report.recentRegistrations30Days).toBe(5);
   });
 });

@@ -118,76 +118,8 @@ export const MainLayout: React.FC = () => {
             );
           })}
         </nav>
-
-        {/* Demo Fast Role Switcher */}
-        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-app)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--iq-gray)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Demo Rol Activo
-            </span>
-            <button
-              onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-              style={{ fontSize: '11px', color: 'var(--iq-secondary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
-            >
-              {showRoleSwitcher ? 'Ocultar' : 'Cambiar'}
-            </button>
-          </div>
-
-          {showRoleSwitcher && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
-              <button
-                onClick={() => switchDemoRole('STUDENT')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('STUDENT') ? 'var(--iq-primary)' : '#fff', color: hasRole('STUDENT') ? '#fff' : 'inherit', cursor: 'pointer' }}
-              >
-                Estudiante
-              </button>
-              <button
-                onClick={() => switchDemoRole('TEACHER')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('TEACHER') ? 'var(--iq-primary)' : '#fff', color: hasRole('TEACHER') ? '#fff' : 'inherit', cursor: 'pointer' }}
-              >
-                Docente
-              </button>
-              <button
-                onClick={() => switchDemoRole('SUPERVISOR')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('SUPERVISOR') ? 'var(--iq-primary)' : '#fff', color: hasRole('SUPERVISOR') ? '#fff' : 'inherit', cursor: 'pointer' }}
-              >
-                Supervisor
-              </button>
-              <button
-                onClick={() => switchDemoRole('ADMIN')}
-                style={{ padding: '6px', fontSize: '11px', fontWeight: 600, borderRadius: '4px', border: '1px solid var(--border-color)', background: hasRole('ADMIN') ? 'var(--iq-primary)' : '#fff', color: hasRole('ADMIN') ? '#fff' : 'inherit', cursor: 'pointer' }}
-              >
-                Admin
-              </button>
-            </div>
-          )}
-
-          {/* User profile footer */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
-              <div style={{ width: '34px', height: '34px', borderRadius: '50%', backgroundColor: 'var(--iq-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '13px' }}>
-                {user?.firstName?.[0] || 'U'}
-              </div>
-              <div style={{ overflow: 'hidden' }}>
-                <div style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {user?.fullName || 'Usuario IQ'}
-                </div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  {user?.roles?.[0]?.replace('ROLE_', '') || 'ONLINE'}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={logout}
-              style={{ background: 'none', border: 'none', color: 'var(--iq-gray)', cursor: 'pointer', padding: '6px' }}
-              title="Cerrar sesión"
-            >
-              <LogOut size={17} />
-            </button>
-          </div>
-        </div>
       </aside>
-
+      
       {/* Main Content Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Top Navbar */}

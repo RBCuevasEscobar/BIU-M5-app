@@ -12,6 +12,8 @@ export interface User {
   avatarUrl?: string;
   roles: string[];
   permissions: string[];
+  studentProfile?: StudentProfile;
+  teacherProfile?: TeacherProfile;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -37,8 +39,12 @@ export interface CreateUserPayload {
   status?: string;
   campusId?: number;
   studentNumber?: string;
+  currentLevelId?: number;
+  currentBookId?: number;
+  currentModuleId?: number;
   employeeNumber?: string;
   specialty?: string;
+  hireDate?: string;
 }
 
 export interface UpdateUserPayload {
@@ -48,6 +54,14 @@ export interface UpdateUserPayload {
   phone?: string;
   status?: string;
   avatarUrl?: string;
+  campusId?: number;
+  studentNumber?: string;
+  currentLevelId?: number;
+  currentBookId?: number;
+  currentModuleId?: number;
+  employeeNumber?: string;
+  specialty?: string;
+  hireDate?: string;
 }
 
 export interface ChangePasswordPayload {
@@ -121,6 +135,16 @@ export interface Campus {
   isActive: boolean;
 }
 
+export interface AcademicLevel {
+  id: number;
+  programId?: number;
+  code: string;
+  name: string;
+  sequenceOrder?: number;
+  description?: string;
+  books?: Book[];
+}
+
 export interface Book {
   id: number;
   levelId: number;
@@ -131,6 +155,8 @@ export interface Book {
   coverImage?: string;
   modules?: ModuleItem[];
 }
+
+export type Module = ModuleItem;
 
 export interface ModuleItem {
   id: number;
@@ -227,6 +253,7 @@ export interface Appointment {
   previousAppointmentId?: number;
   attendanceStatus?: string;
   attendanceNotes?: string;
+  grade?: number;
 }
 
 export interface Attendance {
@@ -238,6 +265,7 @@ export interface Attendance {
   studentNumber: string;
   status: 'PRESENT' | 'ABSENT' | 'EXCUSED';
   notes?: string;
+  grade?: number;
   recordedByTeacherId: number;
   teacherName: string;
   recordedAt: string;
@@ -413,4 +441,12 @@ export interface SuggestedTutoring {
   campusName?: string;
   availableSeats?: number;
   capacity?: number;
+}
+
+export interface DuplicateTutoringGroupPayload {
+  newName?: string;
+  newTeacherId?: number;
+  newSessionDate?: string;
+  newStartTime?: string;
+  newEndTime?: string;
 }

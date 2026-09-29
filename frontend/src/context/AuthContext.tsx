@@ -12,7 +12,7 @@ interface AuthContextType {
   logout: () => void;
   hasRole: (role: string) => boolean;
   hasPermission: (permission: string) => boolean;
-  switchDemoRole: (role: 'STUDENT' | 'TEACHER' | 'SUPERVISOR' | 'ADMIN') => Promise<void>;
+  switchDemoRole: (role: 'ROLE_STUDENT' | 'ROLE_TEACHER' | 'ROLE_SUPERVISOR' | 'ROLE_ADMIN') => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,12 +96,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTeacherProfile(null);
   };
 
-  const switchDemoRole = async (role: 'STUDENT' | 'TEACHER' | 'SUPERVISOR' | 'ADMIN') => {
+  const switchDemoRole = async (role: 'ROLE_STUDENT' | 'ROLE_TEACHER' | 'ROLE_SUPERVISOR' | 'ROLE_ADMIN') => {
     const userMap = {
-      STUDENT: 'student.carlos',
-      TEACHER: 'teacher.ana',
-      SUPERVISOR: 'supervisor.patricia',
-      ADMIN: 'admin.alberto',
+      ROLE_STUDENT: 'student.carlos',
+      ROLE_TEACHER: 'teacher.ana',
+      ROLE_SUPERVISOR: 'supervisor.patricia',
+      ROLE_ADMIN: 'admin.alberto',
     };
     await login(userMap[role], 'Password123!');
   };

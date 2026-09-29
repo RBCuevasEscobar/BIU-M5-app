@@ -1,7 +1,11 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
 import java.util.List;
+import mx.iqenglish.tutoring.dto.AcademicLevelDTO;
+import mx.iqenglish.tutoring.dto.AcademicProgramDTO;
+import mx.iqenglish.tutoring.dto.BookDTO;
+import mx.iqenglish.tutoring.dto.ModuleDTO;
+import mx.iqenglish.tutoring.dto.TopicDTO;
 
 public interface AcademicService {
     List<AcademicProgramDTO> getAllPrograms();

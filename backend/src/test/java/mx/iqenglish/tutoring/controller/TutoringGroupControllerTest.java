@@ -1,7 +1,9 @@
 package mx.iqenglish.tutoring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import mx.iqenglish.tutoring.dto.*;
+import mx.iqenglish.tutoring.dto.GroupReportDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.UpdateTutoringGroupDTO;
 import mx.iqenglish.tutoring.entity.GroupStatus;
 import mx.iqenglish.tutoring.service.TutoringGroupService;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +16,20 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
 
 @SpringBootTest
 @AutoConfigureMockMvc

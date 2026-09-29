@@ -1,5 +1,7 @@
 package mx.iqenglish.tutoring.security;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 import mx.iqenglish.tutoring.entity.Permission;
 import mx.iqenglish.tutoring.entity.Role;
 import mx.iqenglish.tutoring.entity.User;
@@ -8,10 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.contains;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class SecurityRbacTest {
 

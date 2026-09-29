@@ -1,17 +1,23 @@
 package mx.iqenglish.tutoring.service.impl;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.AcademicLevelDTO;
+import mx.iqenglish.tutoring.dto.AcademicProgramDTO;
+import mx.iqenglish.tutoring.dto.BookDTO;
+import mx.iqenglish.tutoring.dto.ModuleDTO;
+import mx.iqenglish.tutoring.dto.TopicDTO;
 import mx.iqenglish.tutoring.entity.Module;
 import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AcademicLevelRepository;
+import mx.iqenglish.tutoring.repository.AcademicProgramRepository;
+import mx.iqenglish.tutoring.repository.BookRepository;
+import mx.iqenglish.tutoring.repository.ModuleRepository;
+import mx.iqenglish.tutoring.repository.TopicRepository;
 import mx.iqenglish.tutoring.service.AcademicService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AcademicServiceImpl implements AcademicService {

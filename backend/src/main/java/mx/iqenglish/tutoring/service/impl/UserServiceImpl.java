@@ -2,18 +2,53 @@ package mx.iqenglish.tutoring.service.impl;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
+import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.AdminPasswordResetRequest;
+import mx.iqenglish.tutoring.dto.AuditLogDTO;
+import mx.iqenglish.tutoring.dto.ChangePasswordRequest;
+import mx.iqenglish.tutoring.dto.CreateUserRequest;
+import mx.iqenglish.tutoring.dto.PageResponse;
+import mx.iqenglish.tutoring.dto.UpdateUserRequest;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.dto.UserReportDTO;
+import mx.iqenglish.tutoring.dto.UserRoleUpdateRequest;
+import mx.iqenglish.tutoring.entity.AcademicLevel;
+import mx.iqenglish.tutoring.entity.Book;
+import mx.iqenglish.tutoring.entity.Campus;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.Role;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.entity.UserStatus;
 import mx.iqenglish.tutoring.exception.BusinessException;
 import mx.iqenglish.tutoring.exception.ResourceNotFoundException;
 import mx.iqenglish.tutoring.exception.UnauthorizedActionException;
 import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
+import mx.iqenglish.tutoring.repository.AcademicLevelRepository;
+import mx.iqenglish.tutoring.repository.AuditLogRepository;
+import mx.iqenglish.tutoring.repository.BookRepository;
+import mx.iqenglish.tutoring.repository.CampusRepository;
+import mx.iqenglish.tutoring.repository.ModuleRepository;
+import mx.iqenglish.tutoring.repository.RoleRepository;
+import mx.iqenglish.tutoring.repository.StudentRepository;
+import mx.iqenglish.tutoring.repository.TeacherRepository;
+import mx.iqenglish.tutoring.repository.UserRepository;
 import mx.iqenglish.tutoring.security.SecurityUtils;
 import mx.iqenglish.tutoring.service.AuditService;
 import mx.iqenglish.tutoring.service.UserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,13 +56,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,6 +65,7 @@ public class UserServiceImpl implements UserService {
     private final CampusRepository campusRepository;
     private final AcademicLevelRepository academicLevelRepository;
     private final BookRepository bookRepository;
+    private final ModuleRepository moduleRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final AuditLogRepository auditLogRepository;
@@ -49,6 +78,7 @@ public class UserServiceImpl implements UserService {
                            CampusRepository campusRepository,
                            AcademicLevelRepository academicLevelRepository,
                            BookRepository bookRepository,
+                           ModuleRepository moduleRepository,
                            StudentRepository studentRepository,
                            TeacherRepository teacherRepository,
                            AuditLogRepository auditLogRepository,
@@ -60,6 +90,7 @@ public class UserServiceImpl implements UserService {
         this.campusRepository = campusRepository;
         this.academicLevelRepository = academicLevelRepository;
         this.bookRepository = bookRepository;
+        this.moduleRepository = moduleRepository;
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
         this.auditLogRepository = auditLogRepository;
@@ -68,11 +99,18 @@ public class UserServiceImpl implements UserService {
         this.auditService = auditService;
     }
 
+    private UserDTO enrichUserDTO(UserDTO dto, Long userId) {
+        if (dto == null || userId == null) return dto;
+        studentRepository.findByUserId(userId).ifPresent(s -> dto.setStudentProfile(entityMapper.toStudentDTO(s)));
+        teacherRepository.findByUserId(userId).ifPresent(t -> dto.setTeacherProfile(entityMapper.toTeacherDTO(t)));
+        return dto;
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-            .map(entityMapper::toUserDTO)
+            .map(u -> enrichUserDTO(entityMapper.toUserDTO(u), u.getId()))
             .collect(Collectors.toList());
     }
 
@@ -108,7 +146,7 @@ public class UserServiceImpl implements UserService {
 
         Page<User> page = userRepository.findAll(spec, pageable);
         List<UserDTO> dtoList = page.getContent().stream()
-            .map(entityMapper::toUserDTO)
+            .map(u -> enrichUserDTO(entityMapper.toUserDTO(u), u.getId()))
             .collect(Collectors.toList());
 
         return new PageResponse<>(
@@ -126,7 +164,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User", id));
-        return entityMapper.toUserDTO(user);
+        return enrichUserDTO(entityMapper.toUserDTO(user), user.getId());
     }
 
     @Override
@@ -134,7 +172,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResourceNotFoundException("User", username));
-        return entityMapper.toUserDTO(user);
+        return enrichUserDTO(entityMapper.toUserDTO(user), user.getId());
     }
 
     @Override
@@ -172,10 +210,12 @@ public class UserServiceImpl implements UserService {
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
             for (String rName : request.getRoles()) {
                 String normalized = rName.startsWith("ROLE_") ? rName : "ROLE_" + rName.toUpperCase();
+                validateRoleName(normalized);
                 roleRepository.findByName(normalized).ifPresent(roles::add);
             }
         } else if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
             String normalized = request.getRole().startsWith("ROLE_") ? request.getRole() : "ROLE_" + request.getRole().toUpperCase();
+            validateRoleName(normalized);
             roleRepository.findByName(normalized).ifPresent(roles::add);
         }
 
@@ -186,7 +226,7 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        // Optional auxiliary entity creation
+        // Auxiliary entity creation
         boolean isStudent = roles.stream().anyMatch(r -> "ROLE_STUDENT".equals(r.getName()));
         boolean isTeacher = roles.stream().anyMatch(r -> "ROLE_TEACHER".equals(r.getName()));
 
@@ -203,17 +243,41 @@ public class UserServiceImpl implements UserService {
             student.setUser(savedUser);
             student.setCampus(defaultCampus);
             String sNum = request.getStudentNumber() != null && !request.getStudentNumber().trim().isEmpty()
-                ? request.getStudentNumber()
+                ? request.getStudentNumber().trim()
                 : "STU-" + String.format("%05d", savedUser.getId());
             student.setStudentNumber(sNum);
             student.setEnrollmentDate(LocalDate.now());
             student.setStatus(savedUser.getStatus());
 
-            AcademicLevel level = academicLevelRepository.findAll().stream().findFirst().orElse(null);
+            AcademicLevel level = null;
+            if (request.getCurrentLevelId() != null) {
+                level = academicLevelRepository.findById(request.getCurrentLevelId()).orElse(null);
+            }
+            if (level == null) {
+                level = academicLevelRepository.findAll().stream().findFirst().orElse(null);
+            }
             student.setCurrentLevel(level);
 
-            Book book = bookRepository.findByBookNumber(1).orElseGet(() -> bookRepository.findAll().stream().findFirst().orElse(null));
+            Book book = null;
+            if (request.getCurrentBookId() != null) {
+                book = bookRepository.findById(request.getCurrentBookId()).orElse(null);
+            }
+            if (book == null && level != null) {
+                book = bookRepository.findByLevelIdOrderByBookNumberAsc(level.getId()).stream().findFirst().orElse(null);
+            }
+            if (book == null) {
+                book = bookRepository.findByBookNumber(1).orElseGet(() -> bookRepository.findAll().stream().findFirst().orElse(null));
+            }
             student.setCurrentBook(book);
+
+            Module module = null;
+            if (request.getCurrentModuleId() != null) {
+                module = moduleRepository.findById(request.getCurrentModuleId()).orElse(null);
+            }
+            if (module == null && book != null) {
+                module = moduleRepository.findByBookIdOrderBySequenceOrderAsc(book.getId()).stream().findFirst().orElse(null);
+            }
+            student.setCurrentModule(module);
 
             studentRepository.save(student);
         } else if (isTeacher && defaultCampus != null) {
@@ -221,11 +285,13 @@ public class UserServiceImpl implements UserService {
             teacher.setUser(savedUser);
             teacher.setCampus(defaultCampus);
             String eNum = request.getEmployeeNumber() != null && !request.getEmployeeNumber().trim().isEmpty()
-                ? request.getEmployeeNumber()
+                ? request.getEmployeeNumber().trim()
                 : "TCH-" + String.format("%05d", savedUser.getId());
             teacher.setEmployeeNumber(eNum);
-            teacher.setSpecialty(request.getSpecialty() != null ? request.getSpecialty() : "General English");
-            teacher.setHireDate(LocalDate.now());
+            teacher.setSpecialty(request.getSpecialty() != null && !request.getSpecialty().trim().isEmpty()
+                ? request.getSpecialty().trim()
+                : "General English");
+            teacher.setHireDate(request.getHireDate() != null ? request.getHireDate() : LocalDate.now());
             teacher.setStatus(savedUser.getStatus());
             teacherRepository.save(teacher);
         }
@@ -233,7 +299,7 @@ public class UserServiceImpl implements UserService {
         String roleSummary = roles.stream().map(Role::getName).collect(Collectors.joining(", "));
         auditService.log("USER_CREATED", "User", savedUser.getId().toString(), "Created user '" + savedUser.getUsername() + "' with roles: " + roleSummary);
 
-        return entityMapper.toUserDTO(savedUser);
+        return enrichUserDTO(entityMapper.toUserDTO(savedUser), savedUser.getId());
     }
 
     @Override
@@ -275,9 +341,77 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         User savedUser = userRepository.save(user);
 
+        // Update Student details if applicable
+        boolean isStudent = savedUser.getRoles().stream().anyMatch(r -> "ROLE_STUDENT".equals(r.getName()));
+        Optional<Student> studentOpt = studentRepository.findByUserId(id);
+        if (isStudent || studentOpt.isPresent()) {
+            Student student = studentOpt.orElseGet(() -> {
+                Student s = new Student();
+                s.setUser(savedUser);
+                s.setStudentNumber("STU-" + String.format("%05d", savedUser.getId()));
+                s.setEnrollmentDate(LocalDate.now());
+                s.setStatus(savedUser.getStatus());
+                return s;
+            });
+
+            if (request.getCampusId() != null) {
+                campusRepository.findById(request.getCampusId()).ifPresent(student::setCampus);
+            } else if (student.getCampus() == null) {
+                campusRepository.findAll().stream().findFirst().ifPresent(student::setCampus);
+            }
+
+            if (request.getStudentNumber() != null && !request.getStudentNumber().trim().isEmpty()) {
+                student.setStudentNumber(request.getStudentNumber().trim());
+            }
+
+            if (request.getCurrentLevelId() != null) {
+                academicLevelRepository.findById(request.getCurrentLevelId()).ifPresent(student::setCurrentLevel);
+            }
+            if (request.getCurrentBookId() != null) {
+                bookRepository.findById(request.getCurrentBookId()).ifPresent(student::setCurrentBook);
+            }
+            if (request.getCurrentModuleId() != null) {
+                moduleRepository.findById(request.getCurrentModuleId()).ifPresent(student::setCurrentModule);
+            }
+            student.setStatus(savedUser.getStatus());
+            studentRepository.save(student);
+        }
+
+        // Update Teacher details if applicable
+        boolean isTeacher = savedUser.getRoles().stream().anyMatch(r -> "ROLE_TEACHER".equals(r.getName()));
+        Optional<Teacher> teacherOpt = teacherRepository.findByUserId(id);
+        if (isTeacher || teacherOpt.isPresent()) {
+            Teacher teacher = teacherOpt.orElseGet(() -> {
+                Teacher t = new Teacher();
+                t.setUser(savedUser);
+                t.setEmployeeNumber("TCH-" + String.format("%05d", savedUser.getId()));
+                t.setHireDate(LocalDate.now());
+                t.setStatus(savedUser.getStatus());
+                return t;
+            });
+
+            if (request.getCampusId() != null) {
+                campusRepository.findById(request.getCampusId()).ifPresent(teacher::setCampus);
+            } else if (teacher.getCampus() == null) {
+                campusRepository.findAll().stream().findFirst().ifPresent(teacher::setCampus);
+            }
+
+            if (request.getEmployeeNumber() != null && !request.getEmployeeNumber().trim().isEmpty()) {
+                teacher.setEmployeeNumber(request.getEmployeeNumber().trim());
+            }
+            if (request.getSpecialty() != null && !request.getSpecialty().trim().isEmpty()) {
+                teacher.setSpecialty(request.getSpecialty().trim());
+            }
+            if (request.getHireDate() != null) {
+                teacher.setHireDate(request.getHireDate());
+            }
+            teacher.setStatus(savedUser.getStatus());
+            teacherRepository.save(teacher);
+        }
+
         auditService.log("USER_UPDATED", "User", savedUser.getId().toString(), "Updated profile attributes for user '" + savedUser.getUsername() + "'");
 
-        return entityMapper.toUserDTO(savedUser);
+        return enrichUserDTO(entityMapper.toUserDTO(savedUser), savedUser.getId());
     }
 
     @Override
@@ -300,10 +434,20 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         User savedUser = userRepository.save(user);
 
+        studentRepository.findByUserId(id).ifPresent(s -> {
+            s.setStatus(status);
+            studentRepository.save(s);
+        });
+
+        teacherRepository.findByUserId(id).ifPresent(t -> {
+            t.setStatus(status);
+            teacherRepository.save(t);
+        });
+
         String action = status == UserStatus.ACTIVE ? "USER_ACTIVATED" : "USER_DEACTIVATED";
         auditService.log(action, "User", savedUser.getId().toString(), "User status set to " + status.name() + " for '" + savedUser.getUsername() + "'");
 
-        return entityMapper.toUserDTO(savedUser);
+        return enrichUserDTO(entityMapper.toUserDTO(savedUser), savedUser.getId());
     }
 
     @Override
@@ -316,10 +460,12 @@ public class UserServiceImpl implements UserService {
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
             for (String rName : request.getRoles()) {
                 String normalized = rName.startsWith("ROLE_") ? rName : "ROLE_" + rName.toUpperCase();
+                validateRoleName(normalized);
                 roleRepository.findByName(normalized).ifPresent(resolvedRoles::add);
             }
         } else if (request.getRole() != null && !request.getRole().trim().isEmpty()) {
             String normalized = request.getRole().startsWith("ROLE_") ? request.getRole() : "ROLE_" + request.getRole().toUpperCase();
+            validateRoleName(normalized);
             roleRepository.findByName(normalized).ifPresent(resolvedRoles::add);
         }
 
@@ -333,7 +479,7 @@ public class UserServiceImpl implements UserService {
         if (currentlyAdmin && !willBeAdmin && user.getStatus() == UserStatus.ACTIVE) {
             long activeAdmins = userRepository.countByRoleNameAndStatus("ROLE_ADMIN", UserStatus.ACTIVE);
             if (activeAdmins <= 1) {
-                throw new BusinessException("CANNOT_REMOVE_LAST_ADMIN_ROLE", "Cannot remove administrator role from the only active system administrator.", HttpStatus.BAD_REQUEST);
+                throw new BusinessException("CANNOT_REMOVE_LAST_ADMIN_ROLE", "Cannot remove administrator role from the only active administrator.", HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -342,9 +488,9 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         String roleSummary = resolvedRoles.stream().map(Role::getName).collect(Collectors.joining(", "));
-        auditService.log("USER_ROLE_CHANGED", "User", savedUser.getId().toString(), "Updated roles for '" + savedUser.getUsername() + "' to: " + roleSummary);
+        auditService.log("USER_ROLES_UPDATED", "User", savedUser.getId().toString(), "Updated assigned roles to: " + roleSummary);
 
-        return entityMapper.toUserDTO(savedUser);
+        return enrichUserDTO(entityMapper.toUserDTO(savedUser), savedUser.getId());
     }
 
     @Override
@@ -355,7 +501,7 @@ public class UserServiceImpl implements UserService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId().orElse(null);
         if (id.equals(currentUserId)) {
-            throw new BusinessException("CANNOT_DELETE_SELF", "You cannot delete or deactivate your own active session account.", HttpStatus.BAD_REQUEST);
+            throw new BusinessException("CANNOT_DELETE_SELF", "You cannot deactivate or delete your own user account.", HttpStatus.BAD_REQUEST);
         }
 
         boolean isAdmin = user.getRoles().stream().anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
@@ -369,6 +515,16 @@ public class UserServiceImpl implements UserService {
         user.setStatus(UserStatus.INACTIVE);
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
+
+        studentRepository.findByUserId(id).ifPresent(s -> {
+            s.setStatus(UserStatus.INACTIVE);
+            studentRepository.save(s);
+        });
+
+        teacherRepository.findByUserId(id).ifPresent(t -> {
+            t.setStatus(UserStatus.INACTIVE);
+            teacherRepository.save(t);
+        });
 
         auditService.log("USER_DELETED", "User", id.toString(), "Soft-deleted user account '" + user.getUsername() + "' by setting status to INACTIVE");
     }
@@ -432,10 +588,10 @@ public class UserServiceImpl implements UserService {
         report.setSuspendedUsers(userRepository.countByStatus(UserStatus.SUSPENDED));
 
         Map<String, Long> roleMap = new LinkedHashMap<>();
-        roleMap.put("ADMIN", userRepository.countByRoleName("ROLE_ADMIN"));
-        roleMap.put("SUPERVISOR", userRepository.countByRoleName("ROLE_SUPERVISOR"));
-        roleMap.put("TEACHER", userRepository.countByRoleName("ROLE_TEACHER"));
-        roleMap.put("STUDENT", userRepository.countByRoleName("ROLE_STUDENT"));
+        roleMap.put("ROLE_ADMIN", userRepository.countByRoleName("ROLE_ADMIN"));
+        roleMap.put("ROLE_SUPERVISOR", userRepository.countByRoleName("ROLE_SUPERVISOR"));
+        roleMap.put("ROLE_TEACHER", userRepository.countByRoleName("ROLE_TEACHER"));
+        roleMap.put("ROLE_STUDENT", userRepository.countByRoleName("ROLE_STUDENT"));
         report.setRoleDistribution(roleMap);
 
         Map<String, Long> statusMap = new LinkedHashMap<>();
@@ -488,7 +644,7 @@ public class UserServiceImpl implements UserService {
 
         for (User u : users) {
             String rolesStr = u.getRoles() != null
-                ? u.getRoles().stream().map(r -> r.getName().replace("ROLE_", "")).collect(Collectors.joining(";"))
+                ? u.getRoles().stream().map(Role::getName).collect(Collectors.joining(";"))
                 : "";
             String createdStr = u.getCreatedAt() != null ? u.getCreatedAt().format(dtf) : "";
 
@@ -522,5 +678,11 @@ public class UserServiceImpl implements UserService {
             return "\"" + value.replace("\"", "\"\"") + "\"";
         }
         return value;
+    }
+    private void validateRoleName(String roleName) {
+        if (!"ROLE_ADMIN".equals(roleName) && !"ROLE_SUPERVISOR".equals(roleName)
+                && !"ROLE_TEACHER".equals(roleName) && !"ROLE_STUDENT".equals(roleName)) {
+            throw new BusinessException("INVALID_ROLE", "Role must be one of: ROLE_ADMIN, ROLE_SUPERVISOR, ROLE_TEACHER, ROLE_STUDENT", HttpStatus.BAD_REQUEST);
+        }
     }
 }

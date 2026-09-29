@@ -14,6 +14,8 @@ public class UserDTO {
     private String avatarUrl;
     private Set<String> roles;
     private Set<String> permissions;
+    private StudentDTO studentProfile;
+    private TeacherDTO teacherProfile;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -40,6 +42,10 @@ public class UserDTO {
     public void setRoles(Set<String> roles) { this.roles = roles; }
     public Set<String> getPermissions() { return permissions; }
     public void setPermissions(Set<String> permissions) { this.permissions = permissions; }
+    public StudentDTO getStudentProfile() { return studentProfile; }
+    public void setStudentProfile(StudentDTO studentProfile) { this.studentProfile = studentProfile; }
+    public TeacherDTO getTeacherProfile() { return teacherProfile; }
+    public void setTeacherProfile(TeacherDTO teacherProfile) { this.teacherProfile = teacherProfile; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

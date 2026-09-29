@@ -125,7 +125,7 @@ export const LoginPage: React.FC = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             <button
-              onClick={() => switchDemoRole('STUDENT')}
+              onClick={() => switchDemoRole('ROLE_STUDENT')}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--iq-secondary)', backgroundColor: 'var(--iq-secondary-light)', cursor: 'pointer', textAlign: 'left' }}
             >
               <GraduationCap size={18} color="var(--iq-primary)" />
@@ -136,7 +136,7 @@ export const LoginPage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => switchDemoRole('TEACHER')}
+              onClick={() => switchDemoRole('ROLE_TEACHER')}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--iq-primary)', backgroundColor: 'var(--iq-primary-light)', cursor: 'pointer', textAlign: 'left' }}
             >
               <BookOpen size={18} color="var(--iq-primary)" />
@@ -147,7 +147,7 @@ export const LoginPage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => switchDemoRole('SUPERVISOR')}
+              onClick={() => switchDemoRole('ROLE_SUPERVISOR')}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid #f59e0b', backgroundColor: '#fffbeb', cursor: 'pointer', textAlign: 'left' }}
             >
               <Shield size={18} color="#b45309" />
@@ -158,7 +158,7 @@ export const LoginPage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => switchDemoRole('ADMIN')}
+              onClick={() => switchDemoRole('ROLE_ADMIN')}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid #10b981', backgroundColor: '#ecfdf5', cursor: 'pointer', textAlign: 'left' }}
             >
               <CheckCircle size={18} color="#047857" />

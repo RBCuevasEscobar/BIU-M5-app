@@ -38,7 +38,7 @@ Source: frontend\package.json (devDependencies)
 - vitest ^5.0.1
 
 Internal dependency graph
-Nodes: 213
+Nodes: 215
 Edges: 92
 
 Nodes:
@@ -88,6 +88,8 @@ Nodes:
 - backend\src\main\java\mx\iqenglish\tutoring\dto\RecordAttendanceDTO.java
 - backend\src\main\java\mx\iqenglish\tutoring\dto\RescheduleAppointmentDTO.java
 - backend\src\main\java\mx\iqenglish\tutoring\dto\StudentDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\StudentModuleItemDTO.java
+- backend\src\main\java\mx\iqenglish\tutoring\dto\SuggestedTutoringDTO.java
 - backend\src\main\java\mx\iqenglish\tutoring\dto\TalkIOSessionDTO.java
 - backend\src\main\java\mx\iqenglish\tutoring\dto\TeacherDTO.java
 - backend\src\main\java\mx\iqenglish\tutoring\dto\TopicDTO.java
@@ -268,10 +270,10 @@ Edges:
 - frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
 - frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\services\api.ts (import)
 - frontend\src\features\administration\AuditLogsPage.tsx -> frontend\src\types\index.ts (import)
-- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Badge.tsx (import)
 - frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Button.tsx (import)
 - frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\Card.tsx (import)
 - frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\components\LoadingSpinner.tsx (import)
+- frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\context\AuthContext.tsx (import)
 - frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\services\api.ts (import)
 - frontend\src\features\attendance\AttendanceRegisterPage.tsx -> frontend\src\types\index.ts (import)
 - frontend\src\features\auth\LoginPage.tsx -> frontend\src\components\Button.tsx (import)

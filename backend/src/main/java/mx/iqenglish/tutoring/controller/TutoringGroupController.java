@@ -3,7 +3,14 @@ package mx.iqenglish.tutoring.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import mx.iqenglish.tutoring.dto.*;
+import java.util.List;
+import mx.iqenglish.tutoring.dto.ApiResponse;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.CreateTutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.DuplicateGroupDTO;
+import mx.iqenglish.tutoring.dto.GroupReportDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.UpdateTutoringGroupDTO;
 import mx.iqenglish.tutoring.entity.GroupStatus;
 import mx.iqenglish.tutoring.service.TutoringGroupService;
 import org.springframework.http.HttpHeaders;
@@ -11,9 +18,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/tutoring/groups")
@@ -108,6 +122,28 @@ public class TutoringGroupController {
         byte[] csvData = groupService.exportGroupReportCsv(campusId, moduleId, teacherId, bookId, status);
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=tutoring_groups_report.csv")
+            .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+            .body(csvData);
+    }
+
+    @GetMapping("/{id}/students")
+    @PreAuthorize("hasAuthority('GROUP_READ') or hasRole('TEACHER') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Get list of enrolled students for a specific group")
+    public ResponseEntity<ApiResponse<List<AppointmentDTO>>> getEnrolledStudentsByGroup(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.ok(groupService.getEnrolledStudentsByGroup(id)));
+    }
+
+    @GetMapping("/students/export/csv")
+    @PreAuthorize("hasAuthority('GROUP_READ') or hasRole('TEACHER') or hasRole('SUPERVISOR') or hasRole('ADMIN')")
+    @Operation(summary = "Export enrolled students roster to CSV")
+    public ResponseEntity<byte[]> exportEnrolledStudentsCsv(
+            @RequestParam(required = false) Long groupId,
+            @RequestParam(required = false) Long campusId,
+            @RequestParam(required = false) Long moduleId,
+            @RequestParam(required = false) Long teacherId) {
+        byte[] csvData = groupService.exportEnrolledStudentsCsv(groupId, campusId, moduleId, teacherId);
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=alumnos_inscritos_reporte.csv")
             .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
             .body(csvData);
     }

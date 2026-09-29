@@ -5,7 +5,7 @@ import { Appointment, GroupSession, DashboardSummary } from '../../types';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { CheckCircle, AlertCircle, Save, CheckCircle2, UserCheck, Calendar, Clock, MapPin, Users } from 'lucide-react';
+import { CheckCircle, AlertCircle, Save, UserCheck, Calendar, Clock, MapPin, Users, Lock } from 'lucide-react';
 
 interface AttendanceRowState {
   status: 'PRESENT' | 'ABSENT' | 'EXCUSED';
@@ -27,7 +27,7 @@ export const AttendanceRegisterPage: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
 
-  // 1. Load teacher sessions corresponding to their dashboard groups (Requirement 4)
+  // 1. Load teacher sessions corresponding to their dashboard groups
   useEffect(() => {
     async function loadTeacherSessions() {
       setIsLoadingSessions(true);
@@ -55,7 +55,7 @@ export const AttendanceRegisterPage: React.FC = () => {
     loadTeacherSessions();
   }, [user]);
 
-  // 2. Load pending students for the selected session (Requirement 3)
+  // 2. Load pending students for the selected session
   useEffect(() => {
     if (!selectedSessionId) return;
 
@@ -64,8 +64,8 @@ export const AttendanceRegisterPage: React.FC = () => {
       setSuccessMsg('');
       setErrorMsg('');
       try {
-        const data = await api.get<Appointment[]>(`/appointments/session/${selectedSessionId}`);
-        // Filter: Show only appointments that have NOT yet had attendance recorded (Requirement 3)
+        const data = await api.get<Appointment[]>('/appointments/session/' + selectedSessionId);
+        // Filter: Show only appointments that have NOT yet had attendance recorded
         const pendingAppts = (data || []).filter(a => !a.attendanceStatus && a.status === 'CONFIRMED');
         setAppointments(pendingAppts);
 
@@ -89,26 +89,44 @@ export const AttendanceRegisterPage: React.FC = () => {
   }, [selectedSessionId]);
 
   const handleStatusChange = (apptId: number, status: 'PRESENT' | 'ABSENT' | 'EXCUSED') => {
-    setAttendanceRecords(prev => ({
-      ...prev,
-      [apptId]: {
-        ...prev[apptId],
-        status,
-        grade: status === 'PRESENT' ? prev[apptId]?.grade || '' : '',
-        error: undefined
-      }
-    }));
+    setAttendanceRecords(prev => {
+      const current = prev[apptId] || { status: 'PRESENT', grade: '', notes: '' };
+      return {
+        ...prev,
+        [apptId]: {
+          ...current,
+          status,
+          // When status is changed to ABSENT or EXCUSED, automatically wipe and block grade
+          grade: status === 'PRESENT' ? current.grade : '',
+          error: undefined
+        }
+      };
+    });
   };
 
   const handleGradeChange = (apptId: number, gradeStr: string) => {
-    setAttendanceRecords(prev => ({
-      ...prev,
-      [apptId]: {
-        ...prev[apptId],
-        grade: gradeStr,
-        error: undefined
+    setAttendanceRecords(prev => {
+      const current = prev[apptId] || { status: 'PRESENT', grade: '', notes: '' };
+      // If status is not PRESENT, do not permit setting any grade value
+      if (current.status !== 'PRESENT') {
+        return {
+          ...prev,
+          [apptId]: {
+            ...current,
+            grade: '',
+            error: 'No se permite ingresar una nota cuando el estado es Ausente o Justificado. El campo nota debe permanecer vacio.'
+          }
+        };
       }
-    }));
+      return {
+        ...prev,
+        [apptId]: {
+          ...current,
+          grade: gradeStr,
+          error: undefined
+        }
+      };
+    });
   };
 
   const handleNotesChange = (apptId: number, notes: string) => {
@@ -118,12 +136,11 @@ export const AttendanceRegisterPage: React.FC = () => {
     }));
   };
 
-  // 3. Register individual student attendance with grade validation (Requirement 3)
+  // 3. Register individual student attendance with grade validation
   const handleSaveIndividual = async (appt: Appointment) => {
     const rec = attendanceRecords[appt.id];
     if (!rec) return;
 
-    // Validation for PRESENT status (Requirement 3)
     let parsedGrade: number | undefined = undefined;
     if (rec.status === 'PRESENT') {
       const num = parseFloat(rec.grade);
@@ -132,12 +149,24 @@ export const AttendanceRegisterPage: React.FC = () => {
           ...prev,
           [appt.id]: {
             ...prev[appt.id],
-            error: 'La nota es obligatoria y debe ser un valor entre 50.00 y 100.00 con hasta dos decimales.'
+            error: 'La calificacion es obligatoria para alumnos Presentes (50.00 a 100.00).'
           }
         }));
         return;
       }
       parsedGrade = Math.round(num * 100) / 100;
+    } else {
+      if (rec.grade && rec.grade.trim() !== '') {
+        setAttendanceRecords(prev => ({
+          ...prev,
+          [appt.id]: {
+            ...prev[appt.id],
+            grade: '',
+            error: 'El campo de calificacion debe permanecer vacio cuando el estado es ' + (rec.status === 'ABSENT' ? 'Ausente' : 'Justificado') + '.'
+          }
+        }));
+        return;
+      }
     }
 
     setIsSavingApptId(appt.id);
@@ -152,9 +181,9 @@ export const AttendanceRegisterPage: React.FC = () => {
         notes: rec.notes || undefined,
       });
 
-      // Requirement 3: Immediately remove the student from the active pending list
+      // Immediately remove the student from the active pending list
       setAppointments(prev => prev.filter(a => a.id !== appt.id));
-      setSuccessMsg(`Asistencia registrada exitosamente para ${appt.studentName} (${rec.status}${parsedGrade ? ` - Nota: ${parsedGrade.toFixed(2)}` : ''}).`);
+      setSuccessMsg('Asistencia registrada exitosamente para ' + appt.studentName + ' (' + rec.status + (parsedGrade ? ' - Calificacion: ' + parsedGrade.toFixed(2) : '') + '). Si todos los alumnos de la sesion han sido evaluados, el grupo y la sesion han sido cerrados automaticamente.');
     } catch (err: any) {
       setErrorMsg(err.message || 'Error al registrar la asistencia del alumno.');
     } finally {
@@ -164,27 +193,37 @@ export const AttendanceRegisterPage: React.FC = () => {
 
   // 4. Batch save all pending students
   const handleSaveAll = async () => {
-    // Validate all rows first
     let hasValidationErrors = false;
     const updatedRecords = { ...attendanceRecords };
 
     for (const appt of appointments) {
       const rec = updatedRecords[appt.id];
-      if (rec && rec.status === 'PRESENT') {
-        const num = parseFloat(rec.grade);
-        if (isNaN(num) || num < 50 || num > 100) {
-          updatedRecords[appt.id] = {
-            ...rec,
-            error: 'Nota requerida (50.00 - 100.00)'
-          };
-          hasValidationErrors = true;
+      if (rec) {
+        if (rec.status === 'PRESENT') {
+          const num = parseFloat(rec.grade);
+          if (isNaN(num) || num < 50 || num > 100) {
+            updatedRecords[appt.id] = {
+              ...rec,
+              error: 'Nota requerida (50.00 - 100.00)'
+            };
+            hasValidationErrors = true;
+          }
+        } else {
+          if (rec.grade && rec.grade.trim() !== '') {
+            updatedRecords[appt.id] = {
+              ...rec,
+              grade: '',
+              error: 'No se permite nota cuando el estado es Ausente o Justificado. Limpia el campo nota.'
+            };
+            hasValidationErrors = true;
+          }
         }
       }
     }
 
     if (hasValidationErrors) {
       setAttendanceRecords(updatedRecords);
-      setErrorMsg('Por favor ingresa una nota valida (50.00 - 100.00) para todos los alumnos marcados como Presente.');
+      setErrorMsg('Por favor verifica las notas: 50.00 - 100.00 para alumnos Presentes y vacio para Ausentes/Justificados.');
       return;
     }
 
@@ -225,7 +264,7 @@ export const AttendanceRegisterPage: React.FC = () => {
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Pasa lista y califica el desempeno academico de los alumnos inscritos</p>
         </div>
 
-        {/* Dynamic Teacher Sessions Dropdown (Requirement 4) */}
+        {/* Dynamic Teacher Sessions Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <select
             value={selectedSessionId}
@@ -234,7 +273,7 @@ export const AttendanceRegisterPage: React.FC = () => {
           >
             {sessions.map(s => (
               <option key={s.id} value={s.id}>
-                [{s.groupCode}] {s.moduleCode} - {s.sessionDate} {s.startTime} hrs ({s.campusName})
+                {'[' + s.groupCode + '] ' + s.moduleCode + ' - ' + s.sessionDate + ' ' + s.startTime + ' hrs (' + s.campusName + ')'}
               </option>
             ))}
           </select>
@@ -248,23 +287,58 @@ export const AttendanceRegisterPage: React.FC = () => {
       </div>
 
       {selectedSession && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px', padding: '14px 20px', backgroundColor: 'var(--iq-primary-light)', borderRadius: 'var(--radius-md)', fontSize: '13.5px', color: 'var(--iq-primary)', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={16} /><span>Grupo: <strong>{selectedSession.groupName} ({selectedSession.groupCode})</strong></span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={16} /><span>Fecha: <strong>{selectedSession.sessionDate}</strong></span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={16} /><span>Horario: <strong>{selectedSession.startTime} - {selectedSession.endTime} hrs</strong></span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={16} /><span>Plantel: <strong>{selectedSession.campusName}</strong></span></div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '16px',
+          padding: '16px 20px',
+          borderRadius: 'var(--radius-md)',
+          backgroundColor: '#f8fafc',
+          border: '1px solid var(--border-color)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Calendar size={18} color="var(--iq-secondary)" />
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Fecha y Turno</div>
+              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--iq-primary)' }}>{selectedSession.sessionDate}</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Clock size={18} color="var(--iq-secondary)" />
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Horario</div>
+              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--iq-primary)' }}>{selectedSession.startTime} - {selectedSession.endTime}</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <MapPin size={18} color="var(--iq-secondary)" />
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Plantel y Aula / Enlace</div>
+              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--iq-primary)' }}>{selectedSession.campusName} - {selectedSession.roomOrLink || 'Aula General'}</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Users size={18} color="var(--iq-secondary)" />
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Alumnos por Evaluar</div>
+              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--iq-primary)' }}>{appointments.length} / {selectedSession.capacity || 8}</div>
+            </div>
+          </div>
         </div>
       )}
 
       {successMsg && (
-        <div style={{ padding: '12px 16px', backgroundColor: 'var(--status-success-bg)', color: 'var(--status-success)', borderRadius: 'var(--radius-md)', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle2 size={18} />
+        <div style={{ padding: '12px 16px', backgroundColor: '#e6f4ea', color: 'var(--status-success)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13.5px', fontWeight: 600 }}>
+          <CheckCircle size={18} />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ padding: '12px 16px', backgroundColor: 'var(--status-danger-bg)', color: 'var(--status-danger)', borderRadius: 'var(--radius-md)', fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ padding: '12px 16px', backgroundColor: '#fde8e8', color: 'var(--status-danger)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13.5px', fontWeight: 600 }}>
           <AlertCircle size={18} />
           <span>{errorMsg}</span>
         </div>
@@ -285,7 +359,7 @@ export const AttendanceRegisterPage: React.FC = () => {
           </div>
         </Card>
       ) : (
-        <Card title={`Alumnos Inscritos Pendientes por Evaluar (${appointments.length})`}>
+        <Card title={'Alumnos Inscritos Pendientes por Evaluar (' + appointments.length + ')'}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {appointments.map(appt => {
               const currentRec = attendanceRecords[appt.id] || { status: 'PRESENT', grade: '', notes: '' };
@@ -318,7 +392,7 @@ export const AttendanceRegisterPage: React.FC = () => {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                      {/* Attendance Status Radios / Buttons (Requirement 3) */}
+                      {/* Attendance Status Radios / Buttons */}
                       <div style={{ display: 'flex', gap: '6px' }}>
                         <button
                           type="button"
@@ -358,18 +432,22 @@ export const AttendanceRegisterPage: React.FC = () => {
                         </button>
                       </div>
 
-                      {/* Grade Input - MANDATORY IF PRESENT (Requirement 3) */}
-                      {isPresent ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-main)' }}>Nota (50-100):</label>
+                      {/* Grade Input - DISABLED and BLOCKED when status is ABSENT or EXCUSED */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: isPresent ? 'var(--text-main)' : 'var(--text-muted)' }}>
+                            Nota:
+                          </label>
+                          <div style={{ position: 'relative', display: 'inline-block' }}>
                             <input
                               type="number"
                               min="50"
                               max="100"
                               step="0.01"
-                              placeholder="Ej. 95.00"
-                              value={currentRec.grade}
+                              placeholder={isPresent ? '50-100' : 'N/A'}
+                              value={isPresent ? currentRec.grade : ''}
+                              disabled={!isPresent}
+                              readOnly={!isPresent}
                               onChange={e => handleGradeChange(appt.id, e.target.value)}
                               style={{
                                 width: '100px',
@@ -378,16 +456,19 @@ export const AttendanceRegisterPage: React.FC = () => {
                                 border: currentRec.error ? '1px solid var(--status-danger)' : '1px solid var(--border-color)',
                                 fontSize: '13px',
                                 fontWeight: 700,
-                                textAlign: 'center'
+                                textAlign: 'center',
+                                backgroundColor: isPresent ? '#ffffff' : '#f1f5f9',
+                                color: isPresent ? 'var(--text-main)' : 'var(--text-muted)',
+                                cursor: isPresent ? 'text' : 'not-allowed',
+                                opacity: isPresent ? 1 : 0.7
                               }}
                             />
+                            {!isPresent && (
+                              <Lock size={12} style={{ position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+                            )}
                           </div>
                         </div>
-                      ) : (
-                        <div style={{ width: '100px', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                          Sin nota
-                        </div>
-                      )}
+                      </div>
 
                       {/* Notes Input */}
                       <input

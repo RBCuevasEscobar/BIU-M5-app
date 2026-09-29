@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByLevelId(Long levelId);
+    List<Book> findByLevelIdOrderByBookNumberAsc(Long levelId);
     Optional<Book> findByBookNumber(Integer bookNumber);
 }

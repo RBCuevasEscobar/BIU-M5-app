@@ -1,14 +1,42 @@
 package mx.iqenglish.tutoring.mapper;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
-import mx.iqenglish.tutoring.entity.Module;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import mx.iqenglish.tutoring.dto.AcademicLevelDTO;
+import mx.iqenglish.tutoring.dto.AcademicProgramDTO;
+import mx.iqenglish.tutoring.dto.AppointmentDTO;
+import mx.iqenglish.tutoring.dto.AttendanceDTO;
+import mx.iqenglish.tutoring.dto.AuditLogDTO;
+import mx.iqenglish.tutoring.dto.BookDTO;
+import mx.iqenglish.tutoring.dto.CampusDTO;
+import mx.iqenglish.tutoring.dto.GroupSessionDTO;
+import mx.iqenglish.tutoring.dto.ModuleDTO;
+import mx.iqenglish.tutoring.dto.NotificationDTO;
+import mx.iqenglish.tutoring.dto.StudentDTO;
+import mx.iqenglish.tutoring.dto.TeacherDTO;
+import mx.iqenglish.tutoring.dto.TopicDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.UserDTO;
+import mx.iqenglish.tutoring.entity.AcademicLevel;
+import mx.iqenglish.tutoring.entity.AcademicProgram;
+import mx.iqenglish.tutoring.entity.Appointment;
+import mx.iqenglish.tutoring.entity.Attendance;
+import mx.iqenglish.tutoring.entity.AuditLog;
+import mx.iqenglish.tutoring.entity.Book;
+import mx.iqenglish.tutoring.entity.Campus;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.Notification;
+import mx.iqenglish.tutoring.entity.Permission;
+import mx.iqenglish.tutoring.entity.Role;
+import mx.iqenglish.tutoring.entity.Student;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.Topic;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
+import mx.iqenglish.tutoring.entity.User;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EntityMapper {

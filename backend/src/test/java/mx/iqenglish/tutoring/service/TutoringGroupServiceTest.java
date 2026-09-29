@@ -1,21 +1,8 @@
 package mx.iqenglish.tutoring.service;
 
-import mx.iqenglish.tutoring.dto.*;
-import mx.iqenglish.tutoring.entity.*;
-import mx.iqenglish.tutoring.entity.Module;
-import mx.iqenglish.tutoring.exception.BusinessException;
-import mx.iqenglish.tutoring.exception.ScheduleConflictException;
-import mx.iqenglish.tutoring.mapper.EntityMapper;
-import mx.iqenglish.tutoring.repository.*;
-import mx.iqenglish.tutoring.service.impl.TutoringGroupServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,22 +11,69 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import mx.iqenglish.tutoring.dto.CreateTutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.GroupReportDTO;
+import mx.iqenglish.tutoring.dto.TutoringGroupDTO;
+import mx.iqenglish.tutoring.dto.UpdateTutoringGroupDTO;
+import mx.iqenglish.tutoring.entity.Campus;
+import mx.iqenglish.tutoring.entity.GroupSession;
+import mx.iqenglish.tutoring.entity.GroupStatus;
+import mx.iqenglish.tutoring.entity.Modality;
+import mx.iqenglish.tutoring.entity.Module;
+import mx.iqenglish.tutoring.entity.SessionStatus;
+import mx.iqenglish.tutoring.entity.Teacher;
+import mx.iqenglish.tutoring.entity.TutoringGroup;
+import mx.iqenglish.tutoring.entity.User;
+import mx.iqenglish.tutoring.exception.BusinessException;
+import mx.iqenglish.tutoring.exception.ScheduleConflictException;
+import mx.iqenglish.tutoring.mapper.EntityMapper;
+import mx.iqenglish.tutoring.repository.AppointmentRepository;
+import mx.iqenglish.tutoring.repository.AttendanceRepository;
+import mx.iqenglish.tutoring.repository.CampusRepository;
+import mx.iqenglish.tutoring.repository.GroupSessionRepository;
+import mx.iqenglish.tutoring.repository.ModuleRepository;
+import mx.iqenglish.tutoring.repository.TeacherRepository;
+import mx.iqenglish.tutoring.repository.TopicRepository;
+import mx.iqenglish.tutoring.repository.TutoringGroupRepository;
+import mx.iqenglish.tutoring.repository.UserRepository;
+import mx.iqenglish.tutoring.service.impl.TutoringGroupServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
-class TutoringGroupServiceTest {
+@MockitoSettings(strictness = Strictness.LENIENT)
+public class TutoringGroupServiceTest {
 
-    @Mock private TutoringGroupRepository groupRepository;
-    @Mock private GroupSessionRepository sessionRepository;
-    @Mock private CampusRepository campusRepository;
-    @Mock private TeacherRepository teacherRepository;
-    @Mock private ModuleRepository moduleRepository;
-    @Mock private TopicRepository topicRepository;
-    @Mock private UserRepository userRepository;
-    @Mock private EntityMapper entityMapper;
-    @Mock private AuditService auditService;
+    @Mock
+    private TutoringGroupRepository groupRepository;
+    @Mock
+    private GroupSessionRepository sessionRepository;
+    @Mock
+    private CampusRepository campusRepository;
+    @Mock
+    private TeacherRepository teacherRepository;
+    @Mock
+    private ModuleRepository moduleRepository;
+    @Mock
+    private TopicRepository topicRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private EntityMapper entityMapper;
+    @Mock
+    private AuditService auditService;
+    @Mock
+    private AppointmentRepository appointmentRepository;
+    @Mock
+    private AttendanceRepository attendanceRepository;
 
     @InjectMocks
     private TutoringGroupServiceImpl groupService;
@@ -56,25 +90,18 @@ class TutoringGroupServiceTest {
         mockCampus.setName("Campus Tlaxcala");
 
         User teacherUser = new User();
-        teacherUser.setId(4L);
+        teacherUser.setId(20L);
         teacherUser.setFirstName("Ana");
         teacherUser.setLastName("Garcia");
-        teacherUser.setEmail("ana.garcia@iqenglish.mx");
 
         mockTeacher = new Teacher();
         mockTeacher.setId(1L);
         mockTeacher.setUser(teacherUser);
 
-        Book mockBook = new Book();
-        mockBook.setId(2L);
-        mockBook.setBookNumber(2);
-        mockBook.setTitle("Book 2 Elementary");
-
         mockModule = new Module();
         mockModule.setId(8L);
         mockModule.setModuleCode("MOD-05B");
         mockModule.setTitle("Lesson 5B");
-        mockModule.setBook(mockBook);
 
         mockGroup = new TutoringGroup();
         mockGroup.setId(100L);
@@ -154,9 +181,6 @@ class TutoringGroupServiceTest {
     void testUpdateGroupCapacityBelowEnrollmentFails() {
         mockGroup.setCurrentEnrollment(8);
         when(groupRepository.findById(100L)).thenReturn(Optional.of(mockGroup));
-        when(campusRepository.findById(1L)).thenReturn(Optional.of(mockCampus));
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(mockTeacher));
-        when(moduleRepository.findById(8L)).thenReturn(Optional.of(mockModule));
 
         UpdateTutoringGroupDTO updateDTO = new UpdateTutoringGroupDTO();
         updateDTO.setName("Group with lower capacity");

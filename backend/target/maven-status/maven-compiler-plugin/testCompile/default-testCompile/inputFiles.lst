@@ -2,5 +2,6 @@ C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\controller\UserControllerTest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\security\SecurityRbacTest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\service\AppointmentServiceTest.java
+C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\service\AttendanceServiceTest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\service\TutoringGroupServiceTest.java
 C:\Users\DELL\.gemini\antigravity\playground\iq-english-tutoring-system\backend\src\test\java\mx\iqenglish\tutoring\service\UserServiceTest.java

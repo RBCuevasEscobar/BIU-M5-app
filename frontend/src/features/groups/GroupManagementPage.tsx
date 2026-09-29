@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
-import { TutoringGroup, Campus, Book, ModuleItem, GroupReport } from '../../types';
+import { TutoringGroup, Campus, Book, ModuleItem, GroupReport, Appointment } from '../../types';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
@@ -26,13 +26,13 @@ import {
   School,
   UserCheck,
   RefreshCw,
-  XCircle
+  GraduationCap
 } from 'lucide-react';
 
 export const GroupManagementPage: React.FC = () => {
   const { user, hasRole } = useAuth();
-  const isAdminOrSupervisor = hasRole('ADMIN') || hasRole('SUPERVISOR');
-  const isTeacher = hasRole('TEACHER') && !isAdminOrSupervisor;
+  const isAdminOrSupervisor = hasRole('ROLE_ADMIN') || hasRole('ROLE_SUPERVISOR');
+  const isTeacher = hasRole('ROLE_TEACHER') && !isAdminOrSupervisor;
 
   // State
   const [groups, setGroups] = useState<TutoringGroup[]>([]);
@@ -60,6 +60,11 @@ export const GroupManagementPage: React.FC = () => {
   const [reportData, setReportData] = useState<GroupReport | null>(null);
   const [isReportLoading, setIsReportLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Enrolled Students Modal State (Requirement: Teacher enrolled students report)
+  const [enrolledGroupTarget, setEnrolledGroupTarget] = useState<TutoringGroup | null>(null);
+  const [enrolledStudents, setEnrolledStudents] = useState<Appointment[]>([]);
+  const [isEnrolledLoading, setIsEnrolledLoading] = useState(false);
 
   // Form states (Create)
   const [createForm, setCreateForm] = useState({
@@ -109,8 +114,11 @@ export const GroupManagementPage: React.FC = () => {
 
       let groupList = groupsData || [];
       if (isTeacher && user) {
-        // Teacher view filter by teacher ID if available
-        groupList = groupList.filter(g => g.teacherName?.toLowerCase().includes(user.firstName.toLowerCase()) || g.teacherId === user.id);
+        groupList = groupList.filter(g => 
+          (g.teacherName && user.fullName && g.teacherName.toLowerCase().includes(user.firstName.toLowerCase())) ||
+          (g.teacherName && user.lastName && g.teacherName.toLowerCase().includes(user.lastName.toLowerCase())) ||
+          g.teacherId === user.id
+        );
       }
 
       setGroups(groupList);
@@ -224,7 +232,7 @@ export const GroupManagementPage: React.FC = () => {
         modality: editForm.modality,
         status: editForm.status
       });
-      setSuccessMessage(`Grupo ${editTarget.code} actualizado correctamente`);
+      setSuccessMessage('Grupo ' + editTarget.code + ' actualizado correctamente');
       setEditTarget(null);
       await loadData();
     } catch (err: any) {
@@ -238,7 +246,7 @@ export const GroupManagementPage: React.FC = () => {
   const handleOpenDuplicate = (group: TutoringGroup) => {
     setDuplicateTarget(group);
     setDupForm({
-      newName: `${group.name} (Copia)`,
+      newName: group.name + ' (Copia)',
       newTeacherId: group.teacherId || 1,
       newSessionDate: '',
       newStartTime: '10:00',
@@ -260,7 +268,7 @@ export const GroupManagementPage: React.FC = () => {
         newStartTime: dupForm.newStartTime || undefined,
         newEndTime: dupForm.newEndTime || undefined
       });
-      setSuccessMessage(`Grupo duplicado con exito a partir de ${duplicateTarget.code}`);
+      setSuccessMessage('Grupo duplicado con exito a partir de ' + duplicateTarget.code);
       setDuplicateTarget(null);
       await loadData();
     } catch (err: any) {
@@ -277,7 +285,7 @@ export const GroupManagementPage: React.FC = () => {
     setError(null);
     try {
       await api.groups.delete(deleteTarget.id);
-      setSuccessMessage(`Grupo ${deleteTarget.code} procesado (eliminado/cancelado)`);
+      setSuccessMessage('Grupo ' + deleteTarget.code + ' procesado (eliminado/cancelado)');
       setDeleteTarget(null);
       await loadData();
     } catch (err: any) {
@@ -306,7 +314,7 @@ export const GroupManagementPage: React.FC = () => {
     }
   };
 
-  // Handle Download CSV
+  // Handle Download Groups Summary CSV
   const handleDownloadCsv = async () => {
     try {
       await api.groups.downloadCsv({
@@ -315,9 +323,37 @@ export const GroupManagementPage: React.FC = () => {
         bookId: selectedBook || undefined,
         status: selectedStatus || undefined
       });
-      setSuccessMessage('Reporte CSV descargado exitosamente');
+      setSuccessMessage('Reporte CSV de grupos descargado exitosamente');
     } catch (err: any) {
       setError(err?.message || 'Error al descargar el archivo CSV');
+    }
+  };
+
+  // Open Enrolled Students Report Modal for a Group (Requirement: Teacher enrolled students report)
+  const handleOpenEnrolledStudents = async (group: TutoringGroup) => {
+    setEnrolledGroupTarget(group);
+    setIsEnrolledLoading(true);
+    try {
+      const data = await api.groups.getEnrolledStudents(group.id);
+      setEnrolledStudents(data || []);
+    } catch (err: any) {
+      setError(err?.message || 'Error al cargar los alumnos inscritos del grupo');
+      setEnrolledStudents([]);
+    } finally {
+      setIsEnrolledLoading(false);
+    }
+  };
+
+  // Download Enrolled Students CSV (for a single group or all teacher groups)
+  const handleDownloadEnrolledStudentsCsv = async (groupId?: number) => {
+    try {
+      await api.groups.downloadEnrolledStudentsCsv(groupId, {
+        campusId: selectedCampus || undefined,
+        moduleId: selectedModule || undefined
+      });
+      setSuccessMessage('Reporte de alumnos inscritos descargado exitosamente en formato CSV');
+    } catch (err: any) {
+      setError(err?.message || 'Error al exportar el reporte de alumnos');
     }
   };
 
@@ -332,7 +368,7 @@ export const GroupManagementPage: React.FC = () => {
           </h1>
           <p style={{ fontSize: '13.5px', color: 'var(--color-gray, #758592)', margin: 0 }}>
             {isTeacher 
-              ? 'Consulta la asignacion de tus grupos academicos, cupos y reportes operativos.' 
+              ? 'Consulta la asignacion de tus grupos academicos, alumnos inscritos y reportes operativos.' 
               : 'Administracion integral de cohortes, asignacion docente, control de cupos y generacion de reportes.'}
           </p>
         </div>
@@ -347,8 +383,14 @@ export const GroupManagementPage: React.FC = () => {
             {isTeacher ? 'Reporte de Mis Grupos' : 'Reporte Operativo'}
           </Button>
 
+          {/* Enrolled Students CSV Export Button */}
+          <Button variant="outline" onClick={() => handleDownloadEnrolledStudentsCsv()}>
+            <GraduationCap size={15} style={{ marginRight: '6px' }} />
+            {isTeacher ? 'Reporte Alumnos Inscritos (CSV)' : 'Alumnos Inscritos (CSV)'}
+          </Button>
+
           <Button variant="outline" onClick={handleDownloadCsv}>
-            <Download size={15} style={{ marginRight: '6px' }} /> Exportar CSV
+            <Download size={15} style={{ marginRight: '6px' }} /> Exportar Grupos CSV
           </Button>
 
           {isAdminOrSupervisor && (
@@ -398,10 +440,10 @@ export const GroupManagementPage: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-gray, #758592)', textTransform: 'uppercase', margin: 0 }}>Cupo Total Ofrecido</p>
-              <h3 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-primary, #002e6d)', margin: '4px 0 0 0' }}>{metrics.totalCapacity}</h3>
+              <h3 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-secondary, #0284c7)', margin: '4px 0 0 0' }}>{metrics.totalCapacity}</h3>
             </div>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(94, 179, 228, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
-              <Users size={20} />
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(2, 132, 199, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-secondary, #0284c7)' }}>
+              <School size={20} />
             </div>
           </div>
         </Card>
@@ -412,7 +454,7 @@ export const GroupManagementPage: React.FC = () => {
               <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-gray, #758592)', textTransform: 'uppercase', margin: 0 }}>Alumnos Inscritos</p>
               <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#16a34a', margin: '4px 0 0 0' }}>{metrics.totalEnrolled}</h3>
             </div>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(34, 197, 94, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(22, 163, 74, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a' }}>
               <UserCheck size={20} />
             </div>
           </div>
@@ -422,12 +464,10 @@ export const GroupManagementPage: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-gray, #758592)', textTransform: 'uppercase', margin: 0 }}>Ocupacion Promedio</p>
-              <h3 style={{ fontSize: '24px', fontWeight: 800, color: metrics.avgOccupancy > 80 ? '#ea580c' : 'var(--color-primary, #002e6d)', margin: '4px 0 0 0' }}>
-                {metrics.avgOccupancy}%
-              </h3>
+              <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#ea580c', margin: '4px 0 0 0' }}>{metrics.avgOccupancy}%</h3>
             </div>
             <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(234, 88, 12, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ea580c' }}>
-              <School size={20} />
+              <Users size={20} />
             </div>
           </div>
         </Card>
@@ -435,150 +475,153 @@ export const GroupManagementPage: React.FC = () => {
 
       {/* FILTER BAR */}
       <Card style={{ padding: '16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray, #758592)' }} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+          <div style={{ flex: 1, minWidth: '220px', position: 'relative' }}>
+            <Search size={16} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray, #758592)' }} />
             <input
               type="text"
-              placeholder="Buscar por codigo, nombre o docente..."
+              placeholder="Buscar por grupo, codigo o docente..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               style={{
                 width: '100%',
-                padding: '8px 12px 8px 32px',
+                padding: '8px 10px 8px 34px',
                 borderRadius: 'var(--radius-md, 6px)',
                 border: '1px solid var(--border-color, #e2e8f0)',
-                fontSize: '13.5px',
-                outline: 'none'
+                fontSize: '13.5px'
               }}
             />
           </div>
 
-          <div>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <select
               value={selectedCampus}
               onChange={e => setSelectedCampus(e.target.value ? Number(e.target.value) : '')}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13px' }}
+              style={{ padding: '8px 12px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13.5px' }}
             >
               <option value="">Todos los Planteles</option>
               {campuses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-          </div>
 
-          <div>
             <select
               value={selectedBook}
               onChange={e => setSelectedBook(e.target.value ? Number(e.target.value) : '')}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13px' }}
+              style={{ padding: '8px 12px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13.5px' }}
             >
               <option value="">Todos los Libros</option>
-              {books.map(b => <option key={b.id} value={b.id}>Book {b.bookNumber}: {b.title}</option>)}
+              {books.map(b => <option key={b.id} value={b.id}>{b.title}</option>)}
             </select>
-          </div>
 
-          <div>
             <select
               value={selectedModule}
               onChange={e => setSelectedModule(e.target.value ? Number(e.target.value) : '')}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13px' }}
+              style={{ padding: '8px 12px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13.5px' }}
             >
               <option value="">Todos los Modulos</option>
               {modules.map(m => <option key={m.id} value={m.id}>{m.moduleCode} - {m.title}</option>)}
             </select>
-          </div>
 
-          <div>
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13px' }}
+              style={{ padding: '8px 12px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)', fontSize: '13.5px' }}
             >
               <option value="">Todos los Estados</option>
-              <option value="PUBLISHED">Publicado (Activo)</option>
+              <option value="PUBLISHED">Publicado</option>
               <option value="INACTIVE">Inactivo</option>
               <option value="CANCELLED">Cancelado</option>
             </select>
+
+            {(searchTerm || selectedCampus || selectedBook || selectedModule || selectedStatus) && (
+              <Button variant="ghost" onClick={() => { setSearchTerm(''); setSelectedCampus(''); setSelectedBook(''); setSelectedModule(''); setSelectedStatus(''); }}>
+                Limpiar
+              </Button>
+            )}
           </div>
         </div>
       </Card>
 
-      {/* MAIN DATA TABLE */}
+      {/* GROUPS TABLE */}
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ padding: '40px', display: 'flex', justifyContent: 'center' }}>
-            <LoadingSpinner message="Cargando grupos de tutoria..." />
+            <LoadingSpinner message="Cargando grupos..." />
           </div>
         ) : filteredGroups.length === 0 ? (
-          <EmptyState
-            title="No se encontraron grupos de tutoria"
-            description="Intenta modificar los filtros de busqueda o crear un nuevo grupo."
-            actionText={isAdminOrSupervisor ? "Crear Nuevo Grupo" : undefined}
-            onAction={isAdminOrSupervisor ? () => setIsCreateOpen(true) : undefined}
-          />
+          <div style={{ padding: '30px' }}>
+            <EmptyState
+              icon={<Users size={40} />}
+              title="No se encontraron grupos"
+              description="No hay cohortes o grupos de tutoria que coincidan con los filtros seleccionados."
+              actionText={isAdminOrSupervisor ? "Crear Nuevo Grupo" : undefined}
+              onAction={isAdminOrSupervisor ? () => setIsCreateOpen(true) : undefined}
+            />
+          </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px', textAlign: 'left' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid var(--border-color, #e2e8f0)' }}>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Codigo</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Nombre del Grupo</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Plantel</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Docente</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Nivel / Modulo</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Ocupacion</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>Estado</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)', textAlign: 'center' }}>Acciones</th>
+                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid var(--border-color, #e2e8f0)', color: 'var(--color-gray, #758592)' }}>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Codigo / Nombre</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Plantel</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Docente</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Modulo / Leccion</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Inscritos / Cupo</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Modalidad</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700 }}>Estado</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 700, textAlign: 'right' }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredGroups.map(group => {
-                  const cap = group.capacity || 12;
-                  const enr = group.currentEnrollment || 0;
-                  const pct = Math.round((enr / cap) * 100);
-                  
+                  const isFull = group.currentEnrollment >= group.capacity;
                   return (
-                    <tr key={group.id} style={{ borderBottom: '1px solid var(--border-color, #e2e8f0)', transition: 'background-color 0.15s' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>
-                        {group.code}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontWeight: 600 }}>
-                        {group.name}
-                        <div style={{ fontSize: '11.5px', color: 'var(--color-gray, #758592)' }}>
-                          Modalidad: {group.modality || 'PRESENTIAL'}
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>{group.campusName || 'N/A'}</td>
-                      <td style={{ padding: '12px 16px' }}>{group.teacherName || 'Sin asignar'}</td>
+                    <tr key={group.id} style={{ borderBottom: '1px solid var(--border-color, #f1f5f9)', transition: 'background-color 0.15s' }}>
                       <td style={{ padding: '12px 16px' }}>
-                        <div style={{ fontWeight: 600 }}>{group.moduleCode} - {group.moduleTitle}</div>
-                        {group.bookTitle && <div style={{ fontSize: '11.5px', color: 'var(--color-gray, #758592)' }}>Book {group.bookNumber}: {group.bookTitle}</div>}
+                        <div style={{ fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>{group.code}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-gray, #758592)' }}>{group.name}</div>
                       </td>
-                      <td style={{ padding: '12px 16px', minWidth: '130px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
-                          <span style={{ fontWeight: 700 }}>{enr} / {cap}</span>
-                          <span style={{ color: pct >= 100 ? '#ea580c' : 'var(--color-gray, #758592)' }}>{pct}%</span>
+                      <td style={{ padding: '12px 16px' }}>{group.campusName}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 600 }}>{group.teacherName || 'Sin asignar'}</td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <div>{group.moduleCode}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--color-gray, #758592)' }}>{group.bookTitle}</div>
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontWeight: 700, color: isFull ? '#dc2626' : '#16a34a' }}>
+                            {group.currentEnrollment} / {group.capacity}
+                          </span>
+                          {isFull && <Badge status="FULL" size="sm" />}
                         </div>
-                        <div style={{ width: '100%', height: '6px', backgroundColor: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div 
-                            style={{ 
-                              width: `${Math.min(100, pct)}%`, 
-                              height: '100%', 
-                              backgroundColor: pct >= 100 ? '#ea580c' : pct > 70 ? '#5eb3e4' : '#16a34a' 
-                            }} 
-                          />
+                        <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)' }}>
+                          {group.availableSeats} disponibles
                         </div>
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Badge status={group.modality} size="sm" />
                       </td>
                       <td style={{ padding: '12px 16px' }}>
                         <Badge status={group.status} />
                       </td>
-                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '6px' }}>
+                      <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>
+                          
+                          {/* Enrolled Students Report Button (Requirement: Teacher enrolled students report) */}
+                          <button
+                            title="Reporte de Alumnos Inscritos"
+                            onClick={() => handleOpenEnrolledStudents(group)}
+                            style={{ padding: '6px', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: '#16a34a' }}
+                          >
+                            <GraduationCap size={15} />
+                          </button>
+
                           <button
                             title="Ver Detalle"
                             onClick={() => setDetailTarget(group)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary, #002e6d)', padding: '4px' }}
+                            style={{ padding: '6px', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: 'var(--color-primary, #002e6d)' }}
                           >
-                            <Eye size={16} />
+                            <Eye size={15} />
                           </button>
 
                           {isAdminOrSupervisor && (
@@ -586,25 +629,25 @@ export const GroupManagementPage: React.FC = () => {
                               <button
                                 title="Editar Grupo"
                                 onClick={() => handleOpenEdit(group)}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0284c7', padding: '4px' }}
+                                style={{ padding: '6px', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: '#0284c7' }}
                               >
-                                <Edit3 size={16} />
+                                <Edit3 size={15} />
                               </button>
 
                               <button
                                 title="Duplicar Grupo"
                                 onClick={() => handleOpenDuplicate(group)}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#16a34a', padding: '4px' }}
+                                style={{ padding: '6px', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: '#8b5cf6' }}
                               >
-                                <Copy size={16} />
+                                <Copy size={15} />
                               </button>
 
                               <button
                                 title="Eliminar / Cancelar Grupo"
                                 onClick={() => setDeleteTarget(group)}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: '4px' }}
+                                style={{ padding: '6px', border: '1px solid var(--border-color, #e2e8f0)', borderRadius: '4px', background: '#ffffff', cursor: 'pointer', color: '#dc2626' }}
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={15} />
                               </button>
                             </>
                           )}
@@ -618,6 +661,114 @@ export const GroupManagementPage: React.FC = () => {
           </div>
         )}
       </Card>
+
+      {/* ENROLLED STUDENTS REPORT MODAL (Requirement: Teacher report for enrolled students per group) */}
+      <Modal 
+        isOpen={!!enrolledGroupTarget} 
+        onClose={() => setEnrolledGroupTarget(null)} 
+        title={'Reporte de Alumnos Inscritos: ' + (enrolledGroupTarget?.code || '')}
+      >
+        {enrolledGroupTarget && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13.5px' }}>
+            {/* Header info card */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '12px',
+              padding: '14px 16px',
+              borderRadius: 'var(--radius-md, 6px)',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)', fontWeight: 700, textTransform: 'uppercase' }}>Grupo</div>
+                <div style={{ fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>{enrolledGroupTarget.name}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)', fontWeight: 700, textTransform: 'uppercase' }}>Plantel</div>
+                <div style={{ fontWeight: 600 }}>{enrolledGroupTarget.campusName}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)', fontWeight: 700, textTransform: 'uppercase' }}>Docente</div>
+                <div style={{ fontWeight: 600 }}>{enrolledGroupTarget.teacherName}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)', fontWeight: 700, textTransform: 'uppercase' }}>Modulo</div>
+                <div style={{ fontWeight: 600 }}>{enrolledGroupTarget.moduleCode} - {enrolledGroupTarget.moduleTitle}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--color-gray, #758592)', fontWeight: 700, textTransform: 'uppercase' }}>Inscritos / Capacidad</div>
+                <div style={{ fontWeight: 700, color: enrolledGroupTarget.currentEnrollment >= enrolledGroupTarget.capacity ? '#dc2626' : '#16a34a' }}>
+                  {enrolledStudents.length} / {enrolledGroupTarget.capacity} alumnos ({Math.max(0, enrolledGroupTarget.capacity - enrolledStudents.length)} cupos disponibles)
+                </div>
+              </div>
+            </div>
+
+            {/* Students Table */}
+            {isEnrolledLoading ? (
+              <div style={{ padding: '30px', display: 'flex', justifyContent: 'center' }}>
+                <LoadingSpinner message="Cargando lista de alumnos inscritos..." />
+              </div>
+            ) : enrolledStudents.length === 0 ? (
+              <div style={{ padding: '24px', textAlign: 'center', backgroundColor: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                <GraduationCap size={36} color="var(--color-gray, #758592)" style={{ margin: '0 auto 8px auto' }} />
+                <p style={{ margin: 0, fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>No hay alumnos inscritos actualmente</p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--color-gray, #758592)' }}>Este grupo aun tiene {enrolledGroupTarget.capacity} cupos disponibles para asignacion.</p>
+              </div>
+            ) : (
+              <div style={{ maxHeight: '350px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12.5px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: 'var(--color-gray, #758592)' }}>
+                      <th style={{ padding: '10px 12px' }}>#</th>
+                      <th style={{ padding: '10px 12px' }}>Matricula</th>
+                      <th style={{ padding: '10px 12px' }}>Nombre del Alumno</th>
+                      <th style={{ padding: '10px 12px' }}>Folio Cita</th>
+                      <th style={{ padding: '10px 12px' }}>Fecha Sesion</th>
+                      <th style={{ padding: '10px 12px' }}>Asistencia</th>
+                      <th style={{ padding: '10px 12px' }}>Nota</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {enrolledStudents.map((st, idx) => (
+                      <tr key={st.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '10px 12px', fontWeight: 600 }}>{idx + 1}</td>
+                        <td style={{ padding: '10px 12px', fontWeight: 700, color: 'var(--color-primary, #002e6d)' }}>
+                          {st.studentNumber || 'STU-' + st.studentId}
+                        </td>
+                        <td style={{ padding: '10px 12px', fontWeight: 600 }}>{st.studentName}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--color-gray, #758592)' }}>{st.appointmentNumber}</td>
+                        <td style={{ padding: '10px 12px' }}>
+                          {st.session?.sessionDate} {st.session?.startTime}
+                        </td>
+                        <td style={{ padding: '10px 12px' }}>
+                          <Badge status={st.attendanceStatus || st.status || 'CONFIRMED'} size="sm" />
+                        </td>
+                        <td style={{ padding: '10px 12px', fontWeight: 700 }}>
+                          {st.grade !== undefined && st.grade !== null ? Number(st.grade).toFixed(2) : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+              <Button 
+                variant="outline" 
+                onClick={() => handleDownloadEnrolledStudentsCsv(enrolledGroupTarget.id)}
+                disabled={enrolledStudents.length === 0}
+              >
+                <Download size={14} style={{ marginRight: '6px' }} /> Descargar Lista CSV
+              </Button>
+
+              <Button onClick={() => setEnrolledGroupTarget(null)}>Cerrar</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       {/* DETAIL MODAL */}
       <Modal isOpen={!!detailTarget} onClose={() => setDetailTarget(null)} title="Detalle del Grupo de Tutoria">
@@ -660,7 +811,10 @@ export const GroupManagementPage: React.FC = () => {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+              <Button variant="outline" onClick={() => { const g = detailTarget; setDetailTarget(null); handleOpenEnrolledStudents(g); }}>
+                <GraduationCap size={15} style={{ marginRight: '6px' }} /> Ver Alumnos Inscritos
+              </Button>
               <Button onClick={() => setDetailTarget(null)}>Cerrar</Button>
             </div>
           </div>
@@ -756,17 +910,42 @@ export const GroupManagementPage: React.FC = () => {
             </div>
           </div>
 
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Modalidad *</label>
+              <select
+                value={createForm.modality}
+                onChange={e => setCreateForm({ ...createForm, modality: e.target.value })}
+                style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
+              >
+                <option value="PRESENTIAL">Presencial</option>
+                <option value="ONLINE">Online</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Aula / Enlace Reunion</label>
+              <input
+                type="text"
+                value={createForm.roomOrLink}
+                onChange={e => setCreateForm({ ...createForm, roomOrLink: e.target.value })}
+                placeholder="Aula 101 o URL Teams/Meet"
+                style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
+              />
+            </div>
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
             <Button variant="ghost" type="button" onClick={() => setIsCreateOpen(false)}>Cancelar</Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Publicando...' : 'Publicar Grupo'}
+              {isSubmitting ? 'Publicando...' : 'Crear y Publicar Grupo'}
             </Button>
           </div>
         </form>
       </Modal>
 
       {/* EDIT MODAL */}
-      <Modal isOpen={!!editTarget} onClose={() => setEditTarget(null)} title={`Editar Grupo: ${editTarget?.code || ''}`}>
+      <Modal isOpen={!!editTarget} onClose={() => setEditTarget(null)} title={'Editar Grupo: ' + (editTarget?.code || '')}>
         {editTarget && (
           <form onSubmit={handleUpdateGroup} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
@@ -808,20 +987,7 @@ export const GroupManagementPage: React.FC = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Modulo / Leccion *</label>
-                <select
-                  value={editForm.moduleId}
-                  onChange={e => setEditForm({ ...editForm, moduleId: Number(e.target.value) })}
-                  style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
-                >
-                  {modules.map(m => <option key={m.id} value={m.id}>{m.moduleCode} - {m.title}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>
-                  Capacidad Maxima * (Min: {editTarget.currentEnrollment})
-                </label>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Capacidad Maxima *</label>
                 <input
                   type="number"
                   min={editTarget.currentEnrollment || 1}
@@ -832,29 +998,15 @@ export const GroupManagementPage: React.FC = () => {
                   style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
                 />
               </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Modalidad</label>
-                <select
-                  value={editForm.modality}
-                  onChange={e => setEditForm({ ...editForm, modality: e.target.value })}
-                  style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
-                >
-                  <option value="PRESENTIAL">Presencial</option>
-                  <option value="ONLINE">En Linea (Online)</option>
-                </select>
-              </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Estado</label>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Estado *</label>
                 <select
                   value={editForm.status}
                   onChange={e => setEditForm({ ...editForm, status: e.target.value })}
                   style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
                 >
-                  <option value="PUBLISHED">Publicado (Activo)</option>
+                  <option value="PUBLISHED">Publicado</option>
                   <option value="INACTIVE">Inactivo</option>
                   <option value="CANCELLED">Cancelado</option>
                 </select>
@@ -872,13 +1024,9 @@ export const GroupManagementPage: React.FC = () => {
       </Modal>
 
       {/* DUPLICATE MODAL */}
-      <Modal isOpen={!!duplicateTarget} onClose={() => setDuplicateTarget(null)} title="Duplicar Configuracion de Grupo">
+      <Modal isOpen={!!duplicateTarget} onClose={() => setDuplicateTarget(null)} title={'Duplicar Grupo: ' + (duplicateTarget?.code || '')}>
         {duplicateTarget && (
           <form onSubmit={handleDuplicateGroup} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <p style={{ fontSize: '13.5px', color: 'var(--color-gray, #758592)', margin: 0 }}>
-              Crea rapidamente una replica de <strong>{duplicateTarget.code}</strong> para horarios recurrentes.
-            </p>
-
             <div>
               <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Nombre del Nuevo Grupo *</label>
               <input
@@ -890,22 +1038,9 @@ export const GroupManagementPage: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Docente Asignado</label>
-              <select
-                value={dupForm.newTeacherId}
-                onChange={e => setDupForm({ ...dupForm, newTeacherId: Number(e.target.value) })}
-                style={{ width: '100%', padding: '8px', borderRadius: 'var(--radius-md, 6px)', border: '1px solid var(--border-color, #e2e8f0)' }}
-              >
-                <option value={1}>Ana Garcia (Intermedio)</option>
-                <option value={2}>Roberto Sanchez (Avanzado)</option>
-                <option value={3}>Laura Morales (Basico)</option>
-              </select>
-            </div>
-
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Nueva Fecha</label>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, marginBottom: '4px' }}>Fecha Sesion *</label>
                 <input
                   type="date"
                   value={dupForm.newSessionDate}
@@ -943,7 +1078,7 @@ export const GroupManagementPage: React.FC = () => {
               <p style={{ margin: 0, fontWeight: 700 }}>Advertencia de Integridad Historica:</p>
               <p style={{ margin: '4px 0 0 0', fontSize: '12.5px' }}>
                 {deleteTarget.currentEnrollment > 0
-                  ? `Este grupo tiene ${deleteTarget.currentEnrollment} alumnos inscritos y registros academicos. Se ejecutara una eliminacion logica cambiando el estado a CANCELADO para preservar el historial.`
+                  ? 'Este grupo tiene ' + deleteTarget.currentEnrollment + ' alumnos inscritos y registros academicos. Se ejecutara una eliminacion logica cambiando el estado a CANCELADO para preservar el historial.'
                   : 'Este grupo no tiene alumnos inscritos y sera removido de forma segura.'}
               </p>
             </div>
@@ -978,9 +1113,14 @@ export const GroupManagementPage: React.FC = () => {
                   <div style={{ fontSize: '12px', color: 'var(--color-gray, #758592)' }}>Alcance (Scope): <strong>{reportData.scope}</strong></div>
                   <div style={{ fontSize: '12px', color: 'var(--color-gray, #758592)' }}>Generado por: <strong>{reportData.generatedBy}</strong></div>
                 </div>
-                <Button variant="outline" onClick={handleDownloadCsv}>
-                  <Download size={14} style={{ marginRight: '6px' }} /> Descargar CSV
-                </Button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <Button variant="outline" onClick={() => handleDownloadEnrolledStudentsCsv()}>
+                    <GraduationCap size={14} style={{ marginRight: '6px' }} /> Alumnos (CSV)
+                  </Button>
+                  <Button variant="outline" onClick={handleDownloadCsv}>
+                    <Download size={14} style={{ marginRight: '6px' }} /> Grupos (CSV)
+                  </Button>
+                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
