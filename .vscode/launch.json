@@ -1,0 +1,37 @@
+{
+  "compounds": [
+    {
+      "name": "Full Stack (Backend + Frontend)",
+      "configurations": [
+        "Spring Boot - Backend (IQ English Application)",
+        "Frontend - Vite Dev Server"
+      ]
+    }
+  ],
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "mainClass": "mx.iqenglish.tutoring.IQEnglishTutoringApplication",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "dev"
+      },
+      "args": "",
+      "name": "Spring Boot - Backend (IQ English Application)",
+      "projectName": "tutoring-management-system"
+    },
+    {
+      "cwd": "/frontend",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "name": "Frontend - Vite Dev Server",
+      "runtimeExecutable": "npm"
+    }
+  ]
+}

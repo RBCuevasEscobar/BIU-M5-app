@@ -1,10 +1,43 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"java.compile.nullAnalysis.mode": "automatic"
-	}
+  "folders": [
+    {
+      "path": ".",
+      "name": "IQ English (Full Solution)"
+    },
+    {
+      "path": "backend",
+      "name": "Backend (Spring Boot)"
+    },
+    {
+      "path": "frontend",
+      "name": "Frontend (React / Vite)"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.DS_Store": true,
+      "**/.classpath": true,
+      "**/.settings": true,
+      "**/.git": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/Thumbs.db": true,
+      "**/.svn": true,
+      "**/.project": true
+    },
+    "java.import.maven.enabled": true,
+    "java.maven.downloadSources": true,
+    "java.autobuild.enabled": true,
+    "java.compile.nullAnalysis.mode": "automatic",
+    "spring-boot.ls.java.home": "C:\\\\Program Files\\\\Java\\\\jdk-21",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.configuration.runtimes": [
+      {
+        "default": true,
+        "path": "C:\\\\Program Files\\\\Java\\\\jdk-21",
+        "name": "JavaSE-21"
+      }
+    ],
+    "java.jdt.ls.java.home": "C:\\\\Program Files\\\\Java\\\\jdk-21"
+  }
 }

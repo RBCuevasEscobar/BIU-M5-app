@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg32"
+   sodipodi:docname="04_lowfi_create_group.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="720"
+     inkscape:cy="450.13575"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg32" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .bg { fill: #F8FAFC; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .surface-alt { fill: #F1F5F9; stroke: #E2E8F0; stroke-width: 1; }
+      .wire-box { fill: #F1F5F9; stroke: #94A3B8; stroke-width: 1.5; stroke-dasharray: 4 3; }
+      .cross-line { stroke: #CBD5E1; stroke-width: 1.5; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .input-disabled { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .btn-primary { fill: #1E293B; stroke: #0F172A; stroke-width: 1.5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .btn-outline { fill: transparent; stroke: #64748B; stroke-width: 1.5; }
+      .btn-ghost { fill: transparent; stroke: transparent; }
+      .btn-danger-outline { fill: transparent; stroke: #94A3B8; stroke-width: 1.5; }
+      .pill-active { fill: #E2E8F0; stroke: #475569; stroke-width: 1.5; }
+      .pill-inactive { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1; }
+      .badge { fill: #E2E8F0; stroke: #94A3B8; stroke-width: 1; rx: 4; }
+      .badge-dark { fill: #334155; stroke: #1E293B; stroke-width: 1; rx: 4; }
+      
+      .txt-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0F172A; }
+      .txt-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #1E293B; }
+      .txt-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+      .txt-value { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #1E293B; }
+      .txt-placeholder { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 400; fill: #94A3B8; }
+      .txt-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 400; fill: #64748B; }
+      .txt-btn-dark { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #FFFFFF; }
+      .txt-btn-light { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #1E293B; }
+      .txt-btn-ghost { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #64748B; }
+      .txt-kpi-num { font-family: 'Inter', -apple-system, sans-serif; font-size: 24px; font-weight: 800; fill: #0F172A; }
+      .txt-tag { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #475569; text-transform: uppercase; }
+      .txt-tag-white { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #FFFFFF; text-transform: uppercase; }
+    </style>
+  </defs>
+  <rect
+     width="1440"
+     height="900"
+     class="bg"
+     id="rect1" />
+  <!-- BACKGROUND CONTEXT -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="64"
+     class="surface"
+     id="rect2" />
+  <rect
+     x="24"
+     y="16"
+     width="32"
+     height="32"
+     rx="6"
+     class="wire-box"
+     id="rect3" />
+  <text
+     x="68"
+     y="37"
+     class="txt-title"
+     font-size="16"
+     id="text3">[ LOGO IQ ENGLISH ]</text>
+  <text
+     x="314"
+     y="37"
+     class="txt-muted"
+     id="text4">| [ Gestion de Grupos de Tutoria ]</text>
+  <rect
+     x="0"
+     y="64"
+     width="240"
+     height="836"
+     class="surface"
+     id="rect4" />
+  <rect
+     x="12"
+     y="88"
+     width="216"
+     height="38"
+     rx="6"
+     class="pill-active"
+     id="rect5" />
+  <text
+     x="54"
+     y="112"
+     class="txt-section"
+     font-size="13"
+     id="text5">[ Grupos de Tutoria ]</text>
+  <rect
+     x="264"
+     y="88"
+     width="1152"
+     height="780"
+     rx="8"
+     class="surface"
+     id="rect6" />
+  <text
+     x="288"
+     y="120"
+     class="txt-title"
+     id="text6">[ Administracion de Grupos ]</text>
+  <rect
+     x="288"
+     y="140"
+     width="1104"
+     height="40"
+     rx="4"
+     class="surface-alt"
+     id="rect7" />
+  <line
+     x1="288"
+     y1="220"
+     x2="1392"
+     y2="220"
+     stroke="#E2E8F0"
+     stroke-width="1"
+     id="line7" />
+  <rect
+     x="1"
+     y="1"
+     width="1440"
+     height="900"
+     fill="#0f172a"
+     fill-opacity="0.45"
+     id="rect8" />
+  <!-- MODAL BACKDROP -->
+  <!-- CREATE GROUP MODAL DIALOG (760 x 780) -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="780"
+     rx="10"
+     class="surface"
+     stroke="#0F172A"
+     stroke-width="2"
+     id="rect9" />
+  <!-- Modal Header -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="56"
+     rx="10"
+     class="surface-alt"
+     id="rect10" />
+  <text
+     x="370"
+     y="95"
+     class="txt-title"
+     font-size="18"
+     id="text10">[ Crear Nuevo Grupo de Tutoria ]</text>
+  <rect
+     x="1050"
+     y="74"
+     width="30"
+     height="30"
+     rx="4"
+     class="surface"
+     id="rect11" />
+  <line
+     x1="1060"
+     y1="84"
+     x2="1070"
+     y2="94"
+     stroke="#64748B"
+     stroke-width="2"
+     id="line11" />
+  <line
+     x1="1060"
+     y1="94"
+     x2="1070"
+     y2="84"
+     stroke="#64748B"
+     stroke-width="2"
+     id="line12" />
+  <!-- Field 1: Nombre del Grupo -->
+  <text
+     x="370"
+     y="144"
+     class="txt-label"
+     id="text12">[ NOMBRE DEL GRUPO ] *</text>
+  <rect
+     x="370"
+     y="154"
+     width="700"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect12" />
+  <text
+     x="382"
+     y="178"
+     class="txt-placeholder"
+     id="text13">[ Ej. Tutoring Book X - Lesson Y Speaking... ]</text>
+  <!-- Row 2: Plantel & Docente -->
+  <text
+     x="370"
+     y="214"
+     class="txt-label"
+     id="text14">[ PLANTEL ] *</text>
+  <rect
+     x="370"
+     y="224"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect14" />
+  <text
+     x="382"
+     y="248"
+     class="txt-placeholder"
+     id="text15">[ Seleccione Plantel... v ]</text>
+  <path
+     d="M685 242 L690 248 L695 242"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path15" />
+  <text
+     x="735"
+     y="214"
+     class="txt-label"
+     id="text16">[ DOCENTE ] *</text>
+  <rect
+     x="735"
+     y="224"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect16" />
+  <text
+     x="747"
+     y="248"
+     class="txt-placeholder"
+     id="text17">[ Seleccione Docente... v ]</text>
+  <path
+     d="M1050 242 L1055 248 L1060 242"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path17" />
+  <!-- Row 3: Modulo / Leccion & Capacidad Maxima -->
+  <text
+     x="370"
+     y="284"
+     class="txt-label"
+     id="text18">[ MODULO / LECCION ] *</text>
+  <rect
+     x="370"
+     y="294"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect18" />
+  <text
+     x="382"
+     y="318"
+     class="txt-placeholder"
+     id="text19">[ Seleccione Modulo / Leccion... v ]</text>
+  <path
+     d="M685 312 L690 318 L695 312"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path19" />
+  <text
+     x="735"
+     y="284"
+     class="txt-label"
+     id="text20">[ CAPACIDAD MAXIMA ] *</text>
+  <rect
+     x="735"
+     y="294"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect20" />
+  <text
+     x="747"
+     y="318"
+     class="txt-value"
+     id="text21"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Medium';font-family:Inter, '-apple-system', sans-serif;font-weight:500;font-style:normal;font-stretch:normal;font-variant:normal;font-size:13px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#1e293b"><tspan
+       sodipodi:role="line"
+       id="tspan32">[ 12 ] (Maximo permitido por grupo)</tspan></text>
+  <!-- Row 4: Fecha Primer Sesion & Hora de Inicio -->
+  <text
+     x="370"
+     y="354"
+     class="txt-label"
+     id="text22">[ FECHA PRIMER SESION ]</text>
+  <rect
+     x="370"
+     y="364"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect22" />
+  <text
+     x="382"
+     y="388"
+     class="txt-placeholder"
+     id="text23">[ DD / MM / AAAA ]</text>
+  <text
+     x="735"
+     y="354"
+     class="txt-label"
+     id="text24">[ HORA DE INICIO ]</text>
+  <rect
+     x="735"
+     y="364"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect24" />
+  <text
+     x="747"
+     y="388"
+     class="txt-placeholder"
+     id="text25">[ --:-- hrs ]</text>
+  <!-- Row 5: Modalidad & Aula / Enlace -->
+  <text
+     x="370"
+     y="424"
+     class="txt-label"
+     id="text26">[ MODALIDAD ] *</text>
+  <rect
+     x="370"
+     y="434"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect26" />
+  <text
+     x="382"
+     y="458"
+     class="txt-value"
+     id="text27">[ Presencial / Online v ]</text>
+  <path
+     d="M685 452 L690 458 L695 452"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path27" />
+  <text
+     x="735"
+     y="424"
+     class="txt-label"
+     id="text28">[ AULA / ENLACE REUNION ]</text>
+  <rect
+     x="735"
+     y="434"
+     width="335"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect28" />
+  <text
+     x="747"
+     y="458"
+     class="txt-placeholder"
+     id="text29">[ Aula 101 o URL Teams/Meet... ]</text>
+  <!-- Rule info box -->
+  <!-- Modal Footer / Actions -->
+  <rect
+     x="340"
+     y="750"
+     width="760"
+     height="90"
+     rx="10"
+     class="surface-alt"
+     id="rect30" />
+  <line
+     x1="340"
+     y1="750"
+     x2="1100"
+     y2="750"
+     stroke="#E2E8F0"
+     stroke-width="1"
+     id="line30" />
+  <rect
+     x="740"
+     y="774"
+     width="120"
+     height="42"
+     rx="6"
+     class="btn-ghost"
+     id="rect31" />
+  <rect
+     x="714.1601"
+     y="774.323"
+     width="142.67307"
+     height="42.229626"
+     rx="4.2801919"
+     class="btn-primary"
+     id="rect32-5"
+     style="fill:#ffffff;stroke:#0f172a;stroke-width:1.27037" />
+  <text
+     x="744"
+     y="800"
+     class="txt-btn-ghost"
+     id="text31"
+     style="fill:#000000">[ Cancelar ]</text>
+  <rect
+     x="870"
+     y="774"
+     width="200"
+     height="42"
+     rx="6"
+     class="btn-primary"
+     id="rect32" />
+  <text
+     x="886"
+     y="800"
+     class="txt-btn-dark"
+     id="text32">[ Crear y Publicar Grupo ]</text>
+</svg>

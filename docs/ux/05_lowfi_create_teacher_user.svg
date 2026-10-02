@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg35"
+   sodipodi:docname="05_lowfi_create_teacher_user.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview35"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="720"
+     inkscape:cy="450.13575"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg35" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .bg { fill: #F8FAFC; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .surface-alt { fill: #F1F5F9; stroke: #E2E8F0; stroke-width: 1; }
+      .wire-box { fill: #F1F5F9; stroke: #94A3B8; stroke-width: 1.5; stroke-dasharray: 4 3; }
+      .cross-line { stroke: #CBD5E1; stroke-width: 1.5; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .input-disabled { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .btn-primary { fill: #1E293B; stroke: #0F172A; stroke-width: 1.5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .btn-outline { fill: transparent; stroke: #64748B; stroke-width: 1.5; }
+      .btn-ghost { fill: transparent; stroke: transparent; }
+      .btn-danger-outline { fill: transparent; stroke: #94A3B8; stroke-width: 1.5; }
+      .pill-active { fill: #E2E8F0; stroke: #475569; stroke-width: 1.5; }
+      .pill-inactive { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1; }
+      .badge { fill: #E2E8F0; stroke: #94A3B8; stroke-width: 1; rx: 4; }
+      .badge-dark { fill: #334155; stroke: #1E293B; stroke-width: 1; rx: 4; }
+      
+      .txt-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0F172A; }
+      .txt-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #1E293B; }
+      .txt-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+      .txt-value { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #1E293B; }
+      .txt-placeholder { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 400; fill: #94A3B8; }
+      .txt-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 400; fill: #64748B; }
+      .txt-btn-dark { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #FFFFFF; }
+      .txt-btn-light { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #1E293B; }
+      .txt-btn-ghost { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #64748B; }
+      .txt-kpi-num { font-family: 'Inter', -apple-system, sans-serif; font-size: 24px; font-weight: 800; fill: #0F172A; }
+      .txt-tag { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #475569; text-transform: uppercase; }
+      .txt-tag-white { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #FFFFFF; text-transform: uppercase; }
+    </style>
+  </defs>
+  <rect
+     width="1440"
+     height="900"
+     class="bg"
+     id="rect1" />
+  <!-- BACKGROUND CONTEXT -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="64"
+     class="surface"
+     id="rect2" />
+  <rect
+     x="24"
+     y="16"
+     width="32"
+     height="32"
+     rx="6"
+     class="wire-box"
+     id="rect3" />
+  <text
+     x="68"
+     y="37"
+     class="txt-title"
+     font-size="16"
+     id="text3">[ LOGO IQ ENGLISH ]</text>
+  <text
+     x="300"
+     y="37"
+     class="txt-muted"
+     id="text4">| [ Gestion de Usuarios ]</text>
+  <rect
+     x="0"
+     y="64"
+     width="240"
+     height="836"
+     class="surface"
+     id="rect4" />
+  <rect
+     x="12"
+     y="88"
+     width="216"
+     height="38"
+     rx="6"
+     class="pill-active"
+     id="rect5" />
+  <text
+     x="54"
+     y="112"
+     class="txt-section"
+     font-size="13"
+     id="text5">[ Plantilla Docente ]</text>
+  <rect
+     x="264"
+     y="88"
+     width="1152"
+     height="780"
+     rx="8"
+     class="surface"
+     id="rect6" />
+  <text
+     x="288"
+     y="120"
+     class="txt-title"
+     id="text6">[ Directorio Docente ]</text>
+  <rect
+     x="288"
+     y="140"
+     width="1104"
+     height="40"
+     rx="4"
+     class="surface-alt"
+     id="rect7" />
+  <line
+     x1="288"
+     y1="220"
+     x2="1392"
+     y2="220"
+     stroke="#E2E8F0"
+     stroke-width="1"
+     id="line7" />
+  <!-- MODAL BACKDROP -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="900"
+     fill="#0F172A"
+     fill-opacity="0.45"
+     id="rect8" />
+  <!-- CREATE TEACHER MODAL (760 x 780) -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="780"
+     rx="10"
+     class="surface"
+     stroke="#0F172A"
+     stroke-width="2"
+     id="rect9" />
+  <!-- Modal Header -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="56"
+     rx="10"
+     class="surface-alt"
+     id="rect10" />
+  <text
+     x="370"
+     y="95"
+     class="txt-title"
+     font-size="18"
+     id="text10">[ Registrar Nuevo Usuario Docente ]</text>
+  <rect
+     x="1050"
+     y="74"
+     width="30"
+     height="30"
+     rx="4"
+     class="surface"
+     id="rect11" />
+  <line
+     x1="1060"
+     y1="84"
+     x2="1070"
+     y2="94"
+     stroke="#64748B"
+     stroke-width="2"
+     id="line11" />
+  <line
+     x1="1060"
+     y1="94"
+     x2="1070"
+     y2="84"
+     stroke="#64748B"
+     stroke-width="2"
+     id="line12" />
+  <!-- Form Fields Grid -->
+  <!-- Row 1: Nombre(s) & Apellidos -->
+  <text
+     x="370"
+     y="144"
+     class="txt-label"
+     id="text12">[ NOMBRE(S) ] *</text>
+  <rect
+     x="370"
+     y="154"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect12" />
+  <text
+     x="382"
+     y="178"
+     class="txt-placeholder"
+     id="text13">[ Ingrese nombre(s)... ]</text>
+  <text
+     x="740"
+     y="144"
+     class="txt-label"
+     id="text14">[ APELLIDOS ] *</text>
+  <rect
+     x="740"
+     y="154"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect14" />
+  <text
+     x="752"
+     y="178"
+     class="txt-placeholder"
+     id="text15">[ Ingrese apellidos... ]</text>
+  <!-- Row 2: Nombre de Usuario & Correo -->
+  <text
+     x="370"
+     y="214"
+     class="txt-label"
+     id="text16">[ NOMBRE DE USUARIO ] *</text>
+  <rect
+     x="370"
+     y="224"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect16" />
+  <text
+     x="382"
+     y="248"
+     class="txt-placeholder"
+     id="text17">[ Ingrese nombre de usuario (docente)... ]</text>
+  <text
+     x="740"
+     y="214"
+     class="txt-label"
+     id="text18">[ CORREO ELECTRONICO ] *</text>
+  <rect
+     x="740"
+     y="224"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect18" />
+  <text
+     x="752"
+     y="248"
+     class="txt-placeholder"
+     id="text19">[ Ingrese correo (@iqenglish.edu.mx)... ]</text>
+  <!-- Row 3: Contrasena Inicial & Telefono -->
+  <text
+     x="370"
+     y="284"
+     class="txt-label"
+     id="text20">[ CONTRASENA INICIAL ] *</text>
+  <rect
+     x="370"
+     y="294"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect20" />
+  <text
+     x="382"
+     y="318"
+     class="txt-placeholder"
+     id="text21">[ Ingrese contrasena inicial... ]</text>
+  <text
+     x="740"
+     y="284"
+     class="txt-label"
+     id="text22">[ TELEFONO ]</text>
+  <rect
+     x="740"
+     y="294"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect22" />
+  <text
+     x="752"
+     y="318"
+     class="txt-placeholder"
+     id="text23">[ Ingrese telefono de contacto... ]</text>
+  <!-- Row 4: Rol Principal & Plantel Asignado -->
+  <text
+     x="370"
+     y="354"
+     class="txt-label"
+     id="text24">[ ROL PRINCIPAL ] *</text>
+  <rect
+     x="370"
+     y="364"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect24" />
+  <text
+     x="382"
+     y="388"
+     class="txt-value"
+     id="text25">[ ROLE_TEACHER v ]</text>
+  <path
+     d="M680 382 L685 388 L690 382"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path25" />
+  <text
+     x="740"
+     y="354"
+     class="txt-label"
+     id="text26">[ PLANTEL ASIGNADO ]</text>
+  <rect
+     x="740"
+     y="364"
+     width="330"
+     height="38"
+     rx="4"
+     class="input-box"
+     id="rect26" />
+  <text
+     x="752"
+     y="388"
+     class="txt-placeholder"
+     id="text27">[ Seleccione Plantel... v ]</text>
+  <path
+     d="M1050 382 L1055 388 L1060 382"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path27" />
+  <!-- Parametros Docente (Card box) -->
+  <rect
+     x="370"
+     y="424"
+     width="700"
+     height="150"
+     rx="6"
+     class="surface-alt"
+     id="rect27" />
+  <text
+     x="390"
+     y="450"
+     class="txt-section"
+     font-size="13"
+     id="text28">💼 [ Perfil y Asignacion del Docente ]</text>
+  <text
+     x="390"
+     y="480"
+     class="txt-label"
+     id="text29"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Semi-Bold';font-family:Inter, '-apple-system', sans-serif;font-weight:600;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0.5px;text-transform:uppercase;fill:#475569"><tspan
+       sodipodi:role="line"
+       id="tspan37">[ ESPECIALIDAD ] *</tspan></text>
+  <rect
+     x="390"
+     y="490"
+     width="320"
+     height="36"
+     rx="4"
+     class="input-box"
+     id="rect29" />
+  <text
+     x="402"
+     y="513"
+     class="txt-placeholder"
+     id="text30"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Normal';font-family:Inter, '-apple-system', sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:13px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#94a3b8"><tspan
+       sodipodi:role="line"
+       id="tspan36">[ Texto Especialidad Docente ]</tspan></text>
+  <text
+     x="730"
+     y="480"
+     class="txt-label"
+     id="text31"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Semi-Bold';font-family:Inter, '-apple-system', sans-serif;font-weight:600;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0.5px;text-transform:uppercase;fill:#475569"><tspan
+       sodipodi:role="line"
+       id="tspan35">[ NIVEL DE IMPARTICION ]</tspan></text>
+  <rect
+     x="730"
+     y="490"
+     width="320"
+     height="36"
+     rx="4"
+     class="input-box"
+     id="rect31" />
+  <text
+     x="390"
+     y="554"
+     class="txt-muted"
+     id="text33">[ El docente podra ser asignado a grupos de tutoria y registrar asistencia ]</text>
+  <!-- Modal Footer / Actions -->
+  <rect
+     x="340"
+     y="750"
+     width="760"
+     height="90"
+     rx="10"
+     class="surface-alt"
+     id="rect33" />
+  <line
+     x1="340"
+     y1="750"
+     x2="1100"
+     y2="750"
+     stroke="#E2E8F0"
+     stroke-width="1"
+     id="line33" />
+  <rect
+     x="800"
+     y="774"
+     width="120"
+     height="42"
+     rx="6"
+     class="btn-ghost"
+     id="rect34" />
+  <rect
+     x="746.55823"
+     y="774.75281"
+     width="141.08029"
+     height="41.994324"
+     rx="6.0462985"
+     class="btn-primary"
+     id="rect35-4"
+     style="fill:#ffffff;stroke:#0f172a;stroke-width:1.50568" />
+  <text
+     x="780"
+     y="800"
+     class="txt-btn-ghost"
+     id="text34"
+     style="fill:#000000">[ Cancelar ]</text>
+  <rect
+     x="906.16864"
+     y="774.06"
+     width="163.77136"
+     height="41.879963"
+     rx="7.0187731"
+     class="btn-primary"
+     id="rect35" />
+  <text
+     x="918"
+     y="800"
+     class="txt-btn-dark"
+     id="text35">[ Registrar Docente ]</text>
+  <text
+     x="745.48291"
+     y="511.87695"
+     class="txt-placeholder"
+     id="text30-7"
+     style="font-weight:400;font-size:13px;font-family:Inter, '-apple-system', sans-serif;fill:#94a3b8">[ Basico / Intermedio / Avanzado v ]</text>
+</svg>

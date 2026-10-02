@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg71"
+   sodipodi:docname="20_midfi_edit_user.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview71"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="720"
+     inkscape:cy="450.13575"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg71" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap');
+      .bg-app { fill: #F1F5F9; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.04)); }
+      .surface-alt { fill: #F8FAFC; stroke: #E2E8F0; stroke-width: 1; }
+      .header-bg { fill: #002E6D; }
+      .sidebar-bg { fill: #FFFFFF; stroke: #E2E8F0; stroke-width: 1; }
+      .banner-iq { fill: #002E6D; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.2; rx: 5; }
+      .input-focus { fill: #FFFFFF; stroke: #0284C7; stroke-width: 1.8; rx: 5; }
+      .btn-primary { fill: #002E6D; stroke: #00204E; stroke-width: 1; rx: 5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #002E6D; stroke-width: 1.2; rx: 5; }
+      .btn-accent { fill: #F59E0B; stroke: #D97706; stroke-width: 1; rx: 5; }
+      .btn-outline { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1; rx: 5; }
+      .btn-ghost { fill: transparent; stroke: transparent; }
+      .badge-success { fill: #DCFCE7; stroke: #86EFAC; stroke-width: 1; rx: 12; }
+      .badge-info { fill: #E0F2FE; stroke: #7DD3FC; stroke-width: 1; rx: 12; }
+      .badge-warning { fill: #FEF3C7; stroke: #FCD34D; stroke-width: 1; rx: 12; }
+      .badge-neutral { fill: #F1F5F9; stroke: #CBD5E1; stroke-width: 1; rx: 12; }
+      .badge-danger { fill: #FEE2E2; stroke: #FCA5A5; stroke-width: 1; rx: 12; }
+      
+      .axure-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #64748B; letter-spacing: 0.5px; text-transform: uppercase; }
+      .axure-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 800; fill: #0F172A; }
+      .axure-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #002E6D; }
+      .axure-body { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #334155; }
+      .axure-body-bold { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #0F172A; }
+      .axure-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #64748B; }
+      .axure-btn-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #FFFFFF; }
+      .axure-btn-sec-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #002E6D; }
+      .axure-marker { font-family: 'Inter', -apple-system, sans-serif; font-size: 9px; font-weight: 700; fill: #0284C7; }
+    </style>
+  </defs>
+  <rect
+     width="1440"
+     height="900"
+     class="bg-app"
+     id="rect1" />
+  <!-- TOPBAR -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="64"
+     class="sidebar-bg"
+     id="rect2" />
+  <rect
+     x="24"
+     y="14"
+     width="36"
+     height="36"
+     rx="8"
+     fill="#002E6D"
+     id="rect3" />
+  <text
+     x="32"
+     y="38"
+     font-family="'Inter', sans-serif"
+     font-size="18"
+     font-weight="900"
+     fill="#FFFFFF"
+     id="text3">IQ</text>
+  <text
+     x="68"
+     y="34"
+     class="axure-title"
+     font-size="16"
+     fill="#002E6D"
+     id="text4">IQ ENGLISH</text>
+  <text
+     x="68"
+     y="48"
+     class="axure-muted"
+     font-size="10"
+     id="text5">DIRECTORIO GENERAL Y EDICION DE USUARIOS</text>
+  <rect
+     x="1150"
+     y="12"
+     width="200"
+     height="40"
+     rx="6"
+     class="surface-alt"
+     id="rect5" />
+  <circle
+     cx="1172"
+     cy="32"
+     r="14"
+     fill="#002E6D"
+     id="circle5" />
+  <text
+     x="1165"
+     y="37"
+     font-family="'Inter', sans-serif"
+     font-size="11"
+     font-weight="700"
+     fill="#FFFFFF"
+     id="text6">AD</text>
+  <text
+     x="1194"
+     y="27"
+     class="axure-body-bold"
+     font-size="12"
+     id="text7">Admin Control</text>
+  <text
+     x="1194"
+     y="41"
+     class="axure-muted"
+     font-size="10"
+     id="text8">ROLE_ADMIN</text>
+  <!-- SIDEBAR -->
+  <rect
+     x="0"
+     y="64"
+     width="240"
+     height="836"
+     class="sidebar-bg"
+     id="rect8" />
+  <text
+     x="24"
+     y="94"
+     class="axure-label"
+     id="text9">ADMINISTRACION</text>
+  <rect
+     x="12"
+     y="108"
+     width="216"
+     height="40"
+     rx="6"
+     fill="transparent"
+     id="rect9" />
+  <text
+     x="48"
+     y="133"
+     class="axure-body"
+     font-size="13"
+     id="text10">📊 Dashboard</text>
+  <rect
+     x="12"
+     y="152"
+     width="216"
+     height="42"
+     rx="6"
+     fill="#002E6D"
+     id="rect10" />
+  <text
+     x="48"
+     y="178"
+     class="axure-btn-txt"
+     font-size="13"
+     id="text11">👥 Usuarios y Roles</text>
+  <!-- MAIN FRAME: UserManagementPage.tsx Table & Stats -->
+  <!-- 4 Stats Cards (Users, Students, Teachers, Staff) -->
+  <rect
+     x="264"
+     y="80"
+     width="270"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect11" />
+  <text
+     x="280"
+     y="102"
+     class="axure-label"
+     id="text12">TOTAL USUARIOS</text>
+  <text
+     x="280"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#002E6D"
+     id="text13">124 Cuentas</text>
+  <rect
+     x="550"
+     y="80"
+     width="270"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect13" />
+  <text
+     x="566"
+     y="102"
+     class="axure-label"
+     id="text14">ESTUDIANTES ACTIVOS</text>
+  <text
+     x="566"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#166534"
+     id="text15">98 Alumnos</text>
+  <rect
+     x="836"
+     y="80"
+     width="270"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect15" />
+  <text
+     x="852"
+     y="102"
+     class="axure-label"
+     id="text16">PLANTILLA DOCENTE</text>
+  <text
+     x="852"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#0369A1"
+     id="text17">18 Docentes</text>
+  <rect
+     x="1122"
+     y="80"
+     width="294"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect17" />
+  <text
+     x="1138"
+     y="102"
+     class="axure-label"
+     id="text18">SUPERVISORES / ADMIN</text>
+  <text
+     x="1138"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#64748B"
+     id="text19">8 Directivos</text>
+  <!-- Filter Bar -->
+  <rect
+     x="264"
+     y="168"
+     width="1152"
+     height="54"
+     rx="8"
+     class="surface"
+     id="rect19" />
+  <rect
+     x="278"
+     y="177"
+     width="320"
+     height="36"
+     class="input-box"
+     id="rect20" />
+  <text
+     x="294"
+     y="200"
+     class="axure-muted"
+     id="text20">🔍 Buscar por nombre, usuario, correo o matrícula...</text>
+  <rect
+     x="610"
+     y="177"
+     width="200"
+     height="36"
+     class="input-box"
+     id="rect21" />
+  <text
+     x="622"
+     y="200"
+     class="axure-body"
+     id="text21">Rol: ROLE_STUDENT v</text>
+  <rect
+     x="820"
+     y="177"
+     width="200"
+     height="36"
+     class="input-box"
+     id="rect22" />
+  <text
+     x="832"
+     y="200"
+     class="axure-body"
+     id="text22">Plantel: Monterrey Norte v</text>
+  <rect
+     x="1030"
+     y="177"
+     width="150"
+     height="36"
+     class="input-box"
+     id="rect23" />
+  <text
+     x="1042"
+     y="200"
+     class="axure-body"
+     id="text23">Estado: ACTIVO v</text>
+  <rect
+     x="1250"
+     y="177"
+     width="152"
+     height="36"
+     rx="6"
+     class="btn-primary"
+     id="rect24" />
+  <text
+     x="1272"
+     y="200"
+     class="axure-btn-txt"
+     id="text24">+ Nuevo Usuario</text>
+  <!-- User Data Table in Background -->
+  <rect
+     x="264"
+     y="234"
+     width="1152"
+     height="630"
+     rx="8"
+     class="surface"
+     id="rect25" />
+  <rect
+     x="264"
+     y="234"
+     width="1152"
+     height="40"
+     rx="8"
+     class="surface-alt"
+     id="rect26" />
+  <text
+     x="280"
+     y="258"
+     class="axure-label"
+     id="text26">USUARIO / MATRICULA</text>
+  <text
+     x="460"
+     y="258"
+     class="axure-label"
+     id="text27">NOMBRE COMPLETO</text>
+  <text
+     x="680"
+     y="258"
+     class="axure-label"
+     id="text28">CORREO INSTITUCIONAL</text>
+  <text
+     x="900"
+     y="258"
+     class="axure-label"
+     id="text29">ROL</text>
+  <text
+     x="1030"
+     y="258"
+     class="axure-label"
+     id="text30">PLANTEL</text>
+  <text
+     x="1170"
+     y="258"
+     class="axure-label"
+     id="text31">ESTADO</text>
+  <text
+     x="1290"
+     y="258"
+     class="axure-label"
+     id="text32">ACCIONES</text>
+  <!-- Row 1 (Target of edit) -->
+  <rect
+     x="264"
+     y="274"
+     width="1152"
+     height="52"
+     fill="#F0F9FF"
+     stroke="#0284C7"
+     stroke-width="1.5"
+     id="rect32" />
+  <text
+     x="280"
+     y="296"
+     class="axure-body-bold"
+     fill="#002E6D"
+     id="text33">student.carlos</text>
+  <text
+     x="280"
+     y="312"
+     class="axure-muted"
+     font-size="11"
+     id="text34">MAT-2026-089</text>
+  <text
+     x="460"
+     y="305"
+     class="axure-body-bold"
+     id="text35">Carlos Méndez Rivera</text>
+  <text
+     x="680"
+     y="305"
+     class="axure-body"
+     id="text36">carlos.mendez@iqenglish.edu.mx</text>
+  <text
+     x="900"
+     y="305"
+     class="axure-body"
+     id="text37">ROLE_STUDENT</text>
+  <text
+     x="1030"
+     y="305"
+     class="axure-body"
+     id="text38">Monterrey Norte</text>
+  <rect
+     x="1170"
+     y="290"
+     width="70"
+     height="22"
+     class="badge-success"
+     id="rect38" />
+  <text
+     x="1184"
+     y="305"
+     font-family="'Inter', sans-serif"
+     font-size="10"
+     font-weight="700"
+     fill="#166534"
+     id="text39">ACTIVO</text>
+  <text
+     x="1290"
+     y="305"
+     class="axure-body"
+     id="text40">✏️ 🔑 📜 🗑️</text>
+  <!-- Table Pagination -->
+  <line
+     x1="264"
+     y1="810"
+     x2="1416"
+     y2="810"
+     stroke="#E2E8F0"
+     id="line40" />
+  <text
+     x="280"
+     y="836"
+     class="axure-muted"
+     id="text41">Mostrando 1 a 8 de 124 usuarios | Página 1 de 16</text>
+  <rect
+     x="1280"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect41" />
+  <text
+     x="1290"
+     y="838"
+     class="axure-body"
+     id="text42">1</text>
+  <rect
+     x="1316"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect42" />
+  <text
+     x="1326"
+     y="838"
+     class="axure-muted"
+     id="text43">2</text>
+  <rect
+     x="1352"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect43" />
+  <text
+     x="1362"
+     y="838"
+     class="axure-muted"
+     id="text44">3</text>
+  <!-- MODAL BACKDROP -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="900"
+     fill="#0F172A"
+     fill-opacity="0.55"
+     id="rect44" />
+  <!-- EDIT USER MODAL DIALOG (UserModals.tsx: EditUserModal) -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="780"
+     rx="12"
+     class="surface"
+     stroke="#002E6D"
+     stroke-width="2"
+     id="rect45" />
+  <!-- Modal Header -->
+  <rect
+     x="340"
+     y="60"
+     width="760"
+     height="60"
+     rx="12"
+     class="banner-iq"
+     id="rect46" />
+  <text
+     x="370"
+     y="96"
+     class="axure-title"
+     font-size="19"
+     fill="#FFFFFF"
+     id="text46"
+     style="fill:#ffffff">Editar Perfil: student.carlos</text>
+  <text
+     x="370"
+     y="112"
+     font-family="'Inter', sans-serif"
+     font-size="11"
+     fill="#93C5FD"
+     id="text47">Actualización de datos personales, estado de cuenta y nivel curricular</text>
+  <rect
+     x="1050"
+     y="74"
+     width="30"
+     height="30"
+     rx="4"
+     fill="#00204E"
+     id="rect47" />
+  <text
+     x="1060"
+     y="94"
+     font-family="'Inter', sans-serif"
+     font-size="15"
+     font-weight="700"
+     fill="#FFFFFF"
+     id="text48">✕</text>
+  <!-- Form Fields Grid -->
+  <!-- Row 1: Nombre(s) & Apellidos -->
+  <text
+     x="370"
+     y="148"
+     class="axure-label"
+     id="text49">NOMBRE(S) *</text>
+  <rect
+     x="370"
+     y="158"
+     width="330"
+     height="40"
+     class="input-box"
+     id="rect49" />
+  <text
+     x="384"
+     y="183"
+     class="axure-body-bold"
+     id="text50">Carlos</text>
+  <text
+     x="740"
+     y="148"
+     class="axure-label"
+     id="text51">APELLIDOS *</text>
+  <rect
+     x="740"
+     y="158"
+     width="330"
+     height="40"
+     class="input-box"
+     id="rect51" />
+  <text
+     x="754"
+     y="183"
+     class="axure-body-bold"
+     id="text52">Méndez Rivera</text>
+  <!-- Row 2: Correo Electronico -->
+  <text
+     x="370"
+     y="220"
+     class="axure-label"
+     id="text53">CORREO ELECTRONICO INSTITUCIONAL *</text>
+  <rect
+     x="370"
+     y="230"
+     width="700"
+     height="40"
+     class="input-box"
+     id="rect53" />
+  <text
+     x="384"
+     y="255"
+     class="axure-body"
+     id="text54"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Medium';font-family:Inter, '-apple-system', sans-serif;font-weight:500;font-style:normal;font-stretch:normal;font-variant:normal;font-size:13px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#334155"><tspan
+       sodipodi:role="line"
+       id="tspan71">carlos.mendez@iqenglish.mx</tspan></text>
+  <!-- Row 3: Telefono & Estado -->
+  <text
+     x="370"
+     y="292"
+     class="axure-label"
+     id="text55">TELEFONO</text>
+  <rect
+     x="370"
+     y="302"
+     width="330"
+     height="40"
+     class="input-box"
+     id="rect55" />
+  <text
+     x="384"
+     y="327"
+     class="axure-body"
+     id="text56">+52 (81) 8234-5678</text>
+  <text
+     x="740"
+     y="292"
+     class="axure-label"
+     id="text57">ESTADO DE LA CUENTA *</text>
+  <rect
+     x="740"
+     y="302"
+     width="330"
+     height="40"
+     class="input-box"
+     id="rect57" />
+  <text
+     x="754"
+     y="327"
+     class="axure-body-bold"
+     fill="#166534"
+     id="text58">ACTIVE (Activo)</text>
+  <path
+     d="M1050 320 L1055 326 L1060 320"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path58" />
+  <!-- Student Academic Section (UserModals.tsx: isStudent) -->
+  <rect
+     x="370"
+     y="364"
+     width="700"
+     height="210"
+     rx="8"
+     fill="#F0FDF4"
+     stroke="#86EFAC"
+     stroke-width="1.2"
+     id="rect58" />
+  <text
+     x="390"
+     y="392"
+     class="axure-section"
+     font-size="14"
+     fill="#166534"
+     id="text59">🎓 Actualización de Nivel y Módulo del Estudiante</text>
+  <text
+     x="390"
+     y="420"
+     class="axure-label"
+     fill="#166534"
+     id="text60">PLANTEL ASIGNADO *</text>
+  <rect
+     x="390"
+     y="430"
+     width="660"
+     height="38"
+     class="input-box"
+     id="rect60" />
+  <text
+     x="404"
+     y="454"
+     class="axure-body-bold"
+     id="text61">Campus Monterrey Norte</text>
+  <path
+     d="M1030 448 L1035 454 L1040 448"
+     stroke="#64748B"
+     stroke-width="1.5"
+     fill="none"
+     id="path61" />
+  <!-- 3 cols: Nivel, Libro, Modulo -->
+  <text
+     x="390"
+     y="490"
+     class="axure-label"
+     fill="#166534"
+     id="text62">NIVEL ACADEMICO *</text>
+  <rect
+     x="390"
+     y="500"
+     width="205"
+     height="38"
+     class="input-box"
+     id="rect62" />
+  <text
+     x="404"
+     y="524"
+     class="axure-body-bold"
+     font-size="12"
+     id="text63">Level 2 - Intermedio B1</text>
+  <text
+     x="615"
+     y="490"
+     class="axure-label"
+     fill="#166534"
+     id="text64">LIBRO *</text>
+  <rect
+     x="615"
+     y="500"
+     width="210"
+     height="38"
+     class="input-box"
+     id="rect64" />
+  <text
+     x="629"
+     y="524"
+     class="axure-body-bold"
+     font-size="12"
+     id="text65"
+     style="-inkscape-font-specification:'Inter, -apple-system, sans-serif, Bold';font-family:Inter, '-apple-system', sans-serif;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-size:12px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#0f172a">Book 2: Interactive Fluency</text>
+  <text
+     x="845"
+     y="490"
+     class="axure-label"
+     fill="#166534"
+     id="text66">MODULO / LECCION *</text>
+  <rect
+     x="845"
+     y="500"
+     width="205"
+     height="38"
+     class="input-box"
+     id="rect66" />
+  <text
+     x="859"
+     y="524"
+     class="axure-body-bold"
+     font-size="12"
+     id="text67">Lesson 5B: Requests</text>
+  <text
+     x="390"
+     y="562"
+     class="axure-muted"
+     font-size="11"
+     id="text68">Cambiar el nivel o libro actualizará el plan curricular del alumno y sus opciones de búsqueda.</text>
+  <!-- Modal Footer Actions -->
+  <rect
+     x="340"
+     y="750"
+     width="760"
+     height="90"
+     rx="12"
+     class="surface-alt"
+     id="rect69" />
+  <line
+     x1="340"
+     y1="750"
+     x2="1100"
+     y2="750"
+     stroke="#E2E8F0"
+     id="line69" />
+  <rect
+     x="760"
+     y="774"
+     width="130"
+     height="44"
+     class="btn-outline"
+     id="rect70" />
+  <text
+     x="802"
+     y="801"
+     class="axure-body"
+     font-weight="600"
+     id="text70">Cancelar</text>
+  <rect
+     x="906"
+     y="774"
+     width="164"
+     height="44"
+     class="btn-primary"
+     id="rect71" />
+  <text
+     x="926"
+     y="801"
+     class="axure-btn-txt"
+     id="text71">Guardar Cambios</text>
+</svg>

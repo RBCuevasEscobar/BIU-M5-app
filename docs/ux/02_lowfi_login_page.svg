@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg32"
+   sodipodi:docname="02_lowfi_login_page.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="723.25792"
+     inkscape:cy="441.44796"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg32" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .bg { fill: #F8FAFC; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .surface-alt { fill: #F1F5F9; stroke: #E2E8F0; stroke-width: 1; }
+      .wire-box { fill: #F1F5F9; stroke: #94A3B8; stroke-width: 1.5; stroke-dasharray: 4 3; }
+      .cross-line { stroke: #CBD5E1; stroke-width: 1.5; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .input-disabled { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .btn-primary { fill: #1E293B; stroke: #0F172A; stroke-width: 1.5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.5; }
+      .btn-outline { fill: transparent; stroke: #64748B; stroke-width: 1.5; }
+      .btn-ghost { fill: transparent; stroke: transparent; }
+      .btn-danger-outline { fill: transparent; stroke: #94A3B8; stroke-width: 1.5; }
+      .pill-active { fill: #E2E8F0; stroke: #475569; stroke-width: 1.5; }
+      .pill-inactive { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1; }
+      .badge { fill: #E2E8F0; stroke: #94A3B8; stroke-width: 1; rx: 4; }
+      .badge-dark { fill: #334155; stroke: #1E293B; stroke-width: 1; rx: 4; }
+      
+      .txt-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0F172A; }
+      .txt-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #1E293B; }
+      .txt-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+      .txt-value { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #1E293B; }
+      .txt-placeholder { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 400; fill: #94A3B8; }
+      .txt-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 11px; font-weight: 400; fill: #64748B; }
+      .txt-btn-dark { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #FFFFFF; }
+      .txt-btn-light { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #1E293B; }
+      .txt-btn-ghost { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #64748B; }
+      .txt-kpi-num { font-family: 'Inter', -apple-system, sans-serif; font-size: 24px; font-weight: 800; fill: #0F172A; }
+      .txt-tag { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #475569; text-transform: uppercase; }
+      .txt-tag-white { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #FFFFFF; text-transform: uppercase; }
+    </style>
+  </defs>
+  <rect
+     width="1440"
+     height="900"
+     class="bg"
+     id="rect1" />
+  <!-- LEFT BRANDING / VALUE PROP PANEL (width: 540) -->
+  <!-- RIGHT FORM SECTION (width: 900) -->
+  <rect
+     x="476"
+     y="100"
+     width="520"
+     height="700"
+     rx="12"
+     class="surface"
+     id="rect15" />
+  <text
+     x="520"
+     y="156"
+     class="txt-title"
+     font-size="22"
+     id="text16">[ Iniciar Sesion ]</text>
+  <text
+     x="520"
+     y="180"
+     class="txt-muted"
+     font-size="13"
+     id="text17">[ Ingresa tus credenciales para acceder a la plataforma ]</text>
+  <!-- Field 1: Username / Email -->
+  <text
+     x="520"
+     y="226"
+     class="txt-label"
+     id="text18">[ NOMBRE DE USUARIO O CORREO ] *</text>
+  <rect
+     x="520"
+     y="236"
+     width="432"
+     height="46"
+     rx="6"
+     class="input-box"
+     id="rect18" />
+  <text
+     x="542"
+     y="265"
+     class="txt-placeholder"
+     id="text19">[ Ingrese usuario o correo institucional... ]</text>
+  <!-- Field 2: Password -->
+  <text
+     x="520"
+     y="316"
+     class="txt-label"
+     id="text20">[ CONTRASENA ] *</text>
+  <rect
+     x="520"
+     y="326"
+     width="432"
+     height="46"
+     rx="6"
+     class="input-box"
+     id="rect20" />
+  <text
+     x="542"
+     y="354"
+     class="txt-placeholder"
+     id="text21">[ •••••••••••• ]</text>
+  <!-- Submit Button -->
+  <rect
+     x="520"
+     y="404"
+     width="432"
+     height="48"
+     rx="6"
+     class="btn-primary"
+     id="rect22" />
+  <text
+     x="662"
+     y="434"
+     class="txt-btn-dark"
+     font-size="14"
+     id="text22">[ Ingresar a la Plataforma ]</text>
+  <!-- Demo Role Switcher Section (AuthContext / LoginPage.tsx) -->
+  <line
+     x1="520"
+     y1="486"
+     x2="952"
+     y2="486"
+     stroke="#e2e8f0"
+     stroke-width="1"
+     id="line22" />
+  <text
+     x="520"
+     y="516"
+     class="txt-label"
+     id="text23">[ ACCESOS RAPIDOS DE DEMOSTRACION (DEMO): ]</text>
+  <!-- Demo Roles Grid -->
+  <rect
+     x="520"
+     y="534"
+     width="206"
+     height="54"
+     rx="6"
+     class="surface-alt"
+     id="rect23" />
+  <text
+     x="534"
+     y="556"
+     class="txt-section"
+     font-size="12"
+     id="text24">[ Rol: Estudiante ]</text>
+  <text
+     x="534"
+     y="574"
+     class="txt-muted"
+     font-size="10"
+     id="text25">[ Perfil de Alumno Activo ]</text>
+  <rect
+     x="746"
+     y="534"
+     width="206"
+     height="54"
+     rx="6"
+     class="surface-alt"
+     id="rect25" />
+  <text
+     x="760"
+     y="556"
+     class="txt-section"
+     font-size="12"
+     id="text26">[ Rol: Docente ]</text>
+  <text
+     x="760"
+     y="574"
+     class="txt-muted"
+     font-size="10"
+     id="text27">[ Gestion de Asistencia ]</text>
+  <rect
+     x="520"
+     y="600"
+     width="206"
+     height="54"
+     rx="6"
+     class="surface-alt"
+     id="rect27" />
+  <text
+     x="534"
+     y="622"
+     class="txt-section"
+     font-size="12"
+     id="text28">[ Rol: Supervisor ]</text>
+  <text
+     x="534"
+     y="640"
+     class="txt-muted"
+     font-size="10"
+     id="text29">[ Supervision de Plantel ]</text>
+  <rect
+     x="746"
+     y="600"
+     width="206"
+     height="54"
+     rx="6"
+     class="surface-alt"
+     id="rect29" />
+  <text
+     x="760"
+     y="622"
+     class="txt-section"
+     font-size="12"
+     id="text30">[ Rol: Administrador ]</text>
+  <text
+     x="760"
+     y="640"
+     class="txt-muted"
+     font-size="10"
+     id="text31">[ Control Total del Sistema ]</text>
+  <text
+     x="570"
+     y="736"
+     class="txt-muted"
+     id="text32"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11px;font-family:Inter, '-apple-system', sans-serif;-inkscape-font-specification:'Inter, -apple-system, sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#64748b"><tspan
+       sodipodi:role="line"
+       id="tspan32"
+       x="570"
+       y="736">[ Click aqui para contactar al equipo de soporte IQ English ]</tspan></text>
+</svg>

@@ -1,0 +1,70 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "Backend: Maven Compile",
+      "command": "..\\\\mvnw.cmd compile",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/backend"
+      }
+    },
+    {
+      "group": "test",
+      "label": "Backend: Maven Test",
+      "command": "..\\\\mvnw.cmd test",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/backend"
+      }
+    },
+    {
+      "group": "none",
+      "label": "Backend: Spring Boot Run",
+      "command": "..\\\\mvnw.cmd spring-boot:run",
+      "type": "shell",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/backend"
+      }
+    },
+    {
+      "group": "none",
+      "label": "Frontend: Install Dependencies",
+      "command": "npm install",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/frontend"
+      }
+    },
+    {
+      "group": "build",
+      "label": "Frontend: Vite Build",
+      "command": "npm run build",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/frontend"
+      }
+    },
+    {
+      "group": "none",
+      "label": "Frontend: Vite Dev",
+      "command": "npm run dev",
+      "type": "shell",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "cwd": "/frontend"
+      }
+    }
+  ]
+}

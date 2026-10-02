@@ -53,16 +53,16 @@ public class ReportServiceImpl implements ReportService {
     private final EntityMapper entityMapper;
 
     public ReportServiceImpl(TutoringGroupRepository groupRepository,
-                             GroupSessionRepository sessionRepository,
-                             AppointmentRepository appointmentRepository,
-                             StudentRepository studentRepository,
-                             TeacherRepository teacherRepository,
-                             ModuleRepository moduleRepository,
-                             AcademicProgressRepository progressRepository,
-                             TutoringGroupService groupService,
-                             AppointmentService appointmentService,
-                             NotificationService notificationService,
-                             EntityMapper entityMapper) {
+            GroupSessionRepository sessionRepository,
+            AppointmentRepository appointmentRepository,
+            StudentRepository studentRepository,
+            TeacherRepository teacherRepository,
+            ModuleRepository moduleRepository,
+            AcademicProgressRepository progressRepository,
+            TutoringGroupService groupService,
+            AppointmentService appointmentService,
+            NotificationService notificationService,
+            EntityMapper entityMapper) {
         this.groupRepository = groupRepository;
         this.sessionRepository = sessionRepository;
         this.appointmentRepository = appointmentRepository;
@@ -104,16 +104,19 @@ public class ReportServiceImpl implements ReportService {
                 // 1. All student appointments mapped with attendance details
                 List<AppointmentDTO> allAppts = appointmentService.getAppointmentsByStudent(s.getId());
 
-                // 2. Upcoming CONFIRMED appointments only, sorted chronologically (Requirement 1)
+                // 2. Upcoming CONFIRMED appointments only, sorted chronologically (Requirement
+                // 1)
                 List<AppointmentDTO> confirmedAppts = allAppts.stream()
-                    .filter(a -> "CONFIRMED".equalsIgnoreCase(a.getStatus()))
-                    .sorted((a1, a2) -> {
-                        if (a1.getSession() == null || a2.getSession() == null) return 0;
-                        int cmp = a1.getSession().getSessionDate().compareTo(a2.getSession().getSessionDate());
-                        if (cmp != 0) return cmp;
-                        return a1.getSession().getStartTime().compareTo(a2.getSession().getStartTime());
-                    })
-                    .collect(Collectors.toList());
+                        .filter(a -> "CONFIRMED".equalsIgnoreCase(a.getStatus()))
+                        .sorted((a1, a2) -> {
+                            if (a1.getSession() == null || a2.getSession() == null)
+                                return 0;
+                            int cmp = a1.getSession().getSessionDate().compareTo(a2.getSession().getSessionDate());
+                            if (cmp != 0)
+                                return cmp;
+                            return a1.getSession().getStartTime().compareTo(a2.getSession().getStartTime());
+                        })
+                        .collect(Collectors.toList());
                 summary.setUpcomingAppointments(confirmedAppts);
 
                 // 3. Academic progress for student's current module (Requirement 2)
@@ -132,7 +135,7 @@ public class ReportServiceImpl implements ReportService {
                 // 4. Curriculum modules and dynamic statuses (Requirements 5 & 6)
                 List<AcademicProgress> studentProgs = progressRepository.findByStudentId(s.getId());
                 Map<Long, AcademicProgress> progMap = studentProgs.stream()
-                    .collect(Collectors.toMap(p -> p.getModule().getId(), p -> p, (p1, p2) -> p1));
+                        .collect(Collectors.toMap(p -> p.getModule().getId(), p -> p, (p1, p2) -> p1));
 
                 List<Module> bookModules = Collections.emptyList();
                 if (s.getCurrentBook() != null) {
@@ -157,13 +160,14 @@ public class ReportServiceImpl implements ReportService {
 
                     // Check if student has active confirmed appointment for this module
                     AppointmentDTO activeApptForMod = confirmedAppts.stream()
-                        .filter(a -> a.getSession() != null && a.getSession().getModuleId() != null && a.getSession().getModuleId().equals(mod.getId()))
-                        .findFirst().orElse(null);
+                            .filter(a -> a.getSession() != null && a.getSession().getModuleId() != null
+                                    && a.getSession().getModuleId().equals(mod.getId()))
+                            .findFirst().orElse(null);
 
                     // Check if there are published groups/sessions for this module
                     List<TutoringGroup> modGroups = groupRepository.findByModuleId(mod.getId()).stream()
-                        .filter(g -> g.getStatus() == GroupStatus.PUBLISHED)
-                        .collect(Collectors.toList());
+                            .filter(g -> g.getStatus() == GroupStatus.PUBLISHED)
+                            .collect(Collectors.toList());
                     boolean hasGroups = !modGroups.isEmpty();
                     item.setHasAvailableGroups(hasGroups);
 
@@ -215,7 +219,8 @@ public class ReportServiceImpl implements ReportService {
                     suggested.setBookNumber(nextPendingModuleItem.getBookNumber());
 
                     // Check for available sessions for this next module
-                    List<GroupSession> availSessions = sessionRepository.findAvailableSessionsByModuleId(nextPendingModuleItem.getModuleId());
+                    List<GroupSession> availSessions = sessionRepository
+                            .findAvailableSessionsByModuleId(nextPendingModuleItem.getModuleId());
                     if (!availSessions.isEmpty()) {
                         GroupSession s0 = availSessions.get(0);
                         suggested.setHasGroup(true);
@@ -243,13 +248,14 @@ public class ReportServiceImpl implements ReportService {
                 summary.setRole("ROLE_TEACHER");
                 summary.setUserFullName(t.getUser().getFullName());
                 summary.setTeacherProfile(entityMapper.toTeacherDTO(t));
-                List<TutoringGroupDTO> teacherGroups = groupService.filterGroups(null, null, t.getId(), null, GroupStatus.PUBLISHED);
+                List<TutoringGroupDTO> teacherGroups = groupService.filterGroups(null, null, t.getId(), null,
+                        GroupStatus.PUBLISHED);
                 summary.setActiveGroups(teacherGroups);
 
                 // Populate teacher's active sessions (Requirement 4)
                 List<GroupSessionDTO> tSessions = sessionRepository.findActiveSessionsByTeacherId(t.getId()).stream()
-                    .map(entityMapper::toGroupSessionDTO)
-                    .collect(Collectors.toList());
+                        .map(entityMapper::toGroupSessionDTO)
+                        .collect(Collectors.toList());
                 summary.setTeacherSessions(tSessions);
             });
         }

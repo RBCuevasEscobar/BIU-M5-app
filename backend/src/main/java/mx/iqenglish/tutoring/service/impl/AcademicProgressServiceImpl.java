@@ -27,9 +27,9 @@ public class AcademicProgressServiceImpl implements AcademicProgressService {
     private final BookRepository bookRepository;
 
     public AcademicProgressServiceImpl(AcademicProgressRepository progressRepository,
-                                       StudentRepository studentRepository,
-                                       ModuleRepository moduleRepository,
-                                       BookRepository bookRepository) {
+            StudentRepository studentRepository,
+            ModuleRepository moduleRepository,
+            BookRepository bookRepository) {
         this.progressRepository = progressRepository;
         this.studentRepository = studentRepository;
         this.moduleRepository = moduleRepository;
@@ -47,17 +47,18 @@ public class AcademicProgressServiceImpl implements AcademicProgressService {
     public void recordModuleAttendance(Long studentId, Long moduleId, BigDecimal grade) {
         Student student = studentRepository.findById(studentId).orElse(null);
         Module module = moduleRepository.findById(moduleId).orElse(null);
-        if (student == null || module == null) return;
+        if (student == null || module == null)
+            return;
 
         AcademicProgress prog = progressRepository.findByStudentIdAndModuleId(studentId, moduleId)
-            .orElseGet(() -> {
-                AcademicProgress p = new AcademicProgress();
-                p.setStudent(student);
-                p.setModule(module);
-                p.setStatus("IN_PROGRESS");
-                p.setAttendanceCount(0);
-                return p;
-            });
+                .orElseGet(() -> {
+                    AcademicProgress p = new AcademicProgress();
+                    p.setStudent(student);
+                    p.setModule(module);
+                    p.setStatus("IN_PROGRESS");
+                    p.setAttendanceCount(0);
+                    return p;
+                });
 
         int newCount = prog.getAttendanceCount() + 1;
         prog.setAttendanceCount(newCount);
@@ -66,7 +67,8 @@ public class AcademicProgressServiceImpl implements AcademicProgressService {
             BigDecimal roundedGrade = grade.setScale(2, RoundingMode.HALF_UP);
             if (prog.getGrade() != null) {
                 // Calculate average grade
-                BigDecimal avg = prog.getGrade().add(roundedGrade).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
+                BigDecimal avg = prog.getGrade().add(roundedGrade).divide(BigDecimal.valueOf(2), 2,
+                        RoundingMode.HALF_UP);
                 prog.setGrade(avg);
             } else {
                 prog.setGrade(roundedGrade);
@@ -80,7 +82,8 @@ public class AcademicProgressServiceImpl implements AcademicProgressService {
 
             // Advance student to next module / book if this was their active module
             if (student.getCurrentModule() != null && student.getCurrentModule().getId().equals(moduleId)) {
-                List<Module> bookModules = moduleRepository.findByBookIdOrderBySequenceOrderAsc(module.getBook().getId());
+                List<Module> bookModules = moduleRepository
+                        .findByBookIdOrderBySequenceOrderAsc(module.getBook().getId());
                 Module nextMod = null;
                 for (int i = 0; i < bookModules.size(); i++) {
                     if (bookModules.get(i).getId().equals(moduleId) && i + 1 < bookModules.size()) {
@@ -97,7 +100,8 @@ public class AcademicProgressServiceImpl implements AcademicProgressService {
                     bookRepository.findByBookNumber(nextBookNumber).ifPresent(nextBook -> {
                         student.setCurrentBook(nextBook);
                         student.setCurrentLevel(nextBook.getLevel());
-                        List<Module> nextBookMods = moduleRepository.findByBookIdOrderBySequenceOrderAsc(nextBook.getId());
+                        List<Module> nextBookMods = moduleRepository
+                                .findByBookIdOrderBySequenceOrderAsc(nextBook.getId());
                         if (!nextBookMods.isEmpty()) {
                             student.setCurrentModule(nextBookMods.get(0));
                         }
