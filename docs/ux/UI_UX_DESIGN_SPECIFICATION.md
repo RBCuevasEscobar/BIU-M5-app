@@ -114,7 +114,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 01: Página de Login y Autenticación de Usuario
 
-![Screenshot 01 - Login](screenshot_01_login.png)
+![Screenshot 01 - Login](UI%20screenshots/screenshot_01_login.png)
 
 * **Ruta de Acceso:** `/login` (Ruta pública).
 * **Propósito UX:** Permitir el acceso seguro a la plataforma mediante credenciales institucionales, emitiendo un token JWT firmado.
@@ -132,7 +132,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 02: Dashboard del Estudiante
 
-![Screenshot 02 - Student Dashboard](screenshot_02_student_dashboard.png)
+![Screenshot 02 - Student Dashboard](UI%20screenshots/screenshot_02_student_dashboard.png)
 
 * **Ruta de Acceso:** `/dashboard` (Rol requerido: `ROLE_STUDENT`).
 * **Propósito UX:** Brindar al estudiante una visión clara de su avance en el programa académico, su siguiente módulo requerido y su próxima cita confirmada.
@@ -146,7 +146,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 03: Búsqueda y Filtrado de Tutorías
 
-![Screenshot 03 - Tutoring Search](screenshot_03_tutoring_search.png)
+![Screenshot 03 - Tutoring Search](UI%20screenshots/screenshot_03_tutoring_search.png)
 
 * **Ruta de Acceso:** `/tutoring/search` (Rol requerido: `ROLE_STUDENT`).
 * **Propósito UX:** Facilitar la localización de grupos de tutoría con cupos libres mediante dos modalidades: búsqueda curricular (por libro/módulo) o por disponibilidad de fechas.
@@ -162,7 +162,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 04: Modal de Confirmación de Reserva de Tutoría
 
-![Screenshot 04 - Booking Modal](screenshot_04_booking_modal.png)
+![Screenshot 04 - Booking Modal](UI%20screenshots/screenshot_04_booking_modal.png)
 
 * **Componente:** `BookingConfirmationModal` (Invocado desde `/tutoring/search`).
 * **Propósito UX:** Prevenir reservas accidentales, confirmar la disponibilidad del cupo y presentar la política de cancelación previa a la persistencia.
@@ -178,7 +178,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 05: Mis Tutorías del Estudiante
 
-![Screenshot 05 - Student Appointments](screenshot_05_student_appointments.png)
+![Screenshot 05 - Student Appointments](UI%20screenshots/screenshot_05_student_appointments.png)
 
 * **Ruta de Acceso:** `/tutoring/my-appointments` (Rol requerido: `ROLE_STUDENT`).
 * **Propósito UX:** Gestionar las citas agendadas activas, consultar folios oficiales y revisar el historial de sesiones asistidas y calificaciones.
@@ -195,7 +195,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 06: Catálogo Académico Curricular
 
-![Screenshot 06 - Academic Catalog](screenshot_06_academic_catalog.png)
+![Screenshot 06 - Academic Catalog](UI%20screenshots/screenshot_06_academic_catalog.png)
 
 * **Ruta de Acceso:** `/academic` (Todos los roles autenticados).
 * **Propósito UX:** Consultar la estructura pedagógica de IQ English, objetivos de aprendizaje, libros de texto y rúbricas de evaluación oral.
@@ -212,7 +212,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 07: Módulo de Práctica Oral TalkIO AI
 
-![Screenshot 07 - TalkIO Practice](screenshot_07_talkio_practice.png)
+![Screenshot 07 - TalkIO Practice](UI%20screenshots/screenshot_07_talkio_practice.png)
 
 * **Ruta de Acceso:** `/talkio` (Rol requerido: `ROLE_STUDENT`).
 * **Propósito UX:** Proveer al alumno un entorno autónomo de práctica oral asistida por inteligencia artificial con retroalimentación instantánea de pronunciación y gramática.
@@ -226,7 +226,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 08: Dashboard del Usuario Docente
 
-![Screenshot 08 - Teacher Dashboard](screenshot_08_teacher_dashboard.png)
+![Screenshot 08 - Teacher Dashboard](UI%20screenshots/screenshot_08_teacher_dashboard.png)
 
 * **Ruta de Acceso:** `/dashboard` (Rol requerido: `ROLE_TEACHER`).
 * **Propósito UX:** Concentrar las herramientas operativas del profesor titular: sesiones asignadas para la fecha actual, acceso directo a listas de asistencia y promedios grupales.
@@ -242,7 +242,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 09: Módulo de Toma de Asistencia (Selector de Sesiones)
 
-![Screenshot 09 - Teacher Attendance](screenshot_09_teacher_attendance.png)
+![Screenshot 09 - Teacher Attendance](UI%20screenshots/screenshot_09_teacher_attendance.png)
 
 * **Ruta de Acceso:** `/attendance` (Rol requerido: `ROLE_TEACHER`).
 * **Propósito UX:** Filtrar y cargar las sesiones de tutoría asignadas al profesor para iniciar el pase de lista y la captura de notas.
@@ -257,7 +257,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 10: Matriz de Evaluación Oral y Toma de Asistencia
 
-![Screenshot 10 - Attendance Matrix](screenshot_10_attendance_matrix.png)
+![Screenshot 10 - Attendance Matrix](UI%20screenshots/screenshot_10_attendance_matrix.png)
 
 * **Ruta de Acceso:** `/attendance` (Vista de grupo cargado).
 * **Propósito UX:** Capturar de forma ágil y estandarizada la asistencia de cada estudiante agendado y calificar su desempeño oral en la sesión.
@@ -275,7 +275,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 11: Dashboard de Administrador y Supervisor
 
-![Screenshot 11 - Admin Dashboard](screenshot_11_admin_dashboard.png)
+![Screenshot 11 - Admin Dashboard](UI%20screenshots/screenshot_11_admin_dashboard.png)
 
 * **Ruta de Acceso:** `/dashboard` (Roles requeridos: `ROLE_ADMIN`, `ROLE_SUPERVISOR`).
 * **Propósito UX:** Proveer una vista ejecutiva de la ocupación de sedes, grupos activos, volumen de citas y métricas globales de gestión académica.
@@ -291,7 +291,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 12: Gestión de Grupos de Tutoría (Tabla Principal)
 
-![Screenshot 12 - Group Management](screenshot_12_group_management.png)
+![Screenshot 12 - Group Management](UI%20screenshots/screenshot_12_group_management.png)
 
 * **Ruta de Acceso:** `/groups` (Roles requeridos: `ROLE_ADMIN`, `ROLE_SUPERVISOR`).
 * **Propósito UX:** Control centralizado de apertura, monitoreo, duplicación y reporte de grupos de tutoría institucional.
@@ -312,7 +312,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 13: Modal de Creación de Nuevo Grupo de Tutoría
 
-![Screenshot 13 - Create Group Modal](screenshot_13_create_group_modal.png)
+![Screenshot 13 - Create Group Modal](UI%20screenshots/screenshot_13_create_group_modal.png)
 
 * **Componente:** `CreateGroupModal` (Invocado desde `/groups`).
 * **Propósito UX:** Programar una nueva sesión de tutoría asignando docente, sede, lección curricular y horario.
@@ -330,7 +330,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 14: Modal de Edición de Grupo de Tutoría
 
-![Screenshot 14 - Edit Group Modal](screenshot_14_edit_group_modal.png)
+![Screenshot 14 - Edit Group Modal](UI%20screenshots/screenshot_14_edit_group_modal.png)
 
 * **Componente:** `EditGroupModal` (Invocado desde `/groups`).
 * **Propósito UX:** Modificar parámetros de un grupo existente (capacidad, docente, estado) y visualizar el listado de estudiantes inscritos.
@@ -344,7 +344,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 15: Directorio General de Usuarios
 
-![Screenshot 15 - User Management](screenshot_15_user_management.png)
+![Screenshot 15 - User Management](UI%20screenshots/screenshot_15_user_management.png)
 
 * **Ruta de Acceso:** `/users` (Roles requeridos: `ROLE_ADMIN`, `ROLE_SUPERVISOR`).
 * **Propósito UX:** Administrar las cuentas institucionales de estudiantes, docentes y personal directivo con filtros avanzados y auditoría.
@@ -364,7 +364,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 16: Modal de Creación de Usuario
 
-![Screenshot 16 - Create User Modal](screenshot_16_create_user_modal.png)
+![Screenshot 16 - Create User Modal](UI%20screenshots/screenshot_16_create_user_modal.png)
 
 * **Componente:** `CreateUserModal` (Invocado desde `/users`).
 * **Propósito UX:** Dar de alta cuentas de estudiantes, profesores o directivos con sus atributos específicos según el rol asignado.
@@ -380,7 +380,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 17: Modal de Edición de Usuario
 
-![Screenshot 17 - Edit User Modal](screenshot_17_edit_user_modal.png)
+![Screenshot 17 - Edit User Modal](UI%20screenshots/screenshot_17_edit_user_modal.png)
 
 * **Componente:** `EditUserModal` (Invocado desde `/users`).
 * **Propósito UX:** Actualizar los datos de contacto, estado de cuenta y plan curricular de un usuario registrado.
@@ -394,7 +394,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 18: Bitácora de Auditoría del Sistema
 
-![Screenshot 18 - Audit Logs](screenshot_18_audit_logs.png)
+![Screenshot 18 - Audit Logs](UI%20screenshots/screenshot_18_audit_logs.png)
 
 * **Ruta de Acceso:** `/admin/audit` (Roles requeridos: `ROLE_ADMIN`, `ROLE_SUPERVISOR`).
 * **Propósito UX:** Garantizar la trazabilidad y seguridad institucional mediante un registro inmutable de todas las operaciones realizadas en la plataforma.
@@ -408,7 +408,7 @@ El layout principal envuelve todas las vistas protegidas del sistema tras la aut
 
 ### UI 19: Modal Global de Cambio de Contraseña
 
-![Screenshot 19 - Change Password Modal](screenshot_19_change_password_modal.png)
+![Screenshot 19 - Change Password Modal](UI%20screenshots/screenshot_19_change_password_modal.png)
 
 * **Componente:** `ChangePasswordModal` (Accesible globalmente desde el Topbar superior).
 * **Propósito UX:** Permitir a cualquier usuario autenticado actualizar su contraseña de acceso cumpliendo con políticas de seguridad.
