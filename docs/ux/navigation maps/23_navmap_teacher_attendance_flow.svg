@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="1500" height="950" viewBox="0 0 1500 950" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap');
+      .bg-canvas { fill: #0B132B; }
+      .grid-pattern { stroke: #1E293B; stroke-width: 0.8; stroke-dasharray: 4,4; }
+      
+      /* Node Styles */
+      .node-entry { fill: #1E293B; stroke: #38BDF8; stroke-width: 2; rx: 8; }
+      .node-page { fill: #FFFFFF; stroke: #002E6D; stroke-width: 1.8; rx: 8; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); }
+      .node-page-active { fill: #F0F9FF; stroke: #0284C7; stroke-width: 2.2; rx: 8; filter: drop-shadow(0 4px 8px rgba(2,132,199,0.25)); }
+      .node-modal { fill: #FFFBEB; stroke: #D97706; stroke-width: 1.8; rx: 8; stroke-dasharray: 6,3; }
+      .node-success { fill: #F0FDF4; stroke: #166534; stroke-width: 2; rx: 8; }
+      .node-api { fill: #1E1B4B; stroke: #818CF8; stroke-width: 1.5; rx: 6; }
+      .node-decision { fill: #FEF3C7; stroke: #B45309; stroke-width: 1.8; rx: 6; }
+      
+      /* Typography */
+      .map-title { font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 900; fill: #FFFFFF; }
+      .map-subtitle { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; fill: #94A3B8; }
+      .node-header { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 800; fill: #002E6D; }
+      .node-route { font-family: 'Inter', monospace; font-size: 10px; font-weight: 700; fill: #0284C7; }
+      .node-body { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; fill: #334155; }
+      .node-badge { font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 800; }
+      .arrow-label { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; fill: #38BDF8; }
+      .legend-text { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; fill: #E2E8F0; }
+      
+      /* Connectors and Markers */
+      .conn-line { stroke: #38BDF8; stroke-width: 1.8; fill: none; }
+      .conn-line-dashed { stroke: #F59E0B; stroke-width: 1.8; stroke-dasharray: 5,4; fill: none; }
+      .conn-line-success { stroke: #22C55E; stroke-width: 2; fill: none; }
+      .conn-line-api { stroke: #A78BFA; stroke-width: 1.5; stroke-dasharray: 4,4; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8" />
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#22C55E" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#A78BFA" />
+    </marker>
+  </defs>
+
+  <rect width="1500" height="950" class="bg-canvas" />
+
+  <!-- HEADER BAR -->
+  <rect x="0" y="0" width="1500" height="74" fill="#141D38" stroke="#3A506B" stroke-width="1" />
+  <rect x="28" y="16" width="42" height="42" rx="8" fill="#002E6D" stroke="#38BDF8" stroke-width="1.5" />
+  <text x="38" y="44" font-family="'Inter', sans-serif" font-size="20" font-weight="900" fill="#FFFFFF">IQ</text>
+  <text x="82" y="38" class="map-title">MAPA DE NAVEGACIÓN: FLUJO DOCENTE (SESIONES, ASISTENCIA Y NOTAS)</text>
+  <text x="82" y="58" class="map-subtitle">Recorrido de 5 Pasos: Login Docente ➔ Dashboard ➔ Módulo de Asistencia ➔ Selección de Grupo ➔ Toma de Asistencia y Calificación Oral</text>
+  
+  <rect x="1280" y="18" width="190" height="38" rx="6" fill="#075985" stroke="#38BDF8" stroke-width="1.2" />
+  <text x="1296" y="42" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#38BDF8">👨‍🏫 Rol: ROLE_TEACHER</text>
+
+  <!-- STEP 1: LOGIN DOCENTE -->
+  <rect x="60" y="120" width="250" height="170" rx="8" class="node-page" />
+  <rect x="60" y="120" width="250" height="28" rx="8" fill="#002E6D" />
+  <text x="74" y="140" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">PASO 1: LOGIN DOCENTE</text>
+  <text x="74" y="168" class="node-route">/login</text>
+  <text x="74" y="190" class="node-body">👤 Usuario: teacher.roberto</text>
+  <text x="74" y="208" class="node-body">🔑 Password: Teach#2026IQ$</text>
+  <text x="74" y="226" class="node-body">⚡ Evento: Click 'Ingresar'</text>
+  <rect x="68" y="244" width="234" height="32" rx="4" fill="#E0F2FE" />
+  <text x="78" y="264" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#0369A1">➔ JWT emitido con ROLE_TEACHER</text>
+
+  <!-- STEP 2: DASHBOARD DOCENTE -->
+  <rect x="360" y="120" width="260" height="170" rx="8" class="node-page" />
+  <rect x="360" y="120" width="260" height="28" rx="8" fill="#002E6D" />
+  <text x="374" y="140" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">PASO 2: DASHBOARD DOCENTE</text>
+  <text x="374" y="168" class="node-route">/dashboard</text>
+  <text x="374" y="190" class="node-body">📊 Sesiones de hoy: 2 clases</text>
+  <text x="374" y="208" class="node-body">👥 Alumnos activos: 18</text>
+  <text x="374" y="226" class="node-body">⚡ Evento: Click 'Tomar Asistencia'</text>
+  <rect x="368" y="244" width="244" height="32" rx="4" fill="#FEF3C7" />
+  <text x="378" y="264" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#B45309">➔ Transición hacia /attendance</text>
+
+  <!-- STEP 3: MODULO ASISTENCIA -->
+  <rect x="670" y="120" width="260" height="170" rx="8" class="node-page" />
+  <rect x="670" y="120" width="260" height="28" rx="8" fill="#002E6D" />
+  <text x="684" y="140" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">PASO 3: FILTRO DE SESIONES</text>
+  <text x="684" y="168" class="node-route">/attendance</text>
+  <text x="684" y="190" class="node-body">📍 Campus: Monterrey Norte</text>
+  <text x="684" y="208" class="node-body">📅 Fecha: 15 Octubre 2026</text>
+  <text x="684" y="226" class="node-body">⚡ Evento: Click 'Cargar Grupos'</text>
+  <rect x="678" y="244" width="244" height="32" rx="4" fill="#E0F2FE" />
+  <text x="688" y="264" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#0369A1">➔ Consulta sesiones asignadas</text>
+
+  <!-- STEP 4: SELECCION DE GRUPO ASIGNADO -->
+  <rect x="980" y="120" width="240" height="170" rx="8" class="node-page" />
+  <rect x="980" y="120" width="240" height="28" rx="8" fill="#002E6D" />
+  <text x="994" y="140" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">PASO 4: SELECCIÓN DE GRUPO</text>
+  <text x="994" y="168" class="node-route">GRP-B2-L5B-01</text>
+  <text x="994" y="190" class="node-body">👥 4 Alumnos con cita confirmada</text>
+  <text x="994" y="208" class="node-body">🎯 Objetivo: Evaluar a Carlos Méndez</text>
+  <text x="994" y="226" class="node-body">⚡ Evento: Click 'Capturar Nota'</text>
+  <rect x="988" y="244" width="224" height="32" rx="4" fill="#FEF3C7" />
+  <text x="998" y="264" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#B45309">➔ Abre formulario de evaluación</text>
+
+  <!-- STEP 5: TOMA ASISTENCIA Y NOTA (DESTINO FINAL) -->
+  <rect x="1260" y="120" width="200" height="170" rx="8" class="node-success" />
+  <rect x="1260" y="120" width="200" height="28" rx="8" fill="#166534" />
+  <text x="1272" y="140" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">PASO 5: EVALUACIÓN</text>
+  <text x="1272" y="168" class="node-route">Estado: [● PRESENTE]</text>
+  <text x="1272" y="190" class="node-body">⭐ Nota: <strong>95.00 / 100</strong></text>
+  <text x="1272" y="208" class="node-body">💬 Feedback registrado</text>
+  <text x="1272" y="226" class="node-body">💾 POST /attendance/batch</text>
+  <rect x="1266" y="244" width="188" height="32" rx="4" fill="#DCFCE7" />
+  <text x="1274" y="264" font-family="'Inter', sans-serif" font-size="10" font-weight="800" fill="#166534">✅ ASISTENCIA GUARDADA</text>
+
+  <!-- Connectors Steps 1-5 -->
+  <path d="M 310 205 L 360 205" class="conn-line" marker-end="url(#arrow)" />
+  <path d="M 620 205 L 670 205" class="conn-line" marker-end="url(#arrow)" />
+  <path d="M 930 205 L 980 205" class="conn-line" marker-end="url(#arrow)" />
+  <path d="M 1220 205 L 1260 205" class="conn-line-success" marker-end="url(#arrow-green)" />
+
+  <!-- DETAILED SPECIFICATION GRID (BOTTOM HALF) -->
+  <rect x="60" y="340" width="1400" height="560" rx="10" fill="#141D38" stroke="#3A506B" />
+  <text x="84" y="374" font-family="'Inter', sans-serif" font-size="15" font-weight="800" fill="#38BDF8">📊 ESPECIFICACIÓN DE MATRIZ PEDAGÓGICA Y EVALUACIÓN ORAL (DOCENTE):</text>
+
+  <!-- Card 1: Attendance State Transitions -->
+  <rect x="84" y="396" width="420" height="470" rx="8" fill="#1E293B" stroke="#3A506B" />
+  <text x="104" y="426" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#38BDF8">1. Estados de Asistencia Disponibles</text>
+  
+  <rect x="104" y="446" width="380" height="64" rx="6" fill="#064E3B" stroke="#34D399" />
+  <text x="120" y="470" font-family="'Inter', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">● PRESENTE (Asistió a Sesión)</text>
+  <text x="120" y="490" font-family="'Inter', sans-serif" font-size="10" fill="#A7F3D0">• Habilita captura de calificación oral numérica (0-100)</text>
+  <text x="120" y="504" font-family="'Inter', sans-serif" font-size="10" fill="#A7F3D0">• Suma porcentaje al avance curricular del alumno</text>
+
+  <rect x="104" y="520" width="380" height="64" rx="6" fill="#7F1D1D" stroke="#F87171" />
+  <text x="120" y="544" font-family="'Inter', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">● AUSENTE (Falta Injustificada)</text>
+  <text x="120" y="564" font-family="'Inter', sans-serif" font-size="10" fill="#FECACA">• Calificación 0.0 automática</text>
+  <text x="120" y="578" font-family="'Inter', sans-serif" font-size="10" fill="#FECACA">• Bloquea avance a siguiente lección</text>
+
+  <rect x="104" y="594" width="380" height="64" rx="6" fill="#78350F" stroke="#FCD34D" />
+  <text x="120" y="618" font-family="'Inter', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF">● JUSTIFICADO (Permiso Académico)</text>
+  <text x="120" y="638" font-family="'Inter', sans-serif" font-size="10" fill="#FDE68A">• No penaliza el promedio del alumno</text>
+  <text x="120" y="652" font-family="'Inter', sans-serif" font-size="10" fill="#FDE68A">• Permite reagendar la sesión sin costo</text>
+
+  <!-- Card 2: Oral Rubric Criteria -->
+  <rect x="530" y="396" width="440" height="470" rx="8" fill="#1E293B" stroke="#3A506B" />
+  <text x="550" y="426" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#F59E0B">2. Criterios de Evaluación Oral (0 - 100)</text>
+  <text x="550" y="452" font-family="'Inter', sans-serif" font-size="11" fill="#CBD5E1">La nota capturada (95.00) se desglosa en la rúbrica oficial IQ English:</text>
+
+  <rect x="550" y="470" width="400" height="50" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="566" y="492" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">🗣️ Fluidez y Espontaneidad (30%)</text>
+  <text x="566" y="508" font-family="'Inter', sans-serif" font-size="10" fill="#94A3B8">Capacidad de respuesta continua sin pausas excesivas.</text>
+
+  <rect x="550" y="530" width="400" height="50" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="566" y="552" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">📚 Precisión Gramatical y Modales (30%)</text>
+  <text x="566" y="568" font-family="'Inter', sans-serif" font-size="10" fill="#94A3B8">Uso correcto de Could, Would, indirect questions en Lesson 5B.</text>
+
+  <rect x="550" y="590" width="400" height="50" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="566" y="612" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">🎯 Pronunciación y Entonación (20%)</text>
+  <text x="566" y="628" font-family="'Inter', sans-serif" font-size="10" fill="#94A3B8">Claridad articulatoria y acentuación adecuada.</text>
+
+  <rect x="550" y="650" width="400" height="50" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="566" y="672" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">💬 Vocabulario y Negociación (20%)</text>
+  <text x="566" y="688" font-family="'Inter', sans-serif" font-size="10" fill="#94A3B8">Expresiones idiomáticas para peticiones y justificaciones.</text>
+
+  <!-- Card 3: Backend Impact &amp; Updates -->
+  <rect x="996" y="396" width="440" height="470" rx="8" fill="#1E293B" stroke="#3A506B" />
+  <text x="1016" y="426" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#34D399">3. Impacto en Base de Datos &amp; Progreso</text>
+  <text x="1016" y="452" font-family="'Inter', sans-serif" font-size="11" fill="#CBD5E1">Al registrar la asistencia se ejecutan los siguientes procesos:</text>
+
+  <rect x="1016" y="470" width="400" height="56" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="1032" y="492" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">💾 Actualización de Cita (Appointment)</text>
+  <text x="1032" y="512" font-family="'Inter', monospace" font-size="10" fill="#38BDF8">status = 'COMPLETED', grade = 95.00</text>
+
+  <rect x="1016" y="536" width="400" height="56" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="1032" y="558" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">📈 Recálculo de Progreso Académico</text>
+  <text x="1032" y="578" font-family="'Inter', monospace" font-size="10" fill="#38BDF8">AcademicProgress: lesson 5B acreditada</text>
+
+  <rect x="1016" y="602" width="400" height="56" rx="6" fill="#141D38" stroke="#3A506B" />
+  <text x="1032" y="624" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">📝 Auditoría Inmutable</text>
+  <text x="1032" y="644" font-family="'Inter', monospace" font-size="10" fill="#38BDF8">AuditLog: 'ATTENDANCE_REGISTERED' by teacher.roberto</text>
+</svg>

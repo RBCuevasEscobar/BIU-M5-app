@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg68"
+   sodipodi:docname="18_midfi_edit_group.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview68"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="720"
+     inkscape:cy="450.13575"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg68" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap');
+      .bg-app { fill: #F1F5F9; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.04)); }
+      .surface-alt { fill: #F8FAFC; stroke: #E2E8F0; stroke-width: 1; }
+      .header-bg { fill: #002E6D; }
+      .sidebar-bg { fill: #FFFFFF; stroke: #E2E8F0; stroke-width: 1; }
+      .banner-iq { fill: #002E6D; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.2; rx: 5; }
+      .input-focus { fill: #FFFFFF; stroke: #0284C7; stroke-width: 1.8; rx: 5; }
+      .btn-primary { fill: #002E6D; stroke: #00204E; stroke-width: 1; rx: 5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #002E6D; stroke-width: 1.2; rx: 5; }
+      .btn-accent { fill: #F59E0B; stroke: #D97706; stroke-width: 1; rx: 5; }
+      .btn-outline { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1; rx: 5; }
+      .btn-ghost { fill: transparent; stroke: transparent; }
+      .badge-success { fill: #DCFCE7; stroke: #86EFAC; stroke-width: 1; rx: 12; }
+      .badge-info { fill: #E0F2FE; stroke: #7DD3FC; stroke-width: 1; rx: 12; }
+      .badge-warning { fill: #FEF3C7; stroke: #FCD34D; stroke-width: 1; rx: 12; }
+      .badge-neutral { fill: #F1F5F9; stroke: #CBD5E1; stroke-width: 1; rx: 12; }
+      .badge-danger { fill: #FEE2E2; stroke: #FCA5A5; stroke-width: 1; rx: 12; }
+      
+      .axure-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #64748B; letter-spacing: 0.5px; text-transform: uppercase; }
+      .axure-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 800; fill: #0F172A; }
+      .axure-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #002E6D; }
+      .axure-body { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #334155; }
+      .axure-body-bold { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #0F172A; }
+      .axure-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #64748B; }
+      .axure-btn-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #FFFFFF; }
+      .axure-btn-sec-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #002E6D; }
+      .axure-marker { font-family: 'Inter', -apple-system, sans-serif; font-size: 9px; font-weight: 700; fill: #0284C7; }
+    </style>
+  </defs>
+  <rect
+     width="1440"
+     height="900"
+     class="bg-app"
+     id="rect1" />
+  <!-- TOPBAR -->
+  <rect
+     x="0"
+     y="0"
+     width="1440"
+     height="64"
+     class="sidebar-bg"
+     id="rect2" />
+  <rect
+     x="24"
+     y="14"
+     width="36"
+     height="36"
+     rx="8"
+     fill="#002E6D"
+     id="rect3" />
+  <text
+     x="32"
+     y="38"
+     font-family="'Inter', sans-serif"
+     font-size="18"
+     font-weight="900"
+     fill="#FFFFFF"
+     id="text3">IQ</text>
+  <text
+     x="68"
+     y="34"
+     class="axure-title"
+     font-size="16"
+     fill="#002E6D"
+     id="text4">IQ ENGLISH</text>
+  <text
+     x="68"
+     y="48"
+     class="axure-muted"
+     font-size="10"
+     id="text5">GESTION Y PROGRAMACION DE GRUPOS DE TUTORIA</text>
+  <rect
+     x="1150"
+     y="12"
+     width="200"
+     height="40"
+     rx="6"
+     class="surface-alt"
+     id="rect5" />
+  <circle
+     cx="1172"
+     cy="32"
+     r="14"
+     fill="#002E6D"
+     id="circle5" />
+  <text
+     x="1165"
+     y="37"
+     font-family="'Inter', sans-serif"
+     font-size="11"
+     font-weight="700"
+     fill="#FFFFFF"
+     id="text6">AD</text>
+  <text
+     x="1194"
+     y="27"
+     class="axure-body-bold"
+     font-size="12"
+     id="text7">Admin Control</text>
+  <text
+     x="1194"
+     y="41"
+     class="axure-muted"
+     font-size="10"
+     id="text8">ROLE_ADMIN</text>
+  <!-- SIDEBAR -->
+  <rect
+     x="0"
+     y="64"
+     width="240"
+     height="836"
+     class="sidebar-bg"
+     id="rect8" />
+  <text
+     x="24"
+     y="94"
+     class="axure-label"
+     id="text9">GESTION ACADEMICA</text>
+  <rect
+     x="12"
+     y="108"
+     width="216"
+     height="40"
+     rx="6"
+     fill="transparent"
+     id="rect9" />
+  <text
+     x="48"
+     y="133"
+     class="axure-body"
+     font-size="13"
+     id="text10">📊 Dashboard</text>
+  <rect
+     x="12"
+     y="152"
+     width="216"
+     height="42"
+     rx="6"
+     fill="#002E6D"
+     id="rect10" />
+  <text
+     x="48"
+     y="178"
+     class="axure-btn-txt"
+     font-size="13"
+     id="text11">📚 Grupos de Tutoría</text>
+  <rect
+     x="12"
+     y="198"
+     width="216"
+     height="40"
+     rx="6"
+     fill="transparent"
+     id="rect11" />
+  <text
+     x="48"
+     y="223"
+     class="axure-body"
+     font-size="13"
+     id="text12">👥 Usuarios y Roles</text>
+  <!-- MAIN FRAME: GroupManagementPage.tsx Table &amp; Stats -->
+  <!-- Top 4 Stats Summary Cards (lines 430-466) -->
+  <rect
+     x="264"
+     y="80"
+     width="270"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect12" />
+  <text
+     x="280"
+     y="102"
+     class="axure-label"
+     id="text13">TOTAL GRUPOS</text>
+  <text
+     x="280"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#002E6D"
+     id="text14">18 Grupos</text>
+  <rect
+     x="1122"
+     y="80"
+     width="294"
+     height="74"
+     rx="8"
+     class="surface"
+     id="rect18" />
+  <text
+     x="1138"
+     y="102"
+     class="axure-label"
+     id="text19">OCUPACION PROMEDIO</text>
+  <text
+     x="1138"
+     y="134"
+     class="axure-title"
+     font-size="22"
+     fill="#F59E0B"
+     id="text20">82.2%</text>
+  <!-- Filter Bar (Search, Campus, Module, Button + Nuevo Grupo) -->
+  <rect
+     x="264"
+     y="168"
+     width="1152"
+     height="54"
+     rx="8"
+     class="surface"
+     id="rect20" />
+  <rect
+     x="278"
+     y="177"
+     width="340"
+     height="36"
+     class="input-box"
+     id="rect21" />
+  <text
+     x="294"
+     y="200"
+     class="axure-muted"
+     id="text21">🔍 Buscar por código, docente o módulo...</text>
+  <rect
+     x="1240"
+     y="177"
+     width="162"
+     height="36"
+     rx="6"
+     class="btn-primary"
+     id="rect24" />
+  <text
+     x="1264"
+     y="200"
+     class="axure-btn-txt"
+     id="text24">+ Nuevo Grupo</text>
+  <!-- Group Data Table in Background -->
+  <rect
+     x="264"
+     y="234"
+     width="1152"
+     height="630"
+     rx="8"
+     class="surface"
+     id="rect25" />
+  <!-- Table Header -->
+  <rect
+     x="264"
+     y="234"
+     width="1152"
+     height="40"
+     rx="8"
+     class="surface-alt"
+     id="rect26" />
+  <text
+     x="280"
+     y="258"
+     class="axure-label"
+     id="text26">CODIGO</text>
+  <text
+     x="1170"
+     y="258"
+     class="axure-label"
+     id="text32">ESTADO</text>
+  <text
+     x="1290"
+     y="258"
+     class="axure-label"
+     id="text33">ACCIONES</text>
+  <!-- Row 1 (Target of edit) -->
+  <rect
+     x="264"
+     y="274"
+     width="1152"
+     height="52"
+     fill="#F0F9FF"
+     stroke="#0284C7"
+     stroke-width="1.5"
+     id="rect33" />
+  <text
+     x="280"
+     y="305"
+     class="axure-body-bold"
+     fill="#002E6D"
+     id="text34">GRP-B2-L5B-01</text>
+  <rect
+     x="1170"
+     y="290"
+     width="80"
+     height="22"
+     class="badge-success"
+     id="rect40" />
+  <text
+     x="1182"
+     y="305"
+     font-family="'Inter', sans-serif"
+     font-size="10"
+     font-weight="700"
+     fill="#166534"
+     id="text41">PUBLICADO</text>
+  <text
+     x="1290"
+     y="305"
+     class="axure-body"
+     id="text42">✏️ 📋 🗑️</text>
+  <!-- Table Pagination -->
+  <line
+     x1="264"
+     y1="810"
+     x2="1416"
+     y2="810"
+     stroke="#E2E8F0"
+     id="line42" />
+  <text
+     x="280"
+     y="836"
+     class="axure-muted"
+     id="text43">Mostrando 1 a 6 de 18 grupos registrados</text>
+  <rect
+     x="1280"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect43" />
+  <text
+     x="1290"
+     y="838"
+     class="axure-body"
+     id="text44">1</text>
+  <rect
+     x="1316"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect44" />
+  <text
+     x="1326"
+     y="838"
+     class="axure-muted"
+     id="text45">2</text>
+  <rect
+     x="1352"
+     y="820"
+     width="30"
+     height="28"
+     class="btn-outline"
+     id="rect45" />
+  <text
+     x="1362"
+     y="838"
+     class="axure-muted"
+     id="text46">3</text>
+  <!-- MODAL BACKDROP -->
+  <!-- EDIT GROUP MODAL DIALOG (GroupManagementPage.tsx: lines 948-1024) -->
+  <!-- Modal Header -->
+  <!-- Field 1: Nombre del Grupo -->
+  <!-- Row 2: Plantel &amp; Docente -->
+  <!-- Row 3: Capacidad Maxima &amp; Estado -->
+  <!-- Enrolled Students Summary Box (GroupManagementPage.tsx) -->
+  <!-- Modal Footer Actions -->
+</svg>

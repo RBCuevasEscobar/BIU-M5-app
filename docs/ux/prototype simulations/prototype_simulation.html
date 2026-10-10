@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IQ English - Simulación Interactiva de Prototipos (Axure Mid-Fi)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --iq-primary: #002e6d;
+      --iq-primary-hover: #00204e;
+      --iq-secondary: #f59e0b;
+      --iq-secondary-hover: #d97706;
+      --iq-bg: #f1f5f9;
+      --iq-card: #ffffff;
+      --iq-border: #cbd5e1;
+      --iq-text: #0f172a;
+      --iq-muted: #64748b;
+      --iq-success: #166534;
+      --iq-success-bg: #dcfce7;
+      --iq-info: #0369a1;
+      --iq-info-bg: #e0f2fe;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+    body { background-color: #0b132b; color: var(--iq-text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Axure Simulation Player Bar */
+    .player-header {
+      background: #00173d;
+      color: #ffffff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #002e6d;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    .player-title { font-size: 15px; font-weight: 800; display: flex; alignItems: center; gap: 10px; }
+    .player-tag { background: #0284c7; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+    .flow-selector { display: flex; gap: 8px; align-items: center; }
+    .flow-btn {
+      background: #0f2952;
+      color: #93c5fd;
+      border: 1px solid #1e40af;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .flow-btn.active { background: #f59e0b; color: #00204e; font-weight: 800; border-color: #d97706; }
+    .flow-btn:hover:not(.active) { background: #1e3a8a; color: #ffffff; }
+
+    /* Main Simulator Layout */
+    .simulator-container { display: flex; flex: 1; height: calc(100vh - 58px); overflow: hidden; }
+    
+    /* Left Sitemap / Step Navigator (Axure Style) */
+    .axure-sitemap {
+      width: 280px;
+      background: #0f172a;
+      color: #94a3b8;
+      border-right: 1px solid #1e293b;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    .sitemap-title { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase; }
+    .sitemap-step {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: #1e293b;
+      border-left: 3px solid #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sitemap-step:hover { background: #334155; color: #ffffff; }
+    .sitemap-step.active { background: #002e6d; color: #ffffff; border-left-color: #f59e0b; }
+    .sitemap-step-title { font-size: 13px; font-weight: 700; color: #ffffff; }
+    .sitemap-step-desc { font-size: 11px; color: #94a3b8; }
+
+    /* Right Interactive Canvas */
+    .canvas-viewport {
+      flex: 1;
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      overflow: auto;
+      position: relative;
+    }
+    .mockup-frame {
+      width: 1120px;
+      height: 700px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 1px solid #cbd5e1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Screen Views */
+    .screen-view { display: none; width: 100%; height: 100%; overflow-y: auto; }
+    .screen-view.active { display: flex; flex-direction: column; }
+
+    /* Component specific styling inside screen views */
+    .topbar { height: 54px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .content-split { display: flex; flex: 1; }
+    .sidebar { width: 200px; background: #ffffff; border-right: 1px solid #e2e8f0; padding: 16px 12px; display: flex; flex-direction: column; gap: 8px; }
+    .nav-btn { padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; color: #334155; cursor: pointer; text-decoration: none; display: flex; gap: 8px; }
+    .nav-btn.active { background: #002e6d; color: #ffffff; }
+    .nav-btn:hover:not(.active) { background: #f8fafc; }
+    .main-body { flex: 1; background: #f1f5f9; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+    .btn { padding: 8px 14px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+    .btn-primary { background: #002e6d; color: #ffffff; }
+    .btn-primary:hover { background: #00204e; }
+    .btn-accent { background: #f59e0b; color: #00204e; }
+    .btn-outline { background: #ffffff; border: 1px solid #cbd5e1; color: #334155; }
+    .badge { padding: 3px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: inline-block; }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    .modal-card {
+      background: #ffffff;
+      width: 680px;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border: 2px solid #002e6d;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header { background: #002e6d; color: #fff; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 12.5px; }
+    .modal-footer { padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 7px 10px; border-radius: 5px; border: 1px solid #cbd5e1; font-size: 12px; }
+
+    /* Hotspot click indicator */
+    .hotspot {
+      outline: 2px dashed #f59e0b;
+      cursor: pointer;
+      position: relative;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { outline-color: #f59e0b; }
+      50% { outline-color: #0284c7; }
+      100% { outline-color: #f59e0b; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Axure Player Bar -->
+  <div class="player-header">
+    <div class="player-title">
+      <span style="font-size: 20px;">⚡</span>
+      <span>IQ English • Simulador de Prototipos de Mediana Fidelidad</span>
+      <span class="player-tag">Axure RP Simulation</span>
+    </div>
+    <div class="flow-selector">
+      <span style="font-size: 12px; color: #94a3b8; margin-right: 6px;">Seleccionar Flujo de Proceso:</span>
+      <button class="flow-btn active" onclick="switchFlow('student')">Flujo 1: Estudiante</button>
+      <button class="flow-btn" onclick="switchFlow('admin')">Flujo 2: Administrador</button>
+    </div>
+  </div>
+
+  <div class="simulator-container">
+    <!-- Left Axure Sitemap -->
+    <div class="axure-sitemap">
+      <div class="sitemap-title">Pasos del Proceso</div>
+      
+      <!-- Student Steps -->
+      <div id="student-steps" style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="sitemap-step active" id="step-s1" onclick="showScreen('student-login')">
+          <div class="sitemap-step-title">1. Login Estudiante</div>
+          <div class="sitemap-step-desc">Autenticación con usuario student.carlos</div>
+        </div>
+        <div class="sitemap-step" id="step-s2" onclick="showScreen('student-dashboard')">
+          <div class="sitemap-step-title">2. Dashboard Estudiante</div>
+          <div class="sitemap-step-desc">Consulta de Book 2, cita activa y lecciones</div>
+        </div>
+      </div>
+
+      <!-- Admin Steps -->
+      <div id="admin-steps" style="display: none; flex-direction: column; gap: 8px;">
+        <div class="sitemap-step" id="step-a1" onclick="showScreen('admin-login')">
+          <div class="sitemap-step-title">1. Login Administrador</div>
+          <div class="sitemap-step-desc">Acceso directivo con admin.control</div>
+        </div>
+        <div class="sitemap-step" id="step-a2" onclick="showScreen('admin-create-user')">
+          <div class="sitemap-step-title">2. Crear Usuario Estudiante</div>
+          <div class="sitemap-step-desc">Modal de alta y asignación académica</div>
+        </div>
+        <div class="sitemap-step" id="step-a3" onclick="showScreen('admin-create-group')">
+          <div class="sitemap-step-title">3. Crear Grupo de Tutoría</div>
+          <div class="sitemap-step-desc">Modal de apertura de grupo (máx 5)</div>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid #1e293b; font-size: 11px; color: #64748b;">
+        <div>💡 <strong>Instrucciones:</strong></div>
+        <div style="margin-top: 4px;">Haz clic en los botones resaltados o en los pasos laterales para simular las transiciones de pantalla.</div>
+      </div>
+    </div>
+
+    <!-- Main Canvas Viewport -->
+    <div class="canvas-viewport">
+      <div class="mockup-frame">
+
+        <!-- ================= SCREEN 1: LOGIN (ESTUDIANTE) ================= -->
+        <div class="screen-view active" id="view-student-login">
+          <div style="display: flex; height: 100%;">
+            <!-- Left Branding -->
+            <div style="width: 440px; background: #002e6d; color: #fff; padding: 40px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 24px; font-weight: 900; letter-spacing: 1px;">IQ ENGLISH</div>
+                <div style="font-size: 12px; color: #93c5fd; margin-top: 2px;">Sistema de Gestión de Tutorías</div>
+                <div style="font-size: 20px; font-weight: 800; margin-top: 40px; line-height: 1.3;">Aprende inglés con método natural y tutorías personalizadas.</div>
+                <div style="font-size: 12px; color: #cbd5e1; margin-top: 10px;">Grupos reducidos de máximo 5 alumnos por sesión.</div>
+              </div>
+              <div style="font-size: 11px; color: #64748b;">Axure Medium-Fidelity Mockup v2.0</div>
+            </div>
+
+            <!-- Right Login Form -->
+            <div style="flex: 1; padding: 40px 50px; display: flex; flex-direction: column; justify-content: center; background: #fff;">
+              <h2 style="font-size: 20px; font-weight: 800; color: #002e6d;">Iniciar Sesión</h2>
+              <p style="font-size: 12px; color: #64748b; margin-top: 4px; margin-bottom: 20px;">Ingresa tus credenciales institucionales</p>
+
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label>Usuario o Correo Institucional</label>
+                <input type="text" value="student.carlos" readonly style="background: #f8fafc; font-weight: 700;">
+              </div>
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label>Contraseña</label>
+                <input type="password" value="Password123!" readonly style="background: #f8fafc;">
+              </div>
+
+              <button class="btn btn-primary hotspot" style="padding: 12px; font-size: 14px;" onclick="goToStudentDashboard()">
+                Ingresar a la Plataforma (Click para Continuar ➔)
+              </button>
+
+              <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">Perfiles Demo Rápidos:</div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                  <span class="badge badge-success" style="cursor: pointer;" onclick="goToStudentDashboard()">👤 Estudiante (student.carlos)</span>
+                  <span class="badge badge-info" style="cursor: pointer;" onclick="switchFlow('admin'); showScreen('admin-create-user');">🛡️ Admin (admin.control)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SCREEN 2: STUDENT DASHBOARD ================= -->
+        <div class="screen-view" id="view-student-dashboard">
+          <div class="topbar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-weight: 900; font-size: 16px; color: #002e6d;">IQ ENGLISH</span>
+              <span class="badge badge-info">Portal Estudiante</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 12px;">
+              <span>Campus: <strong>Monterrey Norte</strong></span>
+              <div style="background: #002e6d; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">CM</div>
+              <span><strong>Carlos Méndez</strong> (MAT-2026-089)</span>
+              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="showScreen('student-login')">Salir</button>
+            </div>
+          </div>
+
+          <div class="content-split">
+            <div class="sidebar">
+              <div class="nav-btn active">📊 Dashboard</div>
+              <div class="nav-btn">🔍 Buscar Tutoría</div>
+              <div class="nav-btn">📅 Mis Citas</div>
+              <div class="nav-btn">📚 Catálogo</div>
+            </div>
+
+            <div class="main-body">
+              <!-- Banner -->
+              <div style="background: #002e6d; color: #fff; padding: 16px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 10px; font-weight: 700; color: #f59e0b;">PORTAL ACADÉMICO IQ ENGLISH</div>
+                  <div style="font-size: 18px; font-weight: 800; margin-top: 2px;">¡Hola, Carlos Méndez!</div>
+                  <div style="font-size: 11.5px; color: #cbd5e1;">Continúa desarrollando tu fluidez en Book 2: Interactive Fluency.</div>
+                </div>
+                <button class="btn btn-accent" style="font-size: 12px;">🔍 Buscar Tutoría</button>
+              </div>
+
+              <!-- 2 Cards Row -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div class="card">
+                  <div style="font-size: 13px; font-weight: 700; color: #002e6d; margin-bottom: 8px;">Tu Contexto Académico</div>
+                  <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                    <div style="font-size: 10px; font-weight: 700; color: #166534;">NIVEL 2 - INTERMEDIO B1</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #14532d;">Book 2: Interactive Fluency</div>
+                    <div style="font-size: 11px; color: #166534;">Módulo: <strong>Lesson 5B: Requests, Excuses & Apologies</strong></div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
+                    <span>Progreso del módulo:</span>
+                    <strong>3 de 4 tutorías (75%)</strong>
+                  </div>
+                  <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
+                    <div style="background: #002e6d; width: 75%; height: 100%;"></div>
+                  </div>
+                  <div style="font-size: 11px; color: #64748b;">🏆 Última Calificación: <strong>92.50 / 100</strong> (Asistencia: 100%)</div>
+                </div>
+
+                <div class="card">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="font-size: 13px; font-weight: 700; color: #002e6d;">Próxima Tutoría Confirmada</div>
+                    <span class="badge badge-success">✓ CONFIRMADA</span>
+                  </div>
+                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; font-size: 11.5px; margin-bottom: 10px;">
+                    <div style="font-weight: 700; color: #002e6d; font-size: 13px;">Lesson 5B: Requests & Excuses</div>
+                    <div style="margin-top: 4px;">📅 <strong>Jueves 15 de Octubre 2026</strong> | ⏰ <strong>18:00 hrs</strong></div>
+                    <div>👨‍🏫 Docente: <strong>Prof. Roberto Garza</strong></div>
+                    <div>🏫 Sede: <strong>Campus Monterrey Norte - Aula 204</strong> (4/5 alumnos)</div>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" style="flex: 1; font-size: 11px;">Reagendar</button>
+                    <button class="btn btn-primary" style="flex: 1; font-size: 11px;">Ver Citas</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Curriculum List -->
+              <div class="card" style="padding: 12px 16px;">
+                <div style="font-size: 12.5px; font-weight: 700; color: #002e6d; margin-bottom: 10px;">Ruta Curricular del Alumno</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #f8fafc; border-radius: 6px;">
+                    <span>1. Lesson 5A: Daily Routine & Habitual Actions</span>
+                    <span class="badge badge-success">✓ COMPLETADA (95/100)</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #f8fafc; border-radius: 6px;">
+                    <span>2. Lesson 5B: Requests, Excuses (Sesión 1)</span>
+                    <span class="badge badge-success">✓ COMPLETADA (90/100)</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #e0f2fe; border-radius: 6px; border: 1px solid #7dd3fc;">
+                    <span><strong>3. Lesson 5B: Requests & Excuses (Sesión Cierre)</strong></span>
+                    <span class="badge badge-info">📅 CONFIRMADA (Jue 15 Oct)</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #f8fafc; border-radius: 6px;">
+                    <span>4. Lesson 6A: Travel & Future Plans</span>
+                    <span class="badge badge-warning">⏳ PENDIENTE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SCREEN 3: ADMIN LOGIN ================= -->
+        <div class="screen-view" id="view-admin-login">
+          <div style="display: flex; height: 100%;">
+            <div style="width: 440px; background: #002e6d; color: #fff; padding: 40px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 24px; font-weight: 900;">IQ ENGLISH</div>
+                <div style="font-size: 12px; color: #93c5fd;">Módulo de Control y Administración</div>
+                <div style="font-size: 20px; font-weight: 800; margin-top: 40px; line-height: 1.3;">Supervisión institucional multi-campus y gestión de cupos.</div>
+              </div>
+              <div style="font-size: 11px; color: #64748b;">Axure Admin Flow Simulation</div>
+            </div>
+
+            <div style="flex: 1; padding: 40px 50px; display: flex; flex-direction: column; justify-content: center; background: #fff;">
+              <h2 style="font-size: 20px; font-weight: 800; color: #002e6d;">Acceso Administrativo</h2>
+              <p style="font-size: 12px; color: #64748b; margin-top: 4px; margin-bottom: 20px;">Ingresa con tu cuenta de control directivo</p>
+
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label>Usuario Administrador</label>
+                <input type="text" value="admin.control" readonly style="background: #f8fafc; font-weight: 700;">
+              </div>
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label>Contraseña</label>
+                <input type="password" value="AdminSecure#2026" readonly style="background: #f8fafc;">
+              </div>
+
+              <button class="btn btn-primary hotspot" style="padding: 12px; font-size: 14px;" onclick="goToCreateUser()">
+                Iniciar Sesión como Administrador (Click para Continuar ➔)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SCREEN 4: ADMIN CREATE USER ================= -->
+        <div class="screen-view" id="view-admin-create-user" style="position: relative;">
+          <!-- Background Users Table -->
+          <div class="topbar">
+            <div style="font-weight: 900; font-size: 16px; color: #002e6d;">IQ ENGLISH • Administración de Usuarios</div>
+            <div style="font-size: 12px;">Admin: <strong>admin.control</strong></div>
+          </div>
+          <div style="padding: 20px; background: #f1f5f9; flex: 1;">
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 15px; color: #002e6d;">Directorio de Usuarios del Sistema</h3>
+                <button class="btn btn-primary">+ Nuevo Usuario</button>
+              </div>
+              <div style="font-size: 12px; color: #64748b;">Abriendo modal de registro de usuario estudiante...</div>
+            </div>
+          </div>
+
+          <!-- Modal Create User -->
+          <div class="modal-overlay">
+            <div class="modal-card">
+              <div class="modal-header">
+                <div>
+                  <div style="font-size: 14px; font-weight: 800;">Registrar Nuevo Usuario</div>
+                  <div style="font-size: 11px; color: #93c5fd;">Alta de estudiante en Book 2</div>
+                </div>
+                <span style="cursor: pointer;" onclick="goToCreateGroup()">✕</span>
+              </div>
+              <div class="modal-body">
+                <div class="form-row">
+                  <div class="form-group"><label>Nombre(s) *</label><input type="text" value="Mariana" readonly></div>
+                  <div class="form-group"><label>Apellidos *</label><input type="text" value="Treviño Lozano" readonly></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Usuario *</label><input type="text" value="student.mariana" readonly></div>
+                  <div class="form-group"><label>Correo *</label><input type="text" value="mariana.trevino@iqenglish.edu.mx" readonly></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Rol Principal *</label><select disabled><option selected>ROLE_STUDENT</option></select></div>
+                  <div class="form-group"><label>Plantel *</label><select disabled><option selected>Campus Monterrey Norte</option></select></div>
+                </div>
+                <!-- Academic Params -->
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
+                  <div style="font-size: 11px; font-weight: 700; color: #166534; margin-bottom: 6px;">🎓 PARÁMETROS ACADÉMICOS INICIALES:</div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <div><label style="font-size: 10px;">Nivel</label><input type="text" value="Intermedio B1" readonly></div>
+                    <div><label style="font-size: 10px;">Libro</label><input type="text" value="Book 2: Interactive" readonly></div>
+                    <div><label style="font-size: 10px;">Módulo</label><input type="text" value="Lesson 5A" readonly></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline" onclick="showScreen('admin-login')">Cancelar</button>
+                <button class="btn btn-primary hotspot" onclick="goToCreateGroup()">Guardar Usuario y Abrir Grupo ➔</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SCREEN 5: ADMIN CREATE GROUP ================= -->
+        <div class="screen-view" id="view-admin-create-group" style="position: relative;">
+          <!-- Background Groups Table -->
+          <div class="topbar">
+            <div style="font-weight: 900; font-size: 16px; color: #002e6d;">IQ ENGLISH • Gestión de Grupos</div>
+            <div style="font-size: 12px;">Admin: <strong>admin.control</strong></div>
+          </div>
+          <div style="padding: 20px; background: #f1f5f9; flex: 1;">
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 15px; color: #002e6d;">Grupos de Tutoría Activos</h3>
+                <button class="btn btn-primary">+ Nuevo Grupo</button>
+              </div>
+              <div style="font-size: 12px; color: #64748b;">Abriendo modal de creación y publicación de grupo...</div>
+            </div>
+          </div>
+
+          <!-- Modal Create Group -->
+          <div class="modal-overlay">
+            <div class="modal-card">
+              <div class="modal-header">
+                <div>
+                  <div style="font-size: 14px; font-weight: 800;">Crear y Publicar Nuevo Grupo de Tutoría</div>
+                  <div style="font-size: 11px; color: #93c5fd;">Apertura con límite estricto de 5 alumnos</div>
+                </div>
+                <span style="cursor: pointer;" onclick="showScreen('student-dashboard')">✕</span>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Nombre del Grupo *</label>
+                  <input type="text" value="Tutoring Book 2 - Lesson 5B Speaking" readonly>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Plantel *</label><input type="text" value="Campus Monterrey Norte" readonly></div>
+                  <div class="form-group"><label>Docente *</label><input type="text" value="Prof. Roberto Garza" readonly></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Módulo / Lección *</label><input type="text" value="Lesson 5B: Requests & Excuses" readonly></div>
+                  <div class="form-group"><label>Capacidad Máxima *</label><input type="text" value="5 Alumnos (Regla R04)" readonly style="font-weight: 700; color: #002e6d;"></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Fecha *</label><input type="text" value="15 / 10 / 2026" readonly></div>
+                  <div class="form-group"><label>Hora *</label><input type="text" value="18:00 hrs (90 min)" readonly></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Modalidad *</label><input type="text" value="Presencial" readonly></div>
+                  <div class="form-group"><label>Aula *</label><input type="text" value="Aula 204 - AudioLab Norte" readonly></div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline" onclick="showScreen('admin-create-user')">Atrás</button>
+                <button class="btn btn-primary hotspot" onclick="completeAdminFlow()">Crear y Publicar Grupo (Finalizar) ➔</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sitemap-step').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('view-' + screenId);
+      if (target) target.classList.add('active');
+
+      if (screenId === 'student-login') document.getElementById('step-s1')?.classList.add('active');
+      if (screenId === 'student-dashboard') document.getElementById('step-s2')?.classList.add('active');
+      if (screenId === 'admin-login') document.getElementById('step-a1')?.classList.add('active');
+      if (screenId === 'admin-create-user') document.getElementById('step-a2')?.classList.add('active');
+      if (screenId === 'admin-create-group') document.getElementById('step-a3')?.classList.add('active');
+    }
+
+    function switchFlow(flowName) {
+      document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
+      if (flowName === 'student') {
+        document.querySelectorAll('.flow-btn')[0].classList.add('active');
+        document.getElementById('student-steps').style.display = 'flex';
+        document.getElementById('admin-steps').style.display = 'none';
+        showScreen('student-login');
+      } else {
+        document.querySelectorAll('.flow-btn')[1].classList.add('active');
+        document.getElementById('student-steps').style.display = 'none';
+        document.getElementById('admin-steps').style.display = 'flex';
+        showScreen('admin-login');
+      }
+    }
+
+    function goToStudentDashboard() {
+      showScreen('student-dashboard');
+    }
+
+    function goToCreateUser() {
+      showScreen('admin-create-user');
+    }
+
+    function goToCreateGroup() {
+      showScreen('admin-create-group');
+    }
+
+    function completeAdminFlow() {
+      alert('¡Grupo GRP-B2-L5B-02 creado exitosamente con capacidad máxima de 5 alumnos! Redirigiendo a vista de estudiante...');
+      switchFlow('student');
+      showScreen('student-dashboard');
+    }
+  </script>
+</body>
+</html>

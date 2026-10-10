@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1440"
+   height="900"
+   viewBox="0 0 1440 900"
+   fill="none"
+   version="1.1"
+   id="svg40"
+   sodipodi:docname="11_midfi_login_page.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview40"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.92083333"
+     inkscape:cx="716.74208"
+     inkscape:cy="388.2353"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg40" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap');
+      .bg-app { fill: #F1F5F9; }
+      .surface { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.04)); }
+      .surface-highlight { fill: #FFFFFF; stroke: #0284C7; stroke-width: 1.8; }
+      .surface-alt { fill: #F8FAFC; stroke: #E2E8F0; stroke-width: 1; }
+      .header-bg { fill: #002E6D; }
+      .sidebar-bg { fill: #FFFFFF; stroke: #E2E8F0; stroke-width: 1; }
+      .banner-iq { fill: #002E6D; }
+      .input-box { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1.2; rx: 5; }
+      .input-focus { fill: #FFFFFF; stroke: #0284C7; stroke-width: 1.8; rx: 5; }
+      .btn-primary { fill: #002E6D; stroke: #00204E; stroke-width: 1; rx: 5; }
+      .btn-secondary { fill: #FFFFFF; stroke: #002E6D; stroke-width: 1.2; rx: 5; }
+      .btn-accent { fill: #F59E0B; stroke: #D97706; stroke-width: 1; rx: 5; }
+      .btn-outline { fill: #FFFFFF; stroke: #94A3B8; stroke-width: 1; rx: 5; }
+      .badge-success { fill: #DCFCE7; stroke: #86EFAC; stroke-width: 1; rx: 12; }
+      .badge-info { fill: #E0F2FE; stroke: #7DD3FC; stroke-width: 1; rx: 12; }
+      .badge-warning { fill: #FEF3C7; stroke: #FCD34D; stroke-width: 1; rx: 12; }
+      .badge-neutral { fill: #F1F5F9; stroke: #CBD5E1; stroke-width: 1; rx: 12; }
+      
+      .axure-label { font-family: 'Inter', -apple-system, sans-serif; font-size: 10px; font-weight: 700; fill: #64748B; letter-spacing: 0.5px; text-transform: uppercase; }
+      .axure-title { font-family: 'Inter', -apple-system, sans-serif; font-size: 20px; font-weight: 800; fill: #0F172A; }
+      .axure-section { font-family: 'Inter', -apple-system, sans-serif; font-size: 15px; font-weight: 700; fill: #002E6D; }
+      .axure-body { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 500; fill: #334155; }
+      .axure-body-bold { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #0F172A; }
+      .axure-muted { font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; font-weight: 400; fill: #64748B; }
+      .axure-btn-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #FFFFFF; }
+      .axure-btn-sec-txt { font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #002E6D; }
+      .axure-marker { font-family: 'Inter', -apple-system, sans-serif; font-size: 9px; font-weight: 700; fill: #0284C7; }
+    </style>
+  </defs>
+  <!-- LEFT BRANDING PANEL (width: 560) -->
+  <!-- Axure Spec Callout -->
+  <!-- Value propositions -->
+  <!-- RIGHT AUTH FORM SECTION -->
+  <rect
+     x="458"
+     y="90"
+     width="540"
+     height="720"
+     rx="12"
+     class="surface"
+     id="rect18" />
+  <text
+     x="506"
+     y="150"
+     class="axure-title"
+     font-size="24"
+     fill="#002E6D"
+     id="text19">Iniciar Sesión</text>
+  <text
+     x="506"
+     y="176"
+     class="axure-muted"
+     font-size="13"
+     id="text20">Ingresa tus credenciales institucionales para acceder a la plataforma</text>
+  <!-- Field 1: Username / Email -->
+  <text
+     x="506"
+     y="222"
+     class="axure-label"
+     id="text21">NOMBRE DE USUARIO O CORREO INSTITUCIONAL *</text>
+  <rect
+     x="506"
+     y="232"
+     width="444"
+     height="46"
+     class="input-focus"
+     id="rect21" />
+  <text
+     x="522"
+     y="260"
+     class="axure-body-bold"
+     font-size="14"
+     id="text22">student.carlos</text>
+  <!-- Field 2: Password -->
+  <text
+     x="506"
+     y="308"
+     class="axure-label"
+     id="text23">CONTRASEÑA *</text>
+  <rect
+     x="506"
+     y="318"
+     width="444"
+     height="46"
+     class="input-box"
+     id="rect23" />
+  <text
+     x="522"
+     y="347"
+     class="axure-body"
+     font-size="16"
+     id="text24">••••••••••••</text>
+  <text
+     x="908"
+     y="346"
+     font-family="Inter, sans-serif"
+     font-size="14px"
+     fill="#64748b"
+     id="text25">👁</text>
+  <!-- Submit Button -->
+  <rect
+     x="506"
+     y="396"
+     width="444"
+     height="50"
+     rx="8"
+     class="btn-primary"
+     id="rect25" />
+  <text
+     x="652"
+     y="427"
+     class="axure-btn-txt"
+     font-size="15"
+     id="text26">Ingresar a la Plataforma</text>
+  <!-- Demo Profiles Switcher (Axure Interactive Widget) -->
+  <line
+     x1="506"
+     y1="480"
+     x2="950"
+     y2="480"
+     stroke="#e2e8f0"
+     stroke-width="1.2"
+     id="line26" />
+  <text
+     x="506"
+     y="510"
+     class="axure-label"
+     id="text27">ACCESOS RAPIDOS DE DEMOSTRACION (DEMO ROLES):</text>
+  <!-- Role 1: Estudiante -->
+  <rect
+     x="506"
+     y="528"
+     width="212"
+     height="68"
+     rx="8"
+     fill="#f0fdf4"
+     stroke="#86efac"
+     stroke-width="1.5"
+     id="rect27" />
+  <text
+     x="522"
+     y="552"
+     class="axure-section"
+     font-size="13"
+     fill="#166534"
+     id="text28">👤 Estudiante</text>
+  <text
+     x="522"
+     y="570"
+     class="axure-body-bold"
+     font-size="12"
+     id="text29">student.carlos</text>
+  <text
+     x="522"
+     y="586"
+     class="axure-muted"
+     font-size="10"
+     id="text30">Book 2 • Lesson 5B</text>
+  <!-- Role 2: Docente -->
+  <rect
+     x="738"
+     y="528"
+     width="212"
+     height="68"
+     rx="8"
+     class="surface-alt"
+     id="rect30" />
+  <text
+     x="754"
+     y="552"
+     class="axure-section"
+     font-size="13"
+     fill="#002E6D"
+     id="text31">👨‍🏫 Docente</text>
+  <text
+     x="754"
+     y="570"
+     class="axure-body-bold"
+     font-size="12"
+     id="text32">teacher.roberto</text>
+  <text
+     x="754"
+     y="586"
+     class="axure-muted"
+     font-size="10"
+     id="text33">Plantel Monterrey Norte</text>
+  <!-- Role 3: Supervisor -->
+  <rect
+     x="506"
+     y="608"
+     width="212"
+     height="68"
+     rx="8"
+     class="surface-alt"
+     id="rect33" />
+  <text
+     x="522"
+     y="632"
+     class="axure-section"
+     font-size="13"
+     fill="#002E6D"
+     id="text34">📋 Supervisor</text>
+  <text
+     x="522"
+     y="650"
+     class="axure-body-bold"
+     font-size="12"
+     id="text35">supervisor.academico</text>
+  <text
+     x="522"
+     y="666"
+     class="axure-muted"
+     font-size="10"
+     id="text36">Supervisión Multi-Plantel</text>
+  <!-- Role 4: Administrador -->
+  <rect
+     x="738"
+     y="608"
+     width="212"
+     height="68"
+     rx="8"
+     class="surface-alt"
+     id="rect36" />
+  <text
+     x="754"
+     y="632"
+     class="axure-section"
+     font-size="13"
+     fill="#002E6D"
+     id="text37">🛡️ Administrador</text>
+  <text
+     x="754"
+     y="650"
+     class="axure-body-bold"
+     font-size="12"
+     id="text38">admin.control</text>
+  <text
+     x="754"
+     y="666"
+     class="axure-muted"
+     font-size="10"
+     id="text39">Control Total del Sistema</text>
+  <text
+     x="528"
+     y="740"
+     class="axure-muted"
+     font-size="12"
+     id="text40">¿Problemas para acceder? Contacta a <tspan
+   font-weight="700"
+   fill="#002e6d"
+   id="tspan39">soporte@iqenglish.edu.mx</tspan></text>
+</svg>
