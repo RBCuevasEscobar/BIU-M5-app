@@ -50,7 +50,7 @@ flowchart LR
         E1["Doble agendamiento y quejas de estudiantes"]
         E2["Desercion escolar por falta de seguimiento"]
         E3["Riesgo de fuga de datos de alumnos"]
-        E4["Subutilizacion de recursos e instalaciones"]
+        E4["Bajos indices de asistencia y participacion en los grupos de tutoria"]
     end
 
     C1 --> E1
